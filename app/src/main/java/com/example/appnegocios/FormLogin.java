@@ -21,7 +21,7 @@ public class FormLogin extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_form_login);
 
-        getSupportActionBar().hide();
+
         IniciarComponentes();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

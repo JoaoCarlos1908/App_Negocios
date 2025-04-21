@@ -23,10 +23,10 @@
         android:textSize="50sp"
         android:textColor="@color/white"
         android:textStyle="bold"
+        android:layout_marginTop="100dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="100dp"
         />
 
     <View
@@ -40,7 +40,6 @@
     <EditText
         android:id="@+id/edit_nome"
         style="@style/edit_text"
-        android:autofillHints=""
         android:hint="@string/nome"
         android:inputType="text"
         app:layout_constraintTop_toTopOf="@+id/conteinerConponentes"
@@ -51,7 +50,6 @@
     <EditText
         android:id="@+id/edit_email"
         style="@style/edit_text"
-        android:autofillHints=""
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:drawableEnd="@drawable/ic_email"
@@ -63,7 +61,6 @@
     <EditText
         android:id="@+id/edit_senha"
         style="@style/edit_text"
-        android:autofillHints=""
         android:hint="@string/senha"
         android:inputType="textPassword"
         android:drawableEnd="@drawable/ic_eye"

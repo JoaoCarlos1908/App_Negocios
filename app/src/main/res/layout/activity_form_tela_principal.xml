@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@drawable/backgroud"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FormTelaPrincipal">
+
+    <View
+        android:id="@+id/conteiner"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/cointeiner_user"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="30dp"
+        />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_user"
+        app:layout_constraintStart_toStartOf="@+id/conteiner"
+        app:layout_constraintEnd_toEndOf="@+id/conteiner"
+        app:layout_constraintTop_toTopOf="@+id/conteiner"
+        app:layout_constraintBottom_toBottomOf="@+id/conteiner"
+        />
+
+    <ImageView
+        android:id="@+id/iconeUser"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_user"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/conteiner"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        />
+
+    <TextView
+        android:id="@+id/text_nome"
+        android:text="João Carlos Oliveira Silva"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/conteiner"
+        app:layout_constraintStart_toEndOf="@+id/iconeUser"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/iconeEmial"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iconeUser"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        />
+
+    <TextView
+        android:id="@+id/text_Email"
+        android:text="joao19.carlos08@gmail.com"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/text_nome"
+        app:layout_constraintStart_toEndOf="@+id/iconeEmial"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="10dp"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        android:text="Deslogar"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        app:layout_constraintTop_toBottomOf="@+id/text_Email"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
