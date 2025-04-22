@@ -22,6 +22,7 @@ public class FormLogin extends AppCompatActivity {
         setContentView(R.layout.activity_form_login);
 
 
+
         IniciarComponentes();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1066083167783",
+    "project_id": "app-negocios-4a621",
+    "storage_bucket": "app-negocios-4a621.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066083167783:android:bc7b70c83bf2d944fda802",
+        "android_client_info": {
+          "package_name": "com.example.appnegocios"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1htQuVNP5ZebNchrnye0JZ9S6HsUbFKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
