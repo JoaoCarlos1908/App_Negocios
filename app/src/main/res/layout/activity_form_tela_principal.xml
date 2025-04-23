@@ -41,8 +41,8 @@
         />
 
     <TextView
-        android:id="@+id/text_nome"
-        android:text="João Carlos Oliveira Silva"
+        android:id="@+id/textNomeUsuario"
+        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
@@ -66,20 +66,21 @@
         />
 
     <TextView
-        android:id="@+id/text_Email"
-        android:text="joao19.carlos08@gmail.com"
+        android:id="@+id/textEmailUsuario"
+        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textSize="18dp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/text_nome"
+        app:layout_constraintTop_toBottomOf="@+id/textNomeUsuario"
         app:layout_constraintStart_toEndOf="@+id/iconeEmial"
         android:layout_marginTop="50dp"
         android:layout_marginLeft="10dp"
         />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_deslogar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/black"
@@ -90,7 +91,7 @@
         android:textSize="18dp"
         android:textStyle="bold"
         android:textAllCaps="false"
-        app:layout_constraintTop_toBottomOf="@+id/text_Email"
+        app:layout_constraintTop_toBottomOf="@+id/textEmailUsuario"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
