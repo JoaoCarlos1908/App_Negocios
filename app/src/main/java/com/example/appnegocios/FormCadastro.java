@@ -1,11 +1,13 @@
 package com.example.appnegocios;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -51,15 +53,15 @@ public class FormCadastro extends AppCompatActivity {
         bt_cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RemoveTeclado();
                 String nome = edit_nome.getText().toString();
                 String email = edit_email.getText().toString();
                 String senha = edit_senha.getText().toString();
 
                 if(nome.isEmpty() || email.isEmpty() || senha.isEmpty()){
                     Snackbar snackbar = Snackbar.make(v, menssagens[0], Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.WHITE);
-                    snackbar.setTextColor(Color.BLACK);
+                    snackbar.setBackgroundTint(Color.RED);
+                    snackbar.setTextColor(Color.WHITE);
                     snackbar.show();
                 }else{
                     CadastrarUsuario(v);
@@ -94,7 +96,7 @@ public class FormCadastro extends AppCompatActivity {
                     SalvarDadosUsuario();
 
                     Snackbar snackbar = Snackbar.make(v, menssagens[1], Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.WHITE);
+                    snackbar.setBackgroundTint(Color.GREEN);
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
                 }else {
@@ -112,12 +114,21 @@ public class FormCadastro extends AppCompatActivity {
                     }
 
                     Snackbar snackbar = Snackbar.make(v, erro, Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.WHITE);
-                    snackbar.setTextColor(Color.BLACK);
+                    snackbar.setBackgroundTint(Color.RED);
+                    snackbar.setTextColor(Color.WHITE);
                     snackbar.show();
                 }
             }
         });
+    }
+
+    private void RemoveTeclado(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View viewAtual = getCurrentFocus();
+
+        if (viewAtual != null) {
+            imm.hideSoftInputFromWindow(viewAtual.getWindowToken(), 0);
+        }
     }
     private void SalvarDadosUsuario(){
         String nome  = edit_nome.getText().toString();

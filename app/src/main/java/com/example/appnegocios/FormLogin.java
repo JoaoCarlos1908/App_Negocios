@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -28,7 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class FormLogin extends AppCompatActivity {
 
-    private TextView text_tela_cadastro;
+    private TextView text_tela_cadastro, text_recuperar_senha;
     private EditText edit_email, edit_senha;
     private Button bt_entrar;
     private ProgressBar progressBar;
@@ -45,13 +47,14 @@ public class FormLogin extends AppCompatActivity {
         bt_entrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                RemoveTeclado();
                 String email = edit_email.getText().toString();
                 String senha = edit_senha.getText().toString();
 
                 if(email.isEmpty() || senha.isEmpty()){
                     Snackbar snackbar = Snackbar.make(v, menssagens[0], Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.WHITE);
-                    snackbar.setTextColor(Color.BLACK);
+                    snackbar.setBackgroundTint(Color.RED);
+                    snackbar.setTextColor(Color.WHITE);
                     snackbar.show();
                 }else{
                     AutenticarUsuario(v);
@@ -69,12 +72,65 @@ public class FormLogin extends AppCompatActivity {
         text_tela_cadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                RemoveTeclado();
                 Intent intent = new Intent(FormLogin.this, FormCadastro.class);
                 startActivity(intent);
             }
         });
+
+        text_recuperar_senha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RemoveTeclado();
+                recoverPassword(v);
+            }
+        });
     }
 
+    private void RemoveTeclado(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View viewAtual = getCurrentFocus();
+
+        if (viewAtual != null) {
+            imm.hideSoftInputFromWindow(viewAtual.getWindowToken(), 0);
+        }
+    }
+    private void recoverPassword(View view){
+        String email = edit_email.getText().toString().trim();
+
+        if (email.isEmpty()) {
+            Snackbar.make(view, "Digite seu e-mail", Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(Color.RED)
+                    .setTextColor(Color.WHITE)
+                    .show();
+            return;
+        }
+
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Snackbar snackbar = Snackbar.make(view, "Se o e-mail estiver cadastrado, você receberá uma mensagem de recuperação", Snackbar.LENGTH_SHORT);
+                    snackbar.setBackgroundTint(Color.GREEN);
+                    snackbar.setTextColor(Color.BLACK);
+                    snackbar.show();
+                }else{
+                    String erro;
+                    try {
+                        throw task.getException();
+                    }catch(FirebaseAuthInvalidCredentialsException e){
+                        erro = "E-mail inválido";
+                    }catch(Exception e){
+                        erro = "Erro ao realizar recuperação de senha";
+                    }
+                    Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
+                    snackbar.setBackgroundTint(Color.RED);
+                    snackbar.setTextColor(Color.WHITE);
+                    snackbar.show();
+                }
+            }
+        });
+    }
     private void AutenticarUsuario(View view){
         String email = edit_email.getText().toString();
         String senha = edit_senha.getText().toString();
@@ -100,8 +156,8 @@ public class FormLogin extends AppCompatActivity {
                         erro = "Erro ao realizar login do Usuário";
                     }
                     Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.WHITE);
-                    snackbar.setTextColor(Color.BLACK);
+                    snackbar.setBackgroundTint(Color.RED);
+                    snackbar.setTextColor(Color.WHITE);
                     snackbar.show();
                 }
             }
@@ -125,6 +181,7 @@ public class FormLogin extends AppCompatActivity {
     }
     private void IniciarComponentes(){
         text_tela_cadastro = findViewById(R.id.text_tela_cadastro);
+        text_recuperar_senha = findViewById(R.id.text_recuperar_senha);
         edit_email = findViewById(R.id.edit_email);
         edit_senha = findViewById(R.id.edit_senha);
         bt_entrar = findViewById(R.id.bt_entrar);

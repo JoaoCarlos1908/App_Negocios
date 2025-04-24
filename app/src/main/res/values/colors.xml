@@ -5,4 +5,11 @@
     <color name="organge">#FFB344</color>
     <color name="pink">#FB528B</color>
     <color name="pink_light">#F899B9</color>
+    <color name="blue_light">#42A5F5</color>
+    <color name="dark_gray">#212121</color>
+    <color name="primaryBlue">#1565C0</color>
+    <color name="deepBlue">#0D47A1</color>
+    <color name="orangeAccent">#F57C00</color>
+    <color name="yellowAccent">#FFC107</color>
+    <color name="amber">#FFA000</color>
 </resources>
