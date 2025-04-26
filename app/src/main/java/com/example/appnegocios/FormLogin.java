@@ -73,7 +73,7 @@ public class FormLogin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 RemoveTeclado();
-                Intent intent = new Intent(FormLogin.this, FormCadastro.class);
+                Intent intent = new Intent(FormLogin.this, FormTipoConta.class);
                 startActivity(intent);
             }
         });
