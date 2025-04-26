@@ -23,10 +23,19 @@
                                                 \n• Ter destaque na plataforma
 
                                                 \n\nPara se cadastrar, será necessário informar:
-                                                \n• Nome do negócio
+                                                \n\n• Nome do negócio
                                                 \n• Categoria
                                                 \n• Endereço
                                                 \n• Contato
                                                 \n• Redes sociais
                                                 \n• Descrição dos serviços</string>
+    <string name="descricao_conta_cliente">A conta de cliente é destinada a pessoas que desejam buscar, avaliar e interagir com empresas, lojas e prestadores de serviços locais. Com essa conta, o cliente poderá:
+
+                                                \n\n• Explorar perfis públicos de negócios e conhecer seus produtos ou serviços
+                                                \n• Realizar avaliações e deixar comentários sobre as experiências
+                                                \n• Publicar reclamações de forma segura e acompanhar as respostas
+                                                \n• Salvar empresas favoritas para fácil acesso
+                                                \n• Receber notificações de promoções, eventos ou atualizações (opcional)
+
+                                                \n\nO cadastro exige informações como nome completo, e-mail, telefone para contato e localização de seu município.</string>
 </resources>
