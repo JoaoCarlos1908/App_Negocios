@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,9 +21,9 @@
         android:layout_height="wrap_content"
         android:text="@string/titulo_tipo_conta"
         android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp"
-        android:textSize="20sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:textSize="22sp"
         android:textColor="@color/dark_gray"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +32,7 @@
         />
 
     <CheckBox
-        android:id="@+id/cb_conta_empreendedora"
+        android:id="@+id/cb_empreendedora"
         style="@style/edit_text"
         android:button="@null"
         android:drawableStart="@drawable/checkbox"
@@ -38,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@id/text_tela_cadastro"/>
 
     <CheckBox
-        android:id="@+id/cb_conta_cliente"
+        android:id="@+id/cb_cliente"
         style="@style/edit_text"
         android:button="@null"
         android:drawableStart="@drawable/checkbox"
@@ -48,6 +55,38 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cb_conta_empreendedora"/>
+        app:layout_constraintTop_toBottomOf="@id/cb_empreendedora"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/conteiner_desc"
+        style="@style/conteiner_desc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_cliente">
+
+        <TextView
+            android:id="@+id/text_descricao_conta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/descricao_conta_empreendedora"
+            android:textSize="18sp"
+            android:textColor="#212121"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_seguir"
+        style="@style/smallButton"
+        android:text="Seguir >>"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/conteiner_desc"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

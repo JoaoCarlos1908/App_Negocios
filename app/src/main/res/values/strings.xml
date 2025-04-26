@@ -13,4 +13,20 @@
     <string name="titulo_tipo_conta">Você quer criar uma conta para o seu empreeendimento ou como cliente?</string>
     <string name="ct_empre">Conta Empreendedora</string>
     <string name="ct_clie">Conta Cliente</string>
+    <string name="descricao_conta_empreendedora">A conta empreendedora é ideal para empresas, lojas e prestadores de serviços locais que desejam divulgar seus produtos ou serviços.
+                                                \n\nCom essa conta, você poderá:
+
+                                                \n\n• Criar um perfil público com logotipo, descrição e localização
+                                                \n• Cadastrar seus produtos ou serviços
+                                                \n• Receber e responder avaliações de clientes
+                                                \n• Visualizar e resolver reclamações publicadas
+                                                \n• Ter destaque na plataforma
+
+                                                \n\nPara se cadastrar, será necessário informar:
+                                                \n• Nome do negócio
+                                                \n• Categoria
+                                                \n• Endereço
+                                                \n• Contato
+                                                \n• Redes sociais
+                                                \n• Descrição dos serviços</string>
 </resources>
