@@ -69,7 +69,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/descricao_conta_cliente"
+            android:text="@string/aviso_tipoConta"
             android:textSize="18sp"
             android:textColor="#212121"
             android:textStyle="bold"

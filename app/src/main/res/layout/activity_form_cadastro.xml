@@ -15,24 +15,27 @@
     android:background="@drawable/backgroud"
     tools:context=".FormCadastro">
 
-    <TextView
-        android:id="@+id/title_cadastrese"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_cadastro"
-        android:textSize="50sp"
-        android:textColor="#212121"
-        android:textStyle="bold"
-        android:layout_marginTop="100dp"
+    <ImageView
+        android:id="@+id/iconUser"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_user"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="20dp"
         />
 
-    <View
-        android:id="@+id/conteinerConponentes"
-        style="@style/ConteinerComponents"
-        app:layout_constraintTop_toBottomOf="@+id/title_cadastrese"
+    <TextView
+        android:id="@+id/text_alterFoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alterar foto de perfil"
+        android:layout_marginTop="5dp"
+        android:textSize="15sp"
+        android:textColor="@color/blue_light"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/iconUser"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
@@ -44,9 +47,21 @@
         android:inputType="text"
         android:textColorHint="@color/white"
         android:textColor="@color/white"
-        app:layout_constraintTop_toTopOf="@+id/conteinerConponentes"
-        app:layout_constraintStart_toStartOf="@+id/conteinerConponentes"
-        app:layout_constraintEnd_toEndOf="@+id/conteinerConponentes"
+        app:layout_constraintTop_toBottomOf="@+id/text_alterFoto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/edit_descricao"
+        style="@style/edit_text"
+        android:hint="Descrição"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:maxLines="6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_nome"
         />
 
     <EditText
@@ -57,9 +72,20 @@
         android:textColorHint="@color/white"
         android:inputType="textEmailAddress"
         android:drawableEnd="@drawable/ic_email"
-        app:layout_constraintStart_toStartOf="@+id/conteinerConponentes"
-        app:layout_constraintEnd_toEndOf="@+id/conteinerConponentes"
-        app:layout_constraintTop_toBottomOf="@+id/edit_nome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_descricao"
+        />
+
+    <EditText
+        android:id="@+id/edit_telefone"
+        style="@style/edit_text"
+        android:hint="Telefone"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_email"
         />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -67,9 +93,11 @@
         app:endIconMode="password_toggle"
         android:hint="Senha"
         style="@style/layout_senha"
-        app:layout_constraintStart_toStartOf="@+id/conteinerConponentes"
-        app:layout_constraintEnd_toEndOf="@+id/conteinerConponentes"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email">
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_telefone">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_senha"
@@ -82,14 +110,34 @@
             android:textColorHint="@color/white"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_cadastrar"
-        style="@style/button"
-        android:text="@string/title_cadastro"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@+id/conteinerConponentes"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_confirme_senha"
+        app:endIconMode="password_toggle"
+        android:hint="Senha"
+        style="@style/layout_senha"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_senha">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_confirme_senha"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_seguir"
+        style="@style/smallButton"
+        android:text="Seguir >>"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

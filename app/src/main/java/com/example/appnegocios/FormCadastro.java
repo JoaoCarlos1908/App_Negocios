@@ -1,7 +1,9 @@
 package com.example.appnegocios;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Message;
@@ -10,8 +12,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -38,6 +44,7 @@ import java.util.Objects;
 public class FormCadastro extends AppCompatActivity {
 
     private EditText edit_nome, edit_email, edit_senha;
+    private TextView text_alterFoto;
     private Button bt_cadastrar;
     String[] menssagens = {"Preencha todos os campos", "Cadastro realizado com sucesso"};
     String usuarioID;
@@ -69,6 +76,13 @@ public class FormCadastro extends AppCompatActivity {
             }
         });
 
+        text_alterFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -77,10 +91,11 @@ public class FormCadastro extends AppCompatActivity {
 
     }
     private void IniciarComponentes(){
+        text_alterFoto = findViewById(R.id.text_alterFoto);
         edit_nome = findViewById(R.id.edit_nome);
         edit_email  = findViewById(R.id.edit_email);
         edit_senha  = findViewById(R.id.edit_senha);
-        bt_cadastrar  = findViewById(R.id.bt_cadastrar);
+        bt_cadastrar  = findViewById(R.id.bt_seguir);
     }
     private void CadastrarUsuario(View v){
 
