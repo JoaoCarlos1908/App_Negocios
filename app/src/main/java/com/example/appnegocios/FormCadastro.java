@@ -7,11 +7,13 @@ import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -46,8 +48,9 @@ public class FormCadastro extends AppCompatActivity {
     private EditText edit_nome, edit_email, edit_senha;
     private TextView text_alterFoto;
     private Button bt_cadastrar;
-    String[] menssagens = {"Preencha todos os campos", "Cadastro realizado com sucesso"};
-    String usuarioID;
+    private String[] menssagens = {"Preencha todos os campos", "Cadastro realizado com sucesso"};
+    private String usuarioID;
+    private ImageView iconUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,15 @@ public class FormCadastro extends AppCompatActivity {
             }
         });
 
+        iconUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                startActivityForResult(Intent.createChooser(intent, "Escolha sua imagem de perfil"), 1);
+
+            }
+        });
+
         text_alterFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,13 +101,24 @@ public class FormCadastro extends AppCompatActivity {
             return insets;
         });
 
+    }//Fim do OnCreate
+
+    protected  void onActivityResult(int RequestCode, int ResultCode, Intent dados){
+        super.onActivityResult(RequestCode, ResultCode, dados);
+        if(ResultCode == AppCompatActivity.RESULT_OK){
+            if(RequestCode == 1){
+                iconUser.setImageURI(dados.getData());
+            }
+        }
     }
+
     private void IniciarComponentes(){
         text_alterFoto = findViewById(R.id.text_alterFoto);
         edit_nome = findViewById(R.id.edit_nome);
         edit_email  = findViewById(R.id.edit_email);
         edit_senha  = findViewById(R.id.edit_senha);
         bt_cadastrar  = findViewById(R.id.bt_seguir);
+        iconUser = findViewById(R.id.iconUser);
     }
     private void CadastrarUsuario(View v){
 
