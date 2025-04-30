@@ -1,13 +1,11 @@
 package com.example.appnegocios;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,17 +13,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,7 +41,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class FormCadastro extends AppCompatActivity {
 
@@ -51,6 +50,8 @@ public class FormCadastro extends AppCompatActivity {
     private String[] menssagens = {"Preencha todos os campos", "Cadastro realizado com sucesso"};
     private String usuarioID;
     private ImageView iconUser;
+    ActivityResultLauncher<Intent> imagePicklauncher;
+    Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,19 @@ public class FormCadastro extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_form_cadastro);
 
+
+
+
+        imagePicklauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if(result.getResultCode() == Activity.RESULT_OK){
+                        Intent data = result.getData();
+                        if(data!=null && data.getData()!=null){
+                            selectedImageUri = data.getData();
+                        }
+                    }
+                }
+                );
         IniciarComponentes();
 
         bt_cadastrar.setOnClickListener(new View.OnClickListener() {
@@ -82,18 +96,16 @@ public class FormCadastro extends AppCompatActivity {
         iconUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                startActivityForResult(Intent.createChooser(intent, "Escolha sua imagem de perfil"), 1);
-
+                ImagePicker.with(FormCadastro.this)
+                        .galleryOnly() // <--- Isso garante que abre a galeria (com Google Fotos incluído)
+                        .crop()        // habilita o corte
+                        .compress(1024) // tamanho máximo 1MB
+                        .maxResultSize(1080, 1080) // resolução máxima
+                        .start();
             }
         });
 
-        text_alterFoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-            }
-        });
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -101,16 +113,47 @@ public class FormCadastro extends AppCompatActivity {
             return insets;
         });
 
+        imagePicklauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    int resultCode = result.getResultCode();
+                    Intent data = result.getData();
+
+                    if (resultCode == Activity.RESULT_OK && data != null) {
+                        Uri fileUri = data.getData();
+                        iconUser.setImageURI(fileUri); // Ou qualquer ImageView que esteja usando
+                    } else if (resultCode == ImagePicker.RESULT_ERROR) {
+                        Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+
     }//Fim do OnCreate
 
-    protected  void onActivityResult(int RequestCode, int ResultCode, Intent dados){
-        super.onActivityResult(RequestCode, ResultCode, dados);
-        if(ResultCode == AppCompatActivity.RESULT_OK){
-            if(RequestCode == 1){
-                iconUser.setImageURI(dados.getData());
-            }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && data != null) {
+            // O URI da imagem estará presente
+            Uri uri = data.getData();
+
+            // Use o URI diretamente no ImageView
+            iconUser.setImageURI(uri);
+
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Ação cancelada", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     private void IniciarComponentes(){
         text_alterFoto = findViewById(R.id.text_alterFoto);

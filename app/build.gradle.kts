@@ -43,6 +43,12 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.android.material:material:1.11.0")
+    implementation("com.github.dhaval2404:imagepicker:2.1")
+    implementation("androidx.activity:activity-ktx:1.2.3")
+    implementation("androidx.fragment:fragment-ktx:1.3.3")
+    implementation("com.github.CanHub:Android-Image-Cropper:4.3.2")
+
+
 
     implementation(libs.appcompat)
     implementation(libs.material)
