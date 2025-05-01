@@ -22,6 +22,7 @@ public class FormTipoConta extends AppCompatActivity {
     private CheckBox cb_empreendimento, cb_cliente;
     private TextView desc_conta;
     private Button bt_seguir;
+    private Boolean tipoConta; //Verdadeiro = Conta Empreendedor / Falso = Conta Cliente
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class FormTipoConta extends AppCompatActivity {
                 if(cb_empreendimento.isChecked()){
                     cb_cliente.setChecked(false);
                     desc_conta.setText(getText(R.string.descricao_conta_empreendedora));
+                    tipoConta = true;
                 } else{
                     desc_conta.setText(getText(R.string.aviso_tipoConta));
                 }
@@ -49,6 +51,7 @@ public class FormTipoConta extends AppCompatActivity {
                 if(cb_cliente.isChecked()){
                     cb_empreendimento.setChecked(false);
                     desc_conta.setText(getText(R.string.descricao_conta_cliente));
+                    tipoConta = false;
                 } else{
                     desc_conta.setText(getText(R.string.aviso_tipoConta));
                 }
@@ -65,7 +68,9 @@ public class FormTipoConta extends AppCompatActivity {
                     snackbar.show();
                 }else{
                     Intent intent = new Intent(FormTipoConta.this, FormCadastro.class);
+                    intent.putExtra("Tipo_Conta", tipoConta);
                     startActivity(intent);
+
                 }
             }
         });

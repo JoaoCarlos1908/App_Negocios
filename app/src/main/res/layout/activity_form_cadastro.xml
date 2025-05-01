@@ -15,7 +15,7 @@
     android:background="@drawable/backgroud"
     tools:context=".FormCadastro">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iconUser"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="20dp"
-        />
+        app:shapeAppearanceOverlay="@style/RoundedImage" />
 
     <TextView
         android:id="@+id/text_alterFoto"
@@ -77,6 +77,16 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_descricao"
         />
 
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteCategorias"
+        android:hint="Selecione ou digite a categoria"
+        style="@style/edit_text"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/edit_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!--
     <EditText
         android:id="@+id/edit_telefone"
         style="@style/edit_text"
@@ -87,6 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_email"
         />
+    -->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_senha"
@@ -97,7 +108,7 @@
         android:layout_marginEnd="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_telefone">
+        app:layout_constraintTop_toBottomOf="@+id/autoCompleteCategorias">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_senha"
@@ -113,7 +124,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_confirme_senha"
         app:endIconMode="password_toggle"
-        android:hint="Senha"
+        android:hint="Confirme sua Senha"
         style="@style/layout_senha"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"

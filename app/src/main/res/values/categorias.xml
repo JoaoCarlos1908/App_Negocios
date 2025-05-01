@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categorias_array">
+        <!-- Alimentação -->
+        <item>Restaurante</item>
+        <item>Cafeteria</item>
+        <item>Lanchonete</item>
+        <item>Padaria</item>
+        <item>Pizzaria</item>
+        <item>Delivery de Comida</item>
+        <item>Food Truck</item>
+        <item>Sorveteria</item>
+        <item>Doceria</item>
+
+        <!-- Varejo e Comércio -->
+        <item>Loja de Roupas</item>
+        <item>Loja de Calçados</item>
+        <item>Loja de Eletrônicos</item>
+        <item>Loja de Informática</item>
+        <item>Papelaria</item>
+        <item>Mercado</item>
+        <item>Pet Shop</item>
+        <item>Loja de Móveis</item>
+        <item>Loja de Bebidas</item>
+        <item>Loja de Brinquedos</item>
+        <item>Loja de Cosméticos</item>
+        <item>Loja de Materiais de Construção</item>
+        <item>Floricultura</item>
+
+        <!-- Serviços -->
+        <item>Salão de Beleza</item>
+        <item>Barbearia</item>
+        <item>Oficina Mecânica</item>
+        <item>Serviço de Entrega</item>
+        <item>Lavanderia</item>
+        <item>Estúdio de Tatuagem</item>
+        <item>Ateliê de Costura</item>
+        <item>Agência de Viagens</item>
+        <item>Imobiliária</item>
+        <item>Corretora de Seguros</item>
+
+        <!-- Tecnologia e Digital -->
+        <item>Desenvolvedor de Software</item>
+        <item>Loja de Jogos</item>
+        <item>Assistência Técnica</item>
+        <item>Agência de Marketing Digital</item>
+        <item>E-commerce</item>
+        <item>Loja de Suplementos</item>
+
+        <!-- Saúde e Bem-estar -->
+        <item>Academia</item>
+        <item>Clínica Médica</item>
+        <item>Clínica Odontológica</item>
+        <item>Psicólogo</item>
+        <item>Nutricionista</item>
+        <item>Estúdio de Yoga</item>
+        <item>Estúdio de Pilates</item>
+
+        <!-- Educação -->
+        <item>Escola de Idiomas</item>
+        <item>Escola de Música</item>
+        <item>Reforço Escolar</item>
+        <item>Cursos Profissionalizantes</item>
+        <item>Aulas Particulares</item>
+
+        <!-- Outros -->
+        <item>Eventos</item>
+        <item>Fotografia</item>
+        <item>Aluguel de Equipamentos</item>
+        <item>Serviços Jurídicos</item>
+        <item>Serviços Contábeis</item>
+        <item>Coworking</item>
+        <item>Consultoria Empresarial</item>
+    </string-array>
+</resources>

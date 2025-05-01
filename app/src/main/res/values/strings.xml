@@ -7,7 +7,7 @@
 
     <string name="title_cadastro">Cadastre-se</string>
     <string name="senha">Senha</string>
-    <string name="nome">Nome</string>
+    <string name="nome">Nome do Empreendimento</string>
     <string name="email">Email</string>
     <string name="recuperar_senha">Esqueci minha senha</string>
     <string name="titulo_tipo_conta">Você quer criar uma conta para o seu empreeendimento ou como cliente?</string>

@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +24,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -44,14 +49,16 @@ import java.util.Map;
 
 public class FormCadastro extends AppCompatActivity {
 
-    private EditText edit_nome, edit_email, edit_senha;
+    private EditText edit_nome, edit_desc,edit_email, edit_tel, edit_senha, edit_confirme_senha;
     private TextView text_alterFoto;
     private Button bt_cadastrar;
     private String[] menssagens = {"Preencha todos os campos", "Cadastro realizado com sucesso"};
-    private String usuarioID;
+    private String usuarioID, categoria;
     private ImageView iconUser;
-    ActivityResultLauncher<Intent> imagePicklauncher;
-    Uri selectedImageUri;
+    private Boolean tipoConta;
+    private ActivityResultLauncher<Intent> imagePicklauncher;
+    private Uri selectedImageUri;
+    private AutoCompleteTextView autoCompleteCategorias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,18 +85,29 @@ public class FormCadastro extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 RemoveTeclado();
-                String nome = edit_nome.getText().toString();
-                String email = edit_email.getText().toString();
-                String senha = edit_senha.getText().toString();
 
-                if(nome.isEmpty() || email.isEmpty() || senha.isEmpty()){
-                    Snackbar snackbar = Snackbar.make(v, menssagens[0], Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.RED);
-                    snackbar.setTextColor(Color.WHITE);
-                    snackbar.show();
-                }else{
-                    CadastrarUsuario(v);
+                String nome = edit_nome.getText().toString().trim();
+                String email = edit_email.getText().toString().trim();
+                String senha = edit_senha.getText().toString();
+                String confirmeSenha = edit_confirme_senha.getText().toString();
+
+                if (nome.isEmpty() || email.isEmpty() || senha.isEmpty()) {
+                    mostrarSnackbar(v, menssagens[0], Color.RED);
+                    return;
                 }
+
+                if (confirmeSenha.isEmpty()) {
+                    mostrarSnackbar(v, "Confirme sua senha", Color.RED);
+                    return;
+                }
+
+                if (!senha.equals(confirmeSenha)) {
+                    mostrarSnackbar(v, "As senhas não coincidem", Color.RED);
+                    return;
+                }
+
+                // Todos os campos estão preenchidos corretamente
+                CadastrarUsuario(v);
             }
         });
 
@@ -97,15 +115,23 @@ public class FormCadastro extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ImagePicker.with(FormCadastro.this)
-                        .galleryOnly() // <--- Isso garante que abre a galeria (com Google Fotos incluído)
-                        .crop()        // habilita o corte
-                        .compress(1024) // tamanho máximo 1MB
+                        .cropSquare() // <-- Isso força o corte 1:1 (quadrado)
+                        .compress(1024) // tamanho máximo em KB
                         .maxResultSize(1080, 1080) // resolução máxima
                         .start();
             }
         });
 
-
+        text_alterFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImagePicker.with(FormCadastro.this)
+                        .cropSquare() // <-- Isso força o corte 1:1 (quadrado)
+                        .compress(1024) // tamanho máximo em KB
+                        .maxResultSize(1080, 1080) // resolução máxima
+                        .start();
+            }
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -113,27 +139,37 @@ public class FormCadastro extends AppCompatActivity {
             return insets;
         });
 
-        imagePicklauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    int resultCode = result.getResultCode();
-                    Intent data = result.getData();
-
-                    if (resultCode == Activity.RESULT_OK && data != null) {
-                        Uri fileUri = data.getData();
-                        iconUser.setImageURI(fileUri); // Ou qualquer ImageView que esteja usando
-                    } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                        Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
+        SelecaoDeCategorias();
 
 
     }//Fim do OnCreate
 
+    private void SelecaoDeCategorias() {
+        String[] categorias = getResources().getStringArray(R.array.categorias_array);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                categorias);
 
+        autoCompleteCategorias.setAdapter(adapter);
+
+        // Exibe as opções ao clicar no campo
+        autoCompleteCategorias.setOnClickListener(v -> autoCompleteCategorias.showDropDown());
+
+        // Captura a categoria selecionada
+        autoCompleteCategorias.setOnItemClickListener((parent, view, position, id) -> {
+            categoria = parent.getItemAtPosition(position).toString();
+        });
+    }
+
+
+    // Método auxiliar para exibir Snackbar
+    private void mostrarSnackbar(View view, String mensagem, int corFundo) {
+        Snackbar snackbar = Snackbar.make(view, mensagem, Snackbar.LENGTH_SHORT);
+        snackbar.setBackgroundTint(corFundo);
+        snackbar.setTextColor(Color.WHITE);
+        snackbar.show();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -153,15 +189,26 @@ public class FormCadastro extends AppCompatActivity {
         }
     }
 
-
-
     private void IniciarComponentes(){
         text_alterFoto = findViewById(R.id.text_alterFoto);
         edit_nome = findViewById(R.id.edit_nome);
+        edit_desc = findViewById(R.id.edit_descricao);
         edit_email  = findViewById(R.id.edit_email);
+        //edit_tel = findViewById(R.id.edit_telefone);
         edit_senha  = findViewById(R.id.edit_senha);
+        edit_confirme_senha = findViewById(R.id.edit_confirme_senha);
         bt_cadastrar  = findViewById(R.id.bt_seguir);
         iconUser = findViewById(R.id.iconUser);
+        autoCompleteCategorias = findViewById(R.id.autoCompleteCategorias);
+
+        tipoConta = getIntent().getBooleanExtra("Tipo_Conta", false);
+        if (!tipoConta) {
+            edit_nome.setHint("Nome");
+            edit_desc.setHint("CEP");     // altera o hint
+            edit_desc.setMaxLines(1);     // altera o número máximo de linhas
+            autoCompleteCategorias.setVisibility(View.GONE);
+        }
+
     }
     private void CadastrarUsuario(View v){
 
@@ -213,11 +260,18 @@ public class FormCadastro extends AppCompatActivity {
     }
     private void SalvarDadosUsuario(){
         String nome  = edit_nome.getText().toString();
+        String desc = edit_desc.getText().toString();
+        String tel = "";
+
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> usuarios = new HashMap<>();
         usuarios.put("nome",nome);
+        usuarios.put("descrição", desc);
+        usuarios.put("telefone", tel);
+        usuarios.put("TipoConta", tipoConta);
+        usuarios.put("categoria", categoria);
 
         usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -235,6 +289,9 @@ public class FormCadastro extends AppCompatActivity {
                 Log.d("db_erro","Erro ao salvar os dados" + e.toString());
             }
         });
+        Intent intent = new Intent(FormCadastro.this, FormTelaPrincipal.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 }
