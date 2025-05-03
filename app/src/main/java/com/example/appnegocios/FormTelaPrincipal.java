@@ -61,7 +61,7 @@ public class FormTelaPrincipal extends AppCompatActivity {
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        DocumentReference documentReference = db.collection("Usuarios").document(usuarioID);
+        DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {

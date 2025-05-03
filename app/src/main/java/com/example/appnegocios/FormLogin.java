@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.view.inputmethod.InputMethodManager;
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -27,6 +28,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FormLogin extends AppCompatActivity {
 
@@ -138,21 +141,52 @@ public class FormLogin extends AppCompatActivity {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     progressBar.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            TelaPrincipal();
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String usuarioID = user.getUid();
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                    // Primeiro, tenta buscar na coleção "Empresa"
+                    db.collection("Empresa").document(usuarioID).get().addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // Usuário é uma empresa
+                            new Handler().postDelayed(() -> {
+                                Intent intent = new Intent(getApplicationContext(), FormDashboard.class); // Tela de empresa
+                                startActivity(intent);
+                                finish();
+                            }, 3000);
+
+                        } else {
+                            // Se não estiver em "Empresa", tenta em "Cliente"
+                            db.collection("Cliente").document(usuarioID).get().addOnSuccessListener(docCliente -> {
+                                if (docCliente.exists()) {
+                                    // Usuário é um cliente
+                                    new Handler().postDelayed(() -> {
+                                        Intent intent = new Intent(getApplicationContext(), FormTelaPrincipal.class); // Tela de cliente
+                                        startActivity(intent);
+                                        finish();
+                                    }, 3000);
+                                } else {
+                                    // UID não encontrado em nenhuma coleção
+                                    Snackbar.make(view, "Usuário não cadastrado em nenhuma categoria.", Snackbar.LENGTH_SHORT)
+                                            .setBackgroundTint(Color.RED)
+                                            .setTextColor(Color.WHITE)
+                                            .show();
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            });
                         }
-                    },3000);
-                }else{
+                    });
+                }
+                else {
                     String erro;
                     try {
                         throw task.getException();
-                    }catch(FirebaseAuthInvalidCredentialsException e){
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
                         erro = "E-mail ou senha inválido";
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         erro = "Erro ao realizar login do Usuário";
                     }
                     Snackbar snackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
@@ -161,24 +195,51 @@ public class FormLogin extends AppCompatActivity {
                     snackbar.show();
                 }
             }
+
         });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser usuarioAtual = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(usuarioAtual != null){
-            TelaPrincipal();
+        validarUsuarioLogado();
+    }
+
+    private void validarUsuarioLogado() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            String usuarioID = user.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            // Primeiro tenta verificar se é empresa
+            db.collection("Empresa").document(usuarioID).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // É uma empresa
+                            Intent intent = new Intent(FormLogin.this, FormDashboard.class); // tela da empresa
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // Se não for empresa, verifica se é cliente
+                            db.collection("Cliente").document(usuarioID).get()
+                                    .addOnSuccessListener(docCliente -> {
+                                        if (docCliente.exists()) {
+                                            // É um cliente
+                                            Intent intent = new Intent(FormLogin.this, FormTelaPrincipal.class); // tela do cliente
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            // Nenhuma categoria encontrada
+                                            Toast.makeText(FormLogin.this, "Usuário não classificado como Empresa ou Cliente.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    });
         }
     }
 
-    private void TelaPrincipal(){
-        Intent intent = new Intent(FormLogin.this, FormDashboard.class);
-        startActivity(intent);
-        finish();
-    }
     private void IniciarComponentes(){
         text_tela_cadastro = findViewById(R.id.text_tela_cadastro);
         text_recuperar_senha = findViewById(R.id.text_recuperar_senha);
