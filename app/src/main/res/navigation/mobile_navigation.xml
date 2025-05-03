@@ -3,23 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_dashboard">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.appnegocios.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/nav_dashboard"
+        android:name="com.example.appnegocios.ui.dashboard.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.appnegocios.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_perfil"
+        android:name="com.example.appnegocios.ui.perfil.PerfilFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.appnegocios.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_produtos"
+        android:name="com.example.appnegocios.ui.produtos.ProdutosFragment"
+        android:label="Produtos e Serviços"
+        tools:layout="@layout/fragment_produtos" />
+
+    <fragment
+        android:id="@+id/nav_avaliacoes"
+        android:name="com.example.appnegocios.ui.avaliacoes.AvaliacoesFragment"
+        android:label="Avaliações e Comentarios"
+        tools:layout="@layout/fragment_avaliacoes" />
+
+    <fragment
+        android:id="@+id/nav_reclamacoes"
+        android:name="com.example.appnegocios.ui.reclamacoes.ReclamacoesFragment"
+        android:label="Reclamações"
+        tools:layout="@layout/fragment_reclamacoes" />
+
+    <fragment
+        android:id="@+id/nav_config"
+        android:name="com.example.appnegocios.ui.configuracoes.ConfiguracoesFragment"
+        android:label="Configurações"
+        tools:layout="@layout/fragment_configuracoes" />
+
+    <fragment
+        android:id="@+id/nav_mudar_conta"
+        android:name="com.example.appnegocios.ui.logout.LogoutFragment"
+        android:label="Mudar de Conta"
+        tools:layout="@layout/fragment_logout" />
 </navigation>

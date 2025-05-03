@@ -22,7 +22,7 @@
             android:icon="@drawable/ic_balao_fala"
             android:title="Avaliações e Comentarios" />
         <item
-            android:id="@+id/nav_reclamações"
+            android:id="@+id/nav_reclamacoes"
             android:icon="@drawable/ic_negativo"
             android:title="Reclamações" />
         <item

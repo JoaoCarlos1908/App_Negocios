@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -24,8 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
+
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -43,13 +41,16 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import Class.Empreendimento;
+import Class.Cliente;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class FormCadastro extends AppCompatActivity {
-
-    private EditText edit_nome, edit_desc,edit_email, edit_tel, edit_senha, edit_confirme_senha;
+    private Empreendimento empreendimento;
+    private Cliente cliente;
+    private EditText edit_nome, edit_desc,edit_email, edit_senha, edit_confirme_senha;
     private TextView text_alterFoto;
     private Button bt_cadastrar;
     private String[] menssagens = {"Preencha todos os campos", "Cadastro realizado com sucesso"};
@@ -159,7 +160,7 @@ public class FormCadastro extends AppCompatActivity {
         // Captura a categoria selecionada
         autoCompleteCategorias.setOnItemClickListener((parent, view, position, id) -> {
             categoria = parent.getItemAtPosition(position).toString();
-        });
+    });
     }
 
 
@@ -194,7 +195,6 @@ public class FormCadastro extends AppCompatActivity {
         edit_nome = findViewById(R.id.edit_nome);
         edit_desc = findViewById(R.id.edit_descricao);
         edit_email  = findViewById(R.id.edit_email);
-        //edit_tel = findViewById(R.id.edit_telefone);
         edit_senha  = findViewById(R.id.edit_senha);
         edit_confirme_senha = findViewById(R.id.edit_confirme_senha);
         bt_cadastrar  = findViewById(R.id.bt_seguir);
@@ -203,10 +203,13 @@ public class FormCadastro extends AppCompatActivity {
 
         tipoConta = getIntent().getBooleanExtra("Tipo_Conta", false);
         if (!tipoConta) {
+            cliente = new Cliente();
             edit_nome.setHint("Nome");
             edit_desc.setHint("CEP");     // altera o hint
             edit_desc.setMaxLines(1);     // altera o número máximo de linhas
             autoCompleteCategorias.setVisibility(View.GONE);
+        }else {
+            empreendimento = new Empreendimento();
         }
 
     }
@@ -259,37 +262,74 @@ public class FormCadastro extends AppCompatActivity {
         }
     }
     private void SalvarDadosUsuario(){
-        String nome  = edit_nome.getText().toString();
-        String desc = edit_desc.getText().toString();
-        String tel = "";
+        if(tipoConta){
+            empreendimento.setNome(edit_nome.getText().toString());
+            empreendimento.setDescricao(edit_desc.getText().toString());
+            empreendimento.setTipoConta(tipoConta);
+            empreendimento.setCategoria(categoria);
+            empreendimento.setEmail(edit_email.getText().toString());
 
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+            Map<String, Object> empresa = new HashMap<>();
+            empresa.put("nome",empreendimento.getNome());
+            empresa.put("descrição", empreendimento.getDescricao());
+            empresa.put("telefone", empreendimento.getTell());
+            empresa.put("TipoConta", empreendimento.getTipoConta());
+            empresa.put("categoria", empreendimento.getCategoria());
+            empresa.put("E-mail", empreendimento.getEmail());
+            empresa.put("Endereço", empreendimento.getEndereco());
 
-        Map<String, Object> usuarios = new HashMap<>();
-        usuarios.put("nome",nome);
-        usuarios.put("descrição", desc);
-        usuarios.put("telefone", tel);
-        usuarios.put("TipoConta", tipoConta);
-        usuarios.put("categoria", categoria);
+            usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DocumentReference documentReference = db.collection("Empresa").document(usuarioID);
+            documentReference.set(empresa).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("db","Sucesso ao salvar os dados");
 
-        DocumentReference documentReference = db.collection("Usuarios").document(usuarioID);
-        documentReference.set(usuarios).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d("db","Sucesso ao salvar os dados");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("db_erro","Erro ao salvar os dados" + e.toString());
+                        }
+                    });
+        }else{
+            cliente.setNome(edit_nome.getText().toString());
+            cliente.setTipoConta(tipoConta);
+            cliente.setCep(edit_desc.getText().toString());
+            cliente.setEmail(edit_email.getText().toString());
 
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("db_erro","Erro ao salvar os dados" + e.toString());
-            }
-        });
-        Intent intent = new Intent(FormCadastro.this, FormTelaPrincipal.class);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> user = new HashMap<>();
+            user.put("nome",cliente.getNome());
+            user.put("telefone", cliente.getTell());
+            user.put("TipoConta", cliente.getTipoConta());
+            user.put("E-mail", cliente.getEmail());
+            user.put("CEP", cliente.getCep());
+
+            usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
+            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("db","Sucesso ao salvar os dados");
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("db_erro","Erro ao salvar os dados" + e.toString());
+                        }
+                    });
+        }
+
+        Intent intent = new Intent(FormCadastro.this, FormDashboard.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
