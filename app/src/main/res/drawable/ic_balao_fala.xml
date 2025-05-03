@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Balão arredondado -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="M20,2H4c-1.1,0 -2,0.9 -2,2v14c0,1.1 0.9,2 2,2h14l4,4V4c0,-1.1 -0.9,-2 -2,-2z" />
+
+    <!-- Pontinho 1 -->
+    <path
+        android:fillColor="#F5F5F5"
+        android:pathData="M8,11.5a1.5,1.5 0 1,0 0.01,0z" />
+
+    <!-- Pontinho 2 -->
+    <path
+        android:fillColor="#F5F5F5"
+        android:pathData="M12,11.5a1.5,1.5 0 1,0 0.01,0z" />
+
+    <!-- Pontinho 3 -->
+    <path
+        android:fillColor="#F5F5F5"
+        android:pathData="M16,11.5a1.5,1.5 0 1,0 0.01,0z" />
+</vector>

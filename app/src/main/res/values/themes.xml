@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.AppNegocios" parent="Base.Theme.AppNegocios" />
+    <style name="Theme.AppNegocios.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.AppNegocios.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.AppNegocios.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

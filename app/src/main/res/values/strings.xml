@@ -39,4 +39,16 @@
 
                                                 \n\nO cadastro exige informações como nome completo, e-mail, telefone para contato e localização de seu município.</string>
     <string name="aviso_tipoConta">Selecione uma das opções acima para continuar</string>
+    <string name="navigation_drawer_open">Abrir menu</string>
+    <string name="navigation_drawer_close">Fechar menu</string>
+    <string name="title_activity_form_dashboard">FormDashboard</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
 </resources>
