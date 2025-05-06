@@ -202,42 +202,43 @@ public class FormLogin extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        validarUsuarioLogado();
-    }
-
-    private void validarUsuarioLogado() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
-            String usuarioID = user.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            // Primeiro tenta verificar se é empresa
-            db.collection("Empresa").document(usuarioID).get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // É uma empresa
-                            Intent intent = new Intent(FormLogin.this, FormDashboard.class); // tela da empresa
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            // Se não for empresa, verifica se é cliente
-                            db.collection("Cliente").document(usuarioID).get()
-                                    .addOnSuccessListener(docCliente -> {
-                                        if (docCliente.exists()) {
-                                            // É um cliente
-                                            Intent intent = new Intent(FormLogin.this, FormTelaPrincipal.class); // tela do cliente
-                                            startActivity(intent);
-                                            finish();
-                                        } else {
-                                            // Nenhuma categoria encontrada
-                                            Toast.makeText(FormLogin.this, "Usuário não classificado como Empresa ou Cliente.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
-                    });
+            validarUsuarioLogado(user);
         }
+    }
+
+    private void validarUsuarioLogado(FirebaseUser user) {
+
+        String usuarioID = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Primeiro tenta verificar se é empresa
+        db.collection("Empresa").document(usuarioID).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // É uma empresa
+                        Intent intent = new Intent(FormLogin.this, FormDashboard.class); // tela da empresa
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // Se não for empresa, verifica se é cliente
+                        db.collection("Cliente").document(usuarioID).get()
+                                .addOnSuccessListener(docCliente -> {
+                                    if (docCliente.exists()) {
+                                        // É um cliente
+                                        Intent intent = new Intent(FormLogin.this, FormTelaPrincipal.class); // tela do cliente
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        // Nenhuma categoria encontrada
+                                        Toast.makeText(FormLogin.this, "Usuário não classificado como Empresa ou Cliente.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                });
+
     }
 
     private void IniciarComponentes(){

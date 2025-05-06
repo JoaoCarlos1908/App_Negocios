@@ -67,9 +67,6 @@ public class FormCadastro extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_form_cadastro);
 
-
-
-
         imagePicklauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if(result.getResultCode() == Activity.RESULT_OK){
@@ -296,6 +293,9 @@ public class FormCadastro extends AppCompatActivity {
                             Log.d("db_erro","Erro ao salvar os dados" + e.toString());
                         }
                     });
+            Intent intent = new Intent(FormCadastro.this, FormDashboard.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }else{
             cliente.setNome(edit_nome.getText().toString());
             cliente.setTipoConta(tipoConta);
@@ -327,11 +327,11 @@ public class FormCadastro extends AppCompatActivity {
                             Log.d("db_erro","Erro ao salvar os dados" + e.toString());
                         }
                     });
+            Intent intent = new Intent(FormCadastro.this, FormTelaPrincipal.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
-        Intent intent = new Intent(FormCadastro.this, FormDashboard.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
     }
 
 }

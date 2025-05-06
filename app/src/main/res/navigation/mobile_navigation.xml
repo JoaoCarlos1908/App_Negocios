@@ -46,4 +46,11 @@
         android:name="com.example.appnegocios.ui.logout.LogoutFragment"
         android:label="Mudar de Conta"
         tools:layout="@layout/fragment_logout" />
+
+    <fragment
+        android:id="@+id/dashboardPlusFragment"
+        android:name="com.example.appnegocios.ui.dashboard.DashboardPlusFragment"
+        android:label="Dashboard Detalhado"
+        tools:layout="@layout/fragment_dashboard_plus" />
+
 </navigation>
