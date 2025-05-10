@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.appnegocios.R;
 import com.example.appnegocios.databinding.FragmentDashboardPlusBinding;
@@ -113,7 +116,7 @@ public class DashboardPlusFragment extends Fragment {
         // Configuração da legenda
         Legend legend = lineChart.getLegend();
         legend.setEnabled(true);
-        legend.setTextSize(12f);
+        legend.setTextSize(16f);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         legend.setForm(Legend.LegendForm.LINE);
 
@@ -130,7 +133,7 @@ public class DashboardPlusFragment extends Fragment {
         }
 
         PieDataSet pieDataSet = new PieDataSet(entriesPie, "");
-        pieDataSet.setColors(new int[] {
+        pieDataSet.setColors(new int[]{
                 Color.parseColor("#4CAF50"),  // 5★ - verde
                 Color.parseColor("#8BC34A"),  // 4★
                 Color.parseColor("#FFEB3B"),  // 3★ - amarelo
@@ -151,10 +154,31 @@ public class DashboardPlusFragment extends Fragment {
         pieChart.animateY(1000);
 
         Legend legendPie = pieChart.getLegend();
-        legendPie.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        legendPie.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        legendPie.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legendPie.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+        legendPie.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        legendPie.setOrientation(Legend.LegendOrientation.VERTICAL);
+        legendPie.setTextSize(16f);
         legendPie.setDrawInside(false); // Deixa a legenda fora do gráfico
+
+        View avali = view.findViewById(R.id.conteinerAvaliacoes);
+        avali.setOnClickListener(v -> {
+
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+
+            // Limpa a pilha até o início antes de navegar
+            navController.popBackStack(R.id.nav_dashboard, true); // ou o fragmento anterior que você quer remover
+            navController.navigate(R.id.nav_avaliacoes);
+        });
+
+        View recla = view.findViewById(R.id.conteinerReclamacoes);
+        recla.setOnClickListener(v -> {
+
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+
+            // Limpa a pilha até o início antes de navegar
+            navController.popBackStack(R.id.nav_dashboard, true); // ou o fragmento anterior que você quer remover
+            navController.navigate(R.id.nav_reclamacoes);
+        });
 
         return view;
     }

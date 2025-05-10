@@ -26,8 +26,8 @@ public class FormTelaPrincipal extends AppCompatActivity {
 
     private TextView textNomeUsuario, textEmailUsuario;
     private Button bt_deslogar;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String usuarioID;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+   private String usuarioID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

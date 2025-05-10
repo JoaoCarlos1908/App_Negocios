@@ -1,23 +1,307 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.perfil.PerfilFragment" >
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/text_perfil"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        tools:context=".ui.perfil.PerfilFragment">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iconUser"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="20dp"
+            android:clickable="false"
+            android:src="@drawable/ic_perfil"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedImage" />
+
+        <TextView
+            android:id="@+id/text_alterFoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Alterar foto de perfil"
+            android:textColor="@color/blue_light"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconUser"
+
+            />
+
+        <EditText
+            android:id="@+id/edit_nome"
+            style="@style/edit_text"
+            android:layout_marginTop="35dp"
+            android:enabled="false"
+            android:hint="@string/nome"
+            android:inputType="text"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconUser" />
+
+        <EditText
+            android:id="@+id/edit_descricao"
+            style="@style/edit_text"
+            android:enabled="false"
+            android:hint="Sem descrição"
+            android:maxLines="6"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_nome" />
+
+        <EditText
+            android:id="@+id/edit_endereco"
+            style="@style/edit_text"
+            android:enabled="false"
+            android:hint="Endereço não cadastrado"
+            android:maxLines="6"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_descricao" />
+
+        <View
+            android:id="@+id/bt_localizacao"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_endereco" />
+
+        <ImageView
+            android:id="@+id/ic_globo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_globo"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_localizacao"
+            app:layout_constraintStart_toStartOf="@+id/bt_localizacao"
+            app:layout_constraintTop_toTopOf="@+id/bt_localizacao" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Localização"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_localizacao"
+            app:layout_constraintStart_toEndOf="@+id/ic_globo"
+            app:layout_constraintTop_toTopOf="@+id/bt_localizacao" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_localizacao"
+            app:layout_constraintEnd_toEndOf="@+id/bt_localizacao"
+            app:layout_constraintTop_toTopOf="@+id/bt_localizacao" />
+
+        <View
+            android:id="@+id/bt_contatos"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_localizacao" />
+
+        <ImageView
+            android:id="@+id/ic_contato"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_balao_fala"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_contatos"
+            app:layout_constraintStart_toStartOf="@+id/bt_contatos"
+            app:layout_constraintTop_toTopOf="@+id/bt_contatos" />
+
+        <TextView
+            android:id="@+id/text_graficos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Contatos"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_contatos"
+            app:layout_constraintStart_toEndOf="@+id/ic_contato"
+            app:layout_constraintTop_toTopOf="@+id/bt_contatos" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_contatos"
+            app:layout_constraintEnd_toEndOf="@+id/bt_contatos"
+            app:layout_constraintTop_toTopOf="@+id/bt_contatos" />
+
+        <View
+            android:id="@+id/bt_links"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_contatos" />
+
+        <ImageView
+            android:id="@+id/ic_links"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_link"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_links"
+            app:layout_constraintStart_toStartOf="@+id/bt_links"
+            app:layout_constraintTop_toTopOf="@+id/bt_links" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Links"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_links"
+            app:layout_constraintStart_toEndOf="@+id/ic_links"
+            app:layout_constraintTop_toTopOf="@+id/bt_links" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_links"
+            app:layout_constraintEnd_toEndOf="@+id/bt_links"
+            app:layout_constraintTop_toTopOf="@+id/bt_links" />
+
+        <View
+            android:id="@+id/bt_relogio"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_links" />
+
+        <ImageView
+            android:id="@+id/ic_relogio"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_relogio"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_relogio"
+            app:layout_constraintStart_toStartOf="@+id/bt_relogio"
+            app:layout_constraintTop_toTopOf="@+id/bt_relogio" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Horários"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_relogio"
+            app:layout_constraintStart_toEndOf="@+id/ic_relogio"
+            app:layout_constraintTop_toTopOf="@+id/bt_relogio" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_relogio"
+            app:layout_constraintEnd_toEndOf="@+id/bt_relogio"
+            app:layout_constraintTop_toTopOf="@+id/bt_relogio" />
+
+        <View
+            android:id="@+id/bt_categoria"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_relogio" />
+
+        <ImageView
+            android:id="@+id/ic_categoria"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_categorias"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
+            app:layout_constraintStart_toStartOf="@+id/bt_categoria"
+            app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Categoria"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
+            app:layout_constraintStart_toEndOf="@+id/ic_categoria"
+            app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
+            app:layout_constraintEnd_toEndOf="@+id/bt_categoria"
+            app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_editar"
+            style="@style/mediumButton"
+            android:text="Editar Informações"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bt_categoria" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_salvar"
+            style="@style/mediumButton"
+            android:layout_marginStart="80dp"
+            android:text="Salvar"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bt_categoria"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_cancelar"
+            style="@style/mediumButton"
+            android:layout_marginEnd="80dp"
+            android:text="Cancelar"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bt_categoria"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

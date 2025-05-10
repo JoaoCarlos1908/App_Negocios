@@ -279,7 +279,7 @@ public class FormCadastro extends AppCompatActivity {
 
             usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            DocumentReference documentReference = db.collection("Empresa").document(usuarioID);
+            DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
             documentReference.set(empresa).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {

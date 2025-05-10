@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.appnegocios.R;
@@ -49,8 +50,9 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                NavController navController = NavHostFragment.findNavController(DashboardFragment.this);
-                navController.navigate(R.id.dashboardPlusFragment);
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.navigate(R.id.dashboardPlusFragment); // Use o ID correto definido no seu nav_graph
+
             }
         });
 

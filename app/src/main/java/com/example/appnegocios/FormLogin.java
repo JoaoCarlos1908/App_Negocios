@@ -148,39 +148,44 @@ public class FormLogin extends AppCompatActivity {
                     String usuarioID = user.getUid();
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                    // Primeiro, tenta buscar na coleção "Empresa"
-                    db.collection("Empresa").document(usuarioID).get().addOnSuccessListener(documentSnapshot -> {
+                    db.collection("Cliente").document(usuarioID).get().addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
-                            // Usuário é uma empresa
-                            new Handler().postDelayed(() -> {
-                                Intent intent = new Intent(getApplicationContext(), FormDashboard.class); // Tela de empresa
-                                startActivity(intent);
-                                finish();
-                            }, 3000);
-
+                            Boolean tipoConta = documentSnapshot.getBoolean("TipoConta");
+                            if (tipoConta != null) {
+                                new Handler().postDelayed(() -> {
+                                    Intent intent;
+                                    if (tipoConta) {
+                                        // true = Empresa
+                                        intent = new Intent(getApplicationContext(), FormDashboard.class);
+                                    } else {
+                                        // false = Cliente
+                                        intent = new Intent(getApplicationContext(), FormTelaPrincipal.class);
+                                    }
+                                    startActivity(intent);
+                                    finish();
+                                }, 3000);
+                            } else {
+                                Snackbar.make(view, "Campo tipoConta não definido.", Snackbar.LENGTH_SHORT)
+                                        .setBackgroundTint(Color.RED)
+                                        .setTextColor(Color.WHITE)
+                                        .show();
+                                progressBar.setVisibility(View.GONE);
+                            }
                         } else {
-                            // Se não estiver em "Empresa", tenta em "Cliente"
-                            db.collection("Cliente").document(usuarioID).get().addOnSuccessListener(docCliente -> {
-                                if (docCliente.exists()) {
-                                    // Usuário é um cliente
-                                    new Handler().postDelayed(() -> {
-                                        Intent intent = new Intent(getApplicationContext(), FormTelaPrincipal.class); // Tela de cliente
-                                        startActivity(intent);
-                                        finish();
-                                    }, 3000);
-                                } else {
-                                    // UID não encontrado em nenhuma coleção
-                                    Snackbar.make(view, "Usuário não cadastrado em nenhuma categoria.", Snackbar.LENGTH_SHORT)
-                                            .setBackgroundTint(Color.RED)
-                                            .setTextColor(Color.WHITE)
-                                            .show();
-                                    progressBar.setVisibility(View.GONE);
-                                }
-                            });
+                            Snackbar.make(view, "Usuário não encontrado na base de dados.", Snackbar.LENGTH_SHORT)
+                                    .setBackgroundTint(Color.RED)
+                                    .setTextColor(Color.WHITE)
+                                    .show();
+                            progressBar.setVisibility(View.GONE);
                         }
+                    }).addOnFailureListener(e -> {
+                        Snackbar.make(view, "Erro ao verificar tipo de conta: " + e.getMessage(), Snackbar.LENGTH_SHORT)
+                                .setBackgroundTint(Color.RED)
+                                .setTextColor(Color.WHITE)
+                                .show();
+                        progressBar.setVisibility(View.GONE);
                     });
-                }
-                else {
+                } else {
                     String erro;
                     try {
                         throw task.getException();
@@ -194,6 +199,7 @@ public class FormLogin extends AppCompatActivity {
                     snackbar.setTextColor(Color.WHITE);
                     snackbar.show();
                 }
+
             }
 
         });
@@ -210,36 +216,38 @@ public class FormLogin extends AppCompatActivity {
     }
 
     private void validarUsuarioLogado(FirebaseUser user) {
-
         String usuarioID = user.getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Primeiro tenta verificar se é empresa
-        db.collection("Empresa").document(usuarioID).get()
+        // Supondo que a coleção "Usuarios" contenha o campo booleano "tipoConta"
+        db.collection("Cliente").document(usuarioID).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        // É uma empresa
-                        Intent intent = new Intent(FormLogin.this, FormDashboard.class); // tela da empresa
-                        startActivity(intent);
-                        finish();
+                        Boolean tipoConta = documentSnapshot.getBoolean("TipoConta");
+                        if (tipoConta != null) {
+                            if (tipoConta) {
+                                // true = Empresa
+                                Intent intent = new Intent(FormLogin.this, FormDashboard.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                // false = Cliente
+                                Intent intent = new Intent(FormLogin.this, FormTelaPrincipal.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        } else {
+                            Toast.makeText(FormLogin.this, "Campo tipoConta não definido para este usuário.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        // Se não for empresa, verifica se é cliente
-                        db.collection("Cliente").document(usuarioID).get()
-                                .addOnSuccessListener(docCliente -> {
-                                    if (docCliente.exists()) {
-                                        // É um cliente
-                                        Intent intent = new Intent(FormLogin.this, FormTelaPrincipal.class); // tela do cliente
-                                        startActivity(intent);
-                                        finish();
-                                    } else {
-                                        // Nenhuma categoria encontrada
-                                        Toast.makeText(FormLogin.this, "Usuário não classificado como Empresa ou Cliente.", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                        Toast.makeText(FormLogin.this, "Usuário não encontrado na base de dados.", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(FormLogin.this, "Erro ao verificar tipo de conta: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
-
     }
+
 
     private void IniciarComponentes(){
         text_tela_cadastro = findViewById(R.id.text_tela_cadastro);

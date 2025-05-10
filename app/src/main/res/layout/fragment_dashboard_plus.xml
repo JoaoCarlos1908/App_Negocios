@@ -123,16 +123,33 @@
             app:layout_constraintTop_toBottomOf="@id/conteinerViews"
             app:layout_constraintWidth_percent="0.45" />
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_mao"
+            app:layout_constraintBottom_toBottomOf="@+id/conteinerReclamacoes"
+            app:layout_constraintEnd_toEndOf="@+id/conteinerReclamacoes" />
+
         <View
             android:id="@+id/conteinerAvaliacoes"
             style="@style/ConteinerDashbord"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintEnd_toStartOf="@id/conteinerCliks"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/conteinerViews"
             app:layout_constraintWidth_percent="0.45" />
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_mao"
+            app:layout_constraintBottom_toBottomOf="@+id/conteinerAvaliacoes"
+            app:layout_constraintEnd_toEndOf="@+id/conteinerAvaliacoes" />
 
         <ImageView
             android:id="@+id/ic_star"
@@ -207,6 +224,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+
             android:text="Gráficos de Desempenho"
             android:textColor="@color/dark_gray"
             android:textSize="25sp"
@@ -219,39 +237,51 @@
             android:id="@+id/graficoViews"
             style="@style/ConteinerDashbord"
             android:layout_height="200dp"
-            android:layout_margin="5dp"
+            android:layout_marginStart="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_graficos"
-            app:layout_constraintWidth_percent="0.98" />
+            app:layout_constraintWidth_percent="0.95" />
+
+        <TextView
+            android:id="@+id/text_taxaAvaliacoes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Distribuição das Avaliações"
+            android:textColor="@color/dark_gray"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/graficoViews" />
 
         <View
             android:id="@+id/graficoAvaliacoes"
             style="@style/ConteinerDashbord"
             android:layout_height="200dp"
-            android:layout_margin="5dp"
+            android:layout_marginStart="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/graficoViews"
-            app:layout_constraintWidth_percent="0.98" />
+            app:layout_constraintTop_toBottomOf="@id/text_taxaAvaliacoes"
+            app:layout_constraintWidth_percent="0.95" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/graficoViews"
-            app:layout_constraintEnd_toEndOf="@+id/graficoViews"
-            app:layout_constraintTop_toTopOf="@+id/graficoViews"
             app:layout_constraintBottom_toBottomOf="@+id/graficoViews"
-            />
+            app:layout_constraintEnd_toEndOf="@+id/graficoViews"
+            app:layout_constraintStart_toStartOf="@+id/graficoViews"
+            app:layout_constraintTop_toTopOf="@+id/graficoViews" />
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChart"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/graficoAvaliacoes"
-            app:layout_constraintEnd_toEndOf="@+id/graficoAvaliacoes"
+            android:foregroundGravity="right"
             app:layout_constraintBottom_toBottomOf="@+id/graficoAvaliacoes"
-            app:layout_constraintTop_toTopOf="@+id/graficoAvaliacoes"
-            />
+            app:layout_constraintEnd_toEndOf="@+id/graficoAvaliacoes"
+            app:layout_constraintStart_toStartOf="@+id/graficoAvaliacoes"
+            app:layout_constraintTop_toTopOf="@+id/graficoAvaliacoes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
