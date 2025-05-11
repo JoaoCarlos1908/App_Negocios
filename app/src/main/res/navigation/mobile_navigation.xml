@@ -53,4 +53,10 @@
         android:label="Dashboard Detalhado"
         tools:layout="@layout/fragment_dashboard_plus" />
 
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.appnegocios.ui.perfil.MapsFragment"
+        android:label="Localização de Atendimento"
+        tools:layout="@layout/fragment_maps" />
+
 </navigation>

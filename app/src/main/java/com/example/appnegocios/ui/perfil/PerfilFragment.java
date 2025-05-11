@@ -2,6 +2,8 @@ package com.example.appnegocios.ui.perfil;
 
 import static androidx.core.app.ActivityCompat.recreate;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.appnegocios.R;
@@ -32,14 +35,14 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import org.checkerframework.common.subtyping.qual.Bottom;
 
 public class PerfilFragment extends Fragment {
-
-private FragmentPerfilBinding binding;
+    private FragmentPerfilBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String usuarioID;
     private TextView editFoto;
     private EditText nome, desc, endereco;
     private ImageView iconUser;
     private Button bt_editar, bt_salvar, bt_cancelar;
+    private View maps;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -95,7 +98,41 @@ private FragmentPerfilBinding binding;
             }
         });
 
+
+        maps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                animarPreenchimento(maps);
+
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                // Código que será executado após
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                                navController.navigate(R.id.mapsFragment); // Use o ID correto definido no seu nav_graph
+                            }
+                        },
+                        250); // tempo de atraso em milissegundos
+            }
+        });
+
         return view;
+    }
+
+    public void animarPreenchimento(View view) {
+        int corInicial = Color.TRANSPARENT; // ou qualquer cor de início
+        int corFinal = Color.parseColor("#a7a7a7"); // Cor final
+
+        ObjectAnimator anim = ObjectAnimator.ofObject(
+                view,
+                "backgroundColor",
+                new ArgbEvaluator(),
+                corInicial,
+                corFinal
+        );
+        anim.setDuration(250); // duração da animação em milissegundos
+        anim.start();
     }
 
 @Override
@@ -132,13 +169,13 @@ private FragmentPerfilBinding binding;
         bt_editar = view.findViewById(R.id.bt_editar);
         bt_salvar = view.findViewById(R.id.bt_salvar);
         bt_cancelar = view.findViewById(R.id.bt_cancelar);
+        maps = view.findViewById(R.id.bt_localizacao);
     }
 
     private void atualizarTela(){
         NavController navController = NavHostFragment.findNavController(this);
         navController.popBackStack(); // Remove o fragment atual da pilha
         navController.navigate(R.id.nav_perfil); // Reinsere o mesmo fragment
-
     }
 
 }
