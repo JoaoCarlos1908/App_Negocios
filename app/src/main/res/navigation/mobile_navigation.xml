@@ -59,4 +59,10 @@
         android:label="Localização de Atendimento"
         tools:layout="@layout/fragment_maps" />
 
+    <fragment
+        android:id="@+id/contatosFragment"
+        android:name="com.example.appnegocios.ui.perfil.ContatosFragment"
+        android:label="Contatos"
+        tools:layout="@layout/fragment_contatos" />
+
 </navigation>

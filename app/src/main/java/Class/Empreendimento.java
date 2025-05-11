@@ -8,6 +8,7 @@ public class Empreendimento extends Usuario{
     }
 
     private String endereco, descricao, categoria;
+    private Contato contato;
 
     public String getCategoria() {
         return categoria;

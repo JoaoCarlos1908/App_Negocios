@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -42,10 +43,10 @@ public class PerfilFragment extends Fragment {
     private EditText nome, desc, endereco;
     private ImageView iconUser;
     private Button bt_editar, bt_salvar, bt_cancelar;
-    private View maps;
+    private View maps, contatos;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
 
         iniciarComponentes(inflater, container, view);
@@ -102,15 +103,29 @@ public class PerfilFragment extends Fragment {
         maps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 animarPreenchimento(maps);
-
                 new android.os.Handler().postDelayed(
                         new Runnable() {
                             public void run() {
                                 // Código que será executado após
                                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
                                 navController.navigate(R.id.mapsFragment); // Use o ID correto definido no seu nav_graph
+                            }
+                        },
+                        250); // tempo de atraso em milissegundos
+            }
+        });
+
+        contatos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animarPreenchimento(contatos);
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                // Código que será executado após
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                                navController.navigate(R.id.contatosFragment); // Use o ID correto definido no seu nav_graph
                             }
                         },
                         250); // tempo de atraso em milissegundos
@@ -135,7 +150,7 @@ public class PerfilFragment extends Fragment {
         anim.start();
     }
 
-@Override
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
@@ -151,7 +166,7 @@ public class PerfilFragment extends Fragment {
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                if(documentSnapshot != null){
+                if (documentSnapshot != null) {
                     nome.setText(documentSnapshot.getString("nome"));
                     desc.setText(documentSnapshot.getString("descrição"));
                     endereco.setText(documentSnapshot.getString("Endereço"));
@@ -160,7 +175,7 @@ public class PerfilFragment extends Fragment {
         });
     }
 
-    private void iniciarComponentes(LayoutInflater inflater, ViewGroup container, View view){
+    private void iniciarComponentes(LayoutInflater inflater, ViewGroup container, View view) {
         nome = view.findViewById(R.id.edit_nome);
         desc = view.findViewById(R.id.edit_descricao);
         endereco = view.findViewById(R.id.edit_endereco);
@@ -170,9 +185,11 @@ public class PerfilFragment extends Fragment {
         bt_salvar = view.findViewById(R.id.bt_salvar);
         bt_cancelar = view.findViewById(R.id.bt_cancelar);
         maps = view.findViewById(R.id.bt_localizacao);
+        contatos = view.findViewById(R.id.bt_contatos);
+
     }
 
-    private void atualizarTela(){
+    private void atualizarTela() {
         NavController navController = NavHostFragment.findNavController(this);
         navController.popBackStack(); // Remove o fragment atual da pilha
         navController.navigate(R.id.nav_perfil); // Reinsere o mesmo fragment
