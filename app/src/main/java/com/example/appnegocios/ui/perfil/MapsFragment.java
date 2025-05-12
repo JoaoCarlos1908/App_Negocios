@@ -227,15 +227,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            // Obtém a latitude e longitude do documento
-                            latitudeFirebase = document.getDouble("latitude");
-                            longitudeFirebase = document.getDouble("longitude");
+                            Double lat = document.getDouble("latitude");
+                            Double lon = document.getDouble("longitude");
 
-                            // Adiciona o marcador se os dados existirem
-                            if (latitudeFirebase != 0.0 && longitudeFirebase != 0.0) {
-                                addMarkerToMap(latitudeFirebase, longitudeFirebase);
+                            if (lat != null && lon != null) {
+                                latitudeFirebase = lat;
+                                longitudeFirebase = lon;
+
+                                if (latitudeFirebase != 0.0 && longitudeFirebase != 0.0) {
+                                    addMarkerToMap(latitudeFirebase, longitudeFirebase);
+                                }
+                            } else {
+                                Toast.makeText(requireContext(), "Latitude ou longitude não definidas", Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Toast.makeText(requireContext(), "Documento de localização não encontrado", Toast.LENGTH_SHORT).show();
                         }
+
                     } else {
                         Toast.makeText(requireContext(), "Erro ao carregar dados do Firebase", Toast.LENGTH_SHORT).show();
                     }

@@ -271,7 +271,6 @@ public class FormCadastro extends AppCompatActivity {
             Map<String, Object> empresa = new HashMap<>();
             empresa.put("nome",empreendimento.getNome());
             empresa.put("descrição", empreendimento.getDescricao());
-            empresa.put("telefone", empreendimento.getTell());
             empresa.put("TipoConta", empreendimento.getTipoConta());
             empresa.put("categoria", empreendimento.getCategoria());
             empresa.put("E-mail", empreendimento.getEmail());

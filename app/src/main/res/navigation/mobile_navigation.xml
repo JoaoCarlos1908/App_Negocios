@@ -65,4 +65,10 @@
         android:label="Contatos"
         tools:layout="@layout/fragment_contatos" />
 
+    <fragment
+        android:id="@+id/linksFragment"
+        android:name="com.example.appnegocios.ui.perfil.LinksFragment"
+        android:label="Links"
+        tools:layout="@layout/fragment_links" />
+
 </navigation>

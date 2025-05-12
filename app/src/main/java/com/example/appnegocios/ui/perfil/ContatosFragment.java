@@ -69,7 +69,7 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             .addOnSuccessListener(docRef -> Log.d("FIREBASE", "Contato adicionado com ID: " + docRef.getId()))
                             .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao adicionar contato", e));
 
-                    atualizarTela();
+                    mostrarContatos(view);
                 }
 
             }
@@ -122,7 +122,7 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                             .addOnFailureListener(e -> {
                                                 Log.e("FIREBASE", "Erro ao excluir contato", e);
                                             });
-                                    atualizarTela();
+                                    mostrarContatos(view);
                                 }
                             });
 
@@ -130,12 +130,6 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         }
                     }
                 });
-    }
-
-    private void atualizarTela() {
-        NavController navController = NavHostFragment.findNavController(this);
-        navController.popBackStack(); // Remove o fragment atual da pilha
-        navController.navigate(R.id.contatosFragment); // Reinsere o mesmo fragment
     }
 
     @Override

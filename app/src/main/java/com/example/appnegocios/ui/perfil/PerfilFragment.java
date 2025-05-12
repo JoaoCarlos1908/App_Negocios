@@ -43,7 +43,7 @@ public class PerfilFragment extends Fragment {
     private EditText nome, desc, endereco;
     private ImageView iconUser;
     private Button bt_editar, bt_salvar, bt_cancelar;
-    private View maps, contatos;
+    private View maps, contatos, links;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -132,6 +132,22 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+        links.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animarPreenchimento(links);
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                // Código que será executado após
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                                navController.navigate(R.id.linksFragment); // Use o ID correto definido no seu nav_graph
+                            }
+                        },
+                        250); // tempo de atraso em milissegundos
+            }
+        });
+
         return view;
     }
 
@@ -186,6 +202,7 @@ public class PerfilFragment extends Fragment {
         bt_cancelar = view.findViewById(R.id.bt_cancelar);
         maps = view.findViewById(R.id.bt_localizacao);
         contatos = view.findViewById(R.id.bt_contatos);
+        links = view.findViewById(R.id.bt_links);
 
     }
 
