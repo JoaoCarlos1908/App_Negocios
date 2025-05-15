@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.perfil.HorariosFragment" >
+
+    <TextView
+        android:id="@+id/text_dom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:text="Domingo"
+        android:textColor="@color/dark_gray"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/text_domH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:text="Fechado"
+        android:textColor="@color/dark_gray"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/edit_dom"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/edit_dom"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_lapis"
+        android:layout_margin="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/text_seg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:text="Segunda-Feira"
+        android:textColor="@color/dark_gray"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_dom"
+        />
+
+    <TextView
+        android:id="@+id/text_segH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:text="Fechado"
+        android:textColor="@color/dark_gray"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/edit_seg"
+        app:layout_constraintTop_toBottomOf="@+id/text_dom"
+        />
+
+    <ImageView
+        android:id="@+id/edit_seg"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_lapis"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_dom"/>
+
+    <TextView
+        android:id="@+id/text_ter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:text="Terça-Feira"
+        android:textColor="@color/dark_gray"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_seg"
+        />
+
+    <TextView
+        android:id="@+id/text_terH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:text="Fechado"
+        android:textColor="@color/dark_gray"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/edit_ter"
+        app:layout_constraintTop_toBottomOf="@+id/text_seg"
+        />
+
+    <ImageView
+        android:id="@+id/edit_ter"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_lapis"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_seg"/>
+
+    <TextView
+        android:id="@+id/text_qua"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:text="Quarta-Feira"
+        android:textColor="@color/dark_gray"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_ter"
+        />
+
+    <TextView
+        android:id="@+id/text_quaH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:text="Fechado"
+        android:textColor="@color/dark_gray"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/edit_qua"
+        app:layout_constraintTop_toBottomOf="@+id/text_ter"
+        />
+
+    <ImageView
+        android:id="@+id/edit_qua"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_lapis"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_ter"/>
+
+    <TextView
+        android:id="@+id/text_qui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:text="Quinta-Feira"
+        android:textColor="@color/dark_gray"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_qua"
+        />
+
+    <TextView
+        android:id="@+id/text_quiH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:text="Fechado"
+        android:textColor="@color/dark_gray"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/edit_qui"
+        app:layout_constraintTop_toBottomOf="@+id/text_qua"
+        />
+
+    <ImageView
+        android:id="@+id/edit_qui"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_lapis"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_qua"/>
+
+    <TextView
+        android:id="@+id/text_sex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:text="Sexta-Feira"
+        android:textColor="@color/dark_gray"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_qui"
+        />
+
+    <TextView
+        android:id="@+id/text_sexH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:text="Fechado"
+        android:textColor="@color/dark_gray"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/edit_sex"
+        app:layout_constraintTop_toBottomOf="@+id/text_qui"
+        />
+
+    <ImageView
+        android:id="@+id/edit_sex"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_lapis"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_qui"/>
+
+    <TextView
+        android:id="@+id/text_sab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:text="Sabado"
+        android:textColor="@color/dark_gray"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_sex"
+        />
+
+    <TextView
+        android:id="@+id/text_sabH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:text="Fechado"
+        android:textColor="@color/dark_gray"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/edit_sab"
+        app:layout_constraintTop_toBottomOf="@+id/text_sex"
+        />
+
+    <ImageView
+        android:id="@+id/edit_sab"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_lapis"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_sex"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_editar_todos"
+        style="@style/lightButton"
+        android:background="@drawable/light_button_selector"
+        android:layout_marginTop="30dp"
+        android:text="Editar Todos"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_sab"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_editar_sabDom"
+        style="@style/lightButton"
+        android:background="@drawable/light_button_selector"
+        android:layout_marginTop="20dp"
+        android:text="Editar Sáb-Dom"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_editar_todos"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_editar_segSex"
+        style="@style/lightButton"
+        android:background="@drawable/light_button_selector"
+        android:layout_marginTop="20dp"
+        android:text="Editar Seg-Sex"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_editar_sabDom"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_cancelar"
+        style="@style/lightButton"
+        android:background="@drawable/light_button_selector"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="40dp"
+        android:text="Cancelar"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_editar_segSex"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_salvar"
+        style="@style/mediumButton"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="40dp"
+        android:text="Salvar"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_editar_segSex"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
