@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/gray_light"
     android:padding="24dp">
 
@@ -36,63 +36,70 @@
             style="@style/lightButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textColor="@color/dark_gray"
-            android:text="D" />
+            android:text="D"
+            android:textColor="@color/dark_gray" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_seg"
             style="@style/lightButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textColor="@color/dark_gray"
-            android:text="S" />
+            android:text="S"
+            android:textColor="@color/dark_gray" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_ter"
             style="@style/lightButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textColor="@color/dark_gray"
-            android:text="T" />
+            android:text="T"
+            android:textColor="@color/dark_gray" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_qua"
             style="@style/lightButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textColor="@color/dark_gray"
-            android:text="Q" />
+            android:text="Q"
+            android:textColor="@color/dark_gray" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_qui"
             style="@style/lightButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textColor="@color/dark_gray"
-            android:text="Q" />
+            android:text="Q"
+            android:textColor="@color/dark_gray" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_sex"
             style="@style/lightButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textColor="@color/dark_gray"
-            android:text="S" />
+            android:text="S"
+            android:textColor="@color/dark_gray" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_sab"
             style="@style/lightButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:textColor="@color/dark_gray"
-            android:text="S" />
+            android:text="S"
+            android:textColor="@color/dark_gray" />
 
     </LinearLayout>
 
@@ -118,34 +125,15 @@
 
     <!-- Horários -->
     <LinearLayout
-        android:id="@+id/horarios"
+        android:id="@+id/conteinerHorarios"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cbAberto24h">
-
-        <EditText
-            android:id="@+id/etAbertura"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColorHint="@color/dark_gray"
-            android:hint="Abertura"
-            android:inputType="time" />
-
-        <EditText
-            android:id="@+id/etFechamento"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColorHint="@color/dark_gray"
-            android:layout_weight="1"
-            android:hint="Fechamento"
-            android:inputType="time" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/cbAberto24h"/>
 
     <!-- Adicionar horário -->
     <TextView
@@ -157,7 +145,7 @@
         android:textColor="@android:color/holo_blue_dark"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/horarios" />
+        app:layout_constraintTop_toBottomOf="@id/conteinerHorarios" />
 
     <!-- Botões Cancelar e Salvar -->
     <LinearLayout
@@ -174,9 +162,9 @@
             android:id="@+id/btnCancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/dark_gray"
             android:background="@drawable/light_button_selector"
-            android:text="Cancelar" />
+            android:text="Cancelar"
+            android:textColor="@color/dark_gray" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSalvar"

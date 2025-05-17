@@ -54,24 +54,6 @@ public class HorariosFragment extends Fragment {
         bt_salvar = view.findViewById(R.id.bt_salvar);
     }
 
-    private void abrirMaterialTimePicker() {
-        MaterialTimePicker picker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK) // Força abrir com relógio
-                .setHour(8)
-                .setMinute(0)
-                .build();
-
-        picker.show(getParentFragmentManager(), "TIME_PICKER");
-
-        picker.addOnPositiveButtonClickListener(dialog -> {
-            hora = picker.getHour();
-            minuto = picker.getMinute();
-            horario = String.format(Locale.getDefault(), "%02d:%02d", hora, minuto);
-        });
-    }
-
-
 @Override
     public void onDestroyView() {
         super.onDestroyView();

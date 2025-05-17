@@ -1,23 +1,36 @@
 package Class.Horarios;
 
 public class HorarioIntervalo {
-    private int horaAbertura;
-    private int minutoAbertura;
-    private int horaFechamento;
-    private int minutoFechamento;
+    private String horarioAbertura;
+    private String horarioFechamento;
 
-    public HorarioIntervalo(int horaAbertura, int minutoAbertura,
-                            int horaFechamento, int minutoFechamento) {
-        this.horaAbertura = horaAbertura;
-        this.minutoAbertura = minutoAbertura;
-        this.horaFechamento = horaFechamento;
-        this.minutoFechamento = minutoFechamento;
+    // Construtor vazio necessário para Firebase
+    public HorarioIntervalo() {
     }
 
+    public HorarioIntervalo(String horarioAbertura, String horarioFechamento) {
+        this.horarioAbertura = horarioAbertura;
+        this.horarioFechamento = horarioFechamento;
+    }
+
+    public String getHorarioAbertura() {
+        return horarioAbertura;
+    }
+
+    public void setHorarioAbertura(String horarioAbertura) {
+        this.horarioAbertura = horarioAbertura;
+    }
+
+    public String getHorarioFechamento() {
+        return horarioFechamento;
+    }
+
+    public void setHorarioFechamento(String horarioFechamento) {
+        this.horarioFechamento = horarioFechamento;
+    }
+
+    @Override
     public String toString() {
-        return String.format("%02d:%02d - %02d:%02d",
-                horaAbertura, minutoAbertura, horaFechamento, minutoFechamento);
+        return horarioAbertura + " - " + horarioFechamento;
     }
-
-    // Getters e setters omitidos por brevidade
 }
