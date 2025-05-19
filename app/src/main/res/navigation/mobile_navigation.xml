@@ -74,7 +74,7 @@
     <fragment
         android:id="@+id/horariosFragment"
         android:name="com.example.appnegocios.ui.perfil.HorariosFragment"
-        android:label="Links"
+        android:label="Horarios"
         tools:layout="@layout/fragment_horarios" />
 
 </navigation>

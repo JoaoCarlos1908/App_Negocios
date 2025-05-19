@@ -1,6 +1,9 @@
 package Class.Horarios;
 
+import android.widget.TextView;
+
 import java.util.EnumMap;
+import java.util.List;
 
 public class HorariosFuncionamento {
     private EnumMap<DiaSemana, DiaHorario> horariosPorDia;
