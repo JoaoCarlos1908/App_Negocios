@@ -39,11 +39,11 @@ public class PerfilFragment extends Fragment {
     private FragmentPerfilBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String usuarioID;
-    private TextView editFoto;
+    private TextView editFoto, text_categoria;
     private EditText nome, desc, endereco;
     private ImageView iconUser;
     private Button bt_editar, bt_salvar, bt_cancelar;
-    private View maps, contatos, links, horas;
+    private View maps, contatos, links, horas, categoria;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -164,6 +164,14 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+        categoria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CategoriasDialogFragment dialog = new CategoriasDialogFragment();
+                dialog.show(getParentFragmentManager(), "Dialog");
+            }
+        });
+
         return view;
     }
 
@@ -202,6 +210,9 @@ public class PerfilFragment extends Fragment {
                     nome.setText(documentSnapshot.getString("nome"));
                     desc.setText(documentSnapshot.getString("descrição"));
                     endereco.setText(documentSnapshot.getString("Endereço"));
+                    String text = documentSnapshot.getString("categoria");
+                    text_categoria.setText("Categoria: " + text);
+                    text_categoria.setText(inserirQuebraEntrePalavras(text_categoria.getText().toString(),25));
                 }
             }
         });
@@ -220,7 +231,8 @@ public class PerfilFragment extends Fragment {
         contatos = view.findViewById(R.id.bt_contatos);
         links = view.findViewById(R.id.bt_links);
         horas = view.findViewById(R.id.bt_relogio);
-
+        categoria = view.findViewById(R.id.bt_categoria);
+        text_categoria = view.findViewById(R.id.text_categoria);
     }
 
     private void atualizarTela() {
@@ -228,5 +240,24 @@ public class PerfilFragment extends Fragment {
         navController.popBackStack(); // Remove o fragment atual da pilha
         navController.navigate(R.id.nav_perfil); // Reinsere o mesmo fragment
     }
+
+    public String inserirQuebraEntrePalavras(String texto, int limite) {
+        StringBuilder resultado = new StringBuilder();
+        String[] palavras = texto.split(" ");
+        int linhaAtual = 0;
+
+        for (String palavra : palavras) {
+            if (linhaAtual + palavra.length() > limite) {
+                resultado.append("\n");
+                linhaAtual = 0;
+            }
+            resultado.append(palavra).append(" ");
+            linhaAtual += palavra.length() + 1; // +1 por causa do espaço
+        }
+
+        return resultado.toString().trim();
+    }
+
+
 
 }

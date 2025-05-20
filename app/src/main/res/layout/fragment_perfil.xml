@@ -16,7 +16,7 @@
             android:id="@+id/iconUser"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_margin="20dp"
+            android:layout_margin="5dp"
             android:clickable="false"
             android:src="@drawable/ic_perfil"
             app:layout_constraintEnd_toEndOf="parent"
@@ -235,13 +235,14 @@
             app:layout_constraintEnd_toEndOf="@+id/bt_relogio"
             app:layout_constraintTop_toTopOf="@+id/bt_relogio" />
 
-        <View
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bt_categoria"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="wrap_content"
+            android:minHeight="65dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bt_relogio" />
+            app:layout_constraintTop_toBottomOf="@id/bt_relogio">
 
         <ImageView
             android:id="@+id/ic_categoria"
@@ -254,13 +255,18 @@
             app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/text_categoria"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="Categoria"
+            android:gravity="center"
             android:textColor="@color/dark_gray"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:singleLine="false"
+            android:ellipsize="none"
+            android:scrollHorizontally="false"
             app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
             app:layout_constraintStart_toEndOf="@+id/ic_categoria"
             app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
@@ -273,6 +279,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
             app:layout_constraintEnd_toEndOf="@+id/bt_categoria"
             app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_editar"
@@ -296,8 +304,9 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_cancelar"
-            style="@style/mediumButton"
+            style="@style/lightButton"
             android:layout_marginStart="80dp"
+            android:background="@drawable/light_button_selector"
             android:text="Cancelar"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
