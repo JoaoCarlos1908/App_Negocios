@@ -4,16 +4,16 @@ import java.math.BigDecimal;
 
 public class Produto {
 
-    private int idProduto;
+    public Produto() { }
+    private String idProduto;
     private String titulo, descricao;
-    private String[] tags = new String[6];
-    private BigDecimal valor;
+    private double valor;
 
-    public int getIdProduto() {
+    public String getIdProduto() {
         return idProduto;
     }
 
-    public void setIdProduto(int idProduto) {
+    public void setIdProduto(String idProduto) {
         this.idProduto = idProduto;
     }
 
@@ -33,19 +33,11 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    public String[] getTags() {
-        return tags;
-    }
-
-    public void setTags(String[] tags) {
-        this.tags = tags;
-    }
-
-    public BigDecimal getValor() {
+    public double getValor() {
         return valor;
     }
 
-    public void setValor(BigDecimal valor) {
+    public void setValor(double valor) {
         this.valor = valor;
     }
 }

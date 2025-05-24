@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgroud"
     tools:context=".ui.produtos.ProdutosFragment">
 
     <fragment
@@ -53,7 +54,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bt_cancelar"
-        style="@style/mediumButton"
+        style="@style/lightButton"
         android:layout_marginStart="80dp"
         android:text="Cancelar"
         android:visibility="gone"

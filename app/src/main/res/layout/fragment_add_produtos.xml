@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="16dp">
+    >
+
+    <!-- Carrossel de imagens -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerImagens"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Indicadores do carrossel (opcional) -->
+    <LinearLayout
+        android:id="@+id/indicadores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="horizontal" />
+
+    <!-- Campo título -->
+    <EditText
+        android:id="@+id/etTituloProduto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/dark_gray"
+        android:hint="Título do Produto"
+        android:inputType="textCapWords"
+        android:textColor="@color/dark_gray"
+        android:textSize="16sp" />
+
+    <!-- Campo descrição -->
+    <EditText
+        android:id="@+id/etDescricaoProduto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/dark_gray"
+        android:gravity="top|start"
+        android:hint="Descrição"
+        android:inputType="textMultiLine"
+        android:maxLines="6"
+        android:minLines="3"
+        android:textColor="@color/dark_gray" />
+
+    <!-- Campo valor -->
+    <EditText
+        android:id="@+id/etValorProduto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/dark_gray"
+        android:hint="Valor (R$)"
+        android:inputType="numberDecimal"
+        android:textColor="@color/dark_gray"
+        android:textSize="16sp" />
+
+    <!-- Botão de adicionar variação -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAdicionarVariacao"
+        style="@style/mediumButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Adicionar Variação" />
+
+    <!-- Botões de ação -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCancelar"
+            style="@style/lightButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:text="Cancelar" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnExcluir"
+            style="@style/lightButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Excluir"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSalvar"
+            style="@style/smallButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Salvar"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/idProduto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</LinearLayout>

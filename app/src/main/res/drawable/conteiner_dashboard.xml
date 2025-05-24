@@ -9,4 +9,5 @@
         android:color="@color/black" /> <!-- Cor da borda -->
     <!-- Cantos arredondados (opcional) -->
     <corners android:radius="20dp" />
+    <solid android:color="@color/gray_light"/>
 </shape>
