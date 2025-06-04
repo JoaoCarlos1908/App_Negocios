@@ -1,6 +1,7 @@
 package com.example.appnegocios.ui.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private TextView text_nomeEmpre;
+    private TextView text_nomeEmpre, text_avaliacoes;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class DashboardFragment extends Fragment {
         LinearLayout containerInteracoes = view.findViewById(R.id.containerInteracoes);
 
         text_nomeEmpre = view.findViewById(R.id.text_nomeEmpre);
+        text_avaliacoes = view.findViewById(R.id.text_avaliacoes);
+
+        calcularMediaAvaliacoes(usuarioID);
 
         DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -73,6 +78,38 @@ public class DashboardFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void calcularMediaAvaliacoes(String idEmpreendimento) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Avaliacoes")
+                .whereEqualTo("idEmpreendimento", idEmpreendimento)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int totalEstrelas = 0;
+                    int totalAvaliacoes = 0;
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Long estrelas = doc.getLong("estrelas");
+
+                        if (estrelas != null) {
+                            totalEstrelas += estrelas;
+                            totalAvaliacoes++;
+                        }
+                    }
+
+                    if (totalAvaliacoes > 0) {
+                        double media = (double) totalEstrelas / totalAvaliacoes;
+                        Log.d("MÉDIA", "Média de estrelas: " + media);
+                        text_avaliacoes.setText(String.format("%.1f", media));
+                    } else {
+                        Log.d("MÉDIA", "Sem avaliações para esse empreendimento.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ERRO", "Erro ao buscar avaliações", e);
+                });
     }
 
     @Override

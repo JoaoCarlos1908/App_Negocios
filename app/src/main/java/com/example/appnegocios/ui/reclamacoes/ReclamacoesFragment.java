@@ -56,7 +56,7 @@ public class ReclamacoesFragment extends Fragment {
         LinearLayout container = view.findViewById(R.id.containerReclamacoes);
         container.removeAllViews(); // Limpar antes de exibir
 
-        db.collection("reclamacoes")
+        db.collection("Reclamacoes")
                 .whereEqualTo("idEmpreendimento", idEmpreendimento)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -93,7 +93,7 @@ public class ReclamacoesFragment extends Fragment {
         View item = LayoutInflater.from(view.getContext()).inflate(R.layout.layout_view_reclamacoes, container, false);
 
         TextView tvNome = item.findViewById(R.id.tvNome);
-        TextView tvComentario = item.findViewById(R.id.tvComentario);
+        TextView tvComentario = item.findViewById(R.id.tvReclamacao);
         TextView tvResposta = item.findViewById(R.id.tvResposta);
         TextView tvRespostatext = item.findViewById(R.id.tvRespostatext);
 

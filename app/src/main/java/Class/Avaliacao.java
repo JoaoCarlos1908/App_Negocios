@@ -41,6 +41,14 @@ public class Avaliacao {
         this.idEmpreendimento = idEmpreendimento;
     }
 
+    public String getIdAvaliador() {
+        return idAvaliador;
+    }
+
+    public void setIdAvaliador(String idAvaliador) {
+        this.idAvaliador = idAvaliador;
+    }
+
     public int getEstrelas() {
         return estrelas;
     }

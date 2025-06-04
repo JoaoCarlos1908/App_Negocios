@@ -26,20 +26,31 @@
         android:text="Nome"
         android:textColor="#333"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ratingBar" />
+
+    <CheckBox
+        android:id="@+id/cb_anonimo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Avaliação Anônima"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:textColor="@color/dark_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ratingBar"  />
 
     <TextView
         android:id="@+id/tvComentario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingTop="4dp"
+        android:layout_marginTop="20dp"
         android:text="Comentário"
         android:textColor="@color/dark_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvNome" />
+        app:layout_constraintTop_toBottomOf="@id/cb_anonimo" />
 
     <EditText
         android:id="@+id/edit_comentario"
@@ -47,6 +58,7 @@
         android:layout_width="0dp"
         android:layout_margin="0dp"
         android:maxLines="6"
+        android:visibility="gone"
         android:inputType="textMultiLine"
         android:scrollHorizontally="false"
         android:textColor="@color/white"
@@ -73,7 +85,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingTop="4dp"
-        android:text="Comentário"
+        android:text="Resposta do empreendimento"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
