@@ -10,28 +10,46 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.appnegocios.R;
 import com.example.appnegocios.databinding.FragmentDashboardBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
+    private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private TextView text_nomeEmpre;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         // Infla o layout XML do fragmento
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
         // Acessa o LinearLayout dentro do layout do fragment
         LinearLayout containerInteracoes = view.findViewById(R.id.containerInteracoes);
 
+        text_nomeEmpre = view.findViewById(R.id.text_nomeEmpre);
+
+        DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                if (documentSnapshot != null) {
+                    text_nomeEmpre.setText(documentSnapshot.getString("nome"));
+                }
+            }
+        });
 
         for (int x = 0; x < 8; x++) {
             // Infla o layout de item individual

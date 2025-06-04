@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_todas"
+        android:title="Todas as avaliações" />
+    <item android:id="@+id/menu_5_estrelas"
+        android:title="5 estrelas" />
+    <item android:id="@+id/menu_4_estrelas"
+        android:title="4 estrelas" />
+    <item android:id="@+id/menu_3_estrelas"
+        android:title="3 estrelas" />
+    <item android:id="@+id/menu_2_estrelas"
+        android:title="2 estrelas" />
+    <item android:id="@+id/menu_1_estrelas"
+        android:title="1 estrela" />
+</menu>

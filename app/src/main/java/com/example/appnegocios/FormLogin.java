@@ -157,9 +157,12 @@ public class FormLogin extends AppCompatActivity {
                                     if (tipoConta) {
                                         // true = Empresa
                                         intent = new Intent(getApplicationContext(), FormDashboard.class);
+                                        intent.putExtra("tipoConta", true);
                                     } else {
                                         // false = Cliente
-                                        intent = new Intent(getApplicationContext(), FormTelaPrincipal.class);
+                                        //intent = new Intent(getApplicationContext(), FormTelaPrincipal.class);
+                                        intent = new Intent(getApplicationContext(), FormDashboard.class);
+                                        intent.putExtra("tipoConta", false);
                                     }
                                     startActivity(intent);
                                     finish();
@@ -228,11 +231,14 @@ public class FormLogin extends AppCompatActivity {
                             if (tipoConta) {
                                 // true = Empresa
                                 Intent intent = new Intent(FormLogin.this, FormDashboard.class);
+                                intent.putExtra("tipoConta", true);
                                 startActivity(intent);
                                 finish();
                             } else {
                                 // false = Cliente
-                                Intent intent = new Intent(FormLogin.this, FormTelaPrincipal.class);
+                                //Intent intent = new Intent(FormLogin.this, FormTelaPrincipal.class);
+                                Intent intent = new Intent(FormLogin.this, FormDashboard.class);
+                                intent.putExtra("tipoConta", false);
                                 startActivity(intent);
                                 finish();
                             }

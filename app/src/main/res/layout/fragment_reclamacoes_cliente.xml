@@ -6,21 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroud"
-    tools:context=".ui.avaliacoes.AvaliacoesFragment" >
+    tools:context=".ui.ReclamacoesClienteFragment" >
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnFiltrar"
+        android:id="@+id/btnNaoRespodidas"
         style="@style/mediumButton"
         android:layout_width="0dp"
         android:layout_marginStart="30dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Filtrar Avaliações"
+        android:text="Não Respodidas"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRespodidas"
+        style="@style/mediumButton"
+        android:layout_width="0dp"
+        android:layout_marginEnd="30dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Respodidas"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <LinearLayout
-        android:id="@+id/containerAvaliacoes"
+        android:id="@+id/containerReclamacoes"
         style="@style/ConteinerDashbord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +42,6 @@
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnFiltrar" />
+        app:layout_constraintTop_toBottomOf="@id/btnNaoRespodidas" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

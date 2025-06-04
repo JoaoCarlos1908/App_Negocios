@@ -1,4 +1,4 @@
-package com.example.appnegocios.ui.avaliacoes;
+package com.example.appnegocios.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,44 +22,42 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import Class.Avaliacao;
 
-public class AvaliacoesFragment extends Fragment {
+public class AvaliacoesClienteFragment extends Fragment {
 
     private FragmentAvaliacoesBinding binding;
     private Button btnFiltrar;
-    private String idEmpreendimento = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private String idCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_avaliacoes, container, false);
+        View view = inflater.inflate(R.layout.fragment_avaliacoes_cliente, container, false);
 
         btnFiltrar = view.findViewById(R.id.btnFiltrar);
 
-        carregarAvaliacoes(idEmpreendimento, view);
+        carregarAvaliacoes(idCliente, view);
 
         btnFiltrar.setOnClickListener(v -> mostrarMenuFiltrar(v));
 
         return view;
     }
 
-    private void carregarAvaliacoes(String idEmpreendimento, View view) {
+    private void carregarAvaliacoes(String idCliente, View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout container = view.findViewById(R.id.containerAvaliacoes);
         container.removeAllViews(); // Limpar antes de exibir
 
         db.collection("avaliacoes")
-                .whereEqualTo("idEmpreendimento", idEmpreendimento)
+                .whereEqualTo("idCliente", idCliente)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Avaliacao avaliacao = doc.toObject(Avaliacao.class);
                         avaliacao.setIdAvaliacao(doc.getId());
 
-                        String idAvaliador = doc.getString("idAvaliador");
+                        String idEmpreendimento = doc.getString("idEmpreendimento");
 
-                        // Busca o nome do avaliador se não for anônimo
-                        if (!avaliacao.isAnonima()) {
                             db.collection("Cliente")
-                                    .document(idAvaliador)
+                                    .document(idEmpreendimento)
                                     .get()
                                     .addOnSuccessListener(userDoc -> {
                                         String nome = userDoc.getString("nome");
@@ -68,10 +66,7 @@ public class AvaliacoesFragment extends Fragment {
                                         }
                                         exibirAvaliacao(container, avaliacao, view);
                                     });
-                        } else {
-                            // Se for anônimo, exibe direto
-                            exibirAvaliacao(container, avaliacao, view);
-                        }
+
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -89,7 +84,7 @@ public class AvaliacoesFragment extends Fragment {
         TextView tvRespostatext = item.findViewById(R.id.tvRespostatext);
 
         ratingBar.setRating(avaliacao.getEstrelas());
-        tvNome.setText("Por: " + avaliacao.getNomeAvaliador());
+        tvNome.setText("Para: " + avaliacao.getNomeAvaliador());
         tvComentario.setText(avaliacao.getDescricao());
 
         tvResposta.setOnClickListener(new View.OnClickListener() {
@@ -124,10 +119,10 @@ public class AvaliacoesFragment extends Fragment {
         popup.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
 
-            String idEmpreendimento = getArguments() != null ? getArguments().getString("idEmpreendimento") : "";
+            String idCliente = getArguments() != null ? getArguments().getString("idCliente") : "";
 
             if (id == R.id.menu_todas) {
-                carregarAvaliacoes(idEmpreendimento, getView());
+                carregarAvaliacoes(idCliente, getView());
             } else {
                 int estrelas = 0;
                 if (id == R.id.menu_5_estrelas) estrelas = 5;
@@ -136,7 +131,7 @@ public class AvaliacoesFragment extends Fragment {
                 else if (id == R.id.menu_2_estrelas) estrelas = 2;
                 else if (id == R.id.menu_1_estrelas) estrelas = 1;
 
-                carregarAvaliacoesFiltradas(idEmpreendimento, estrelas, getView());
+                carregarAvaliacoesFiltradas(idCliente, estrelas, getView());
             }
 
             return true;
@@ -145,13 +140,13 @@ public class AvaliacoesFragment extends Fragment {
         popup.show();
     }
 
-    private void carregarAvaliacoesFiltradas(String idEmpreendimento, int estrelas, View view) {
+    private void carregarAvaliacoesFiltradas(String idCliente, int estrelas, View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout container = view.findViewById(R.id.containerAvaliacoes);
         container.removeAllViews(); // Limpa as avaliações anteriores
 
         db.collection("avaliacoes")
-                .whereEqualTo("idEmpreendimento", idEmpreendimento)
+                .whereEqualTo("idCliente", idCliente)
                 .whereEqualTo("estrelas", estrelas)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {

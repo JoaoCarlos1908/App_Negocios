@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_inicial"
+            android:icon="@drawable/ic_home"
+            android:title="Tela Inicial" />
+        <item
+            android:id="@+id/nav_perfilCliente"
+            android:icon="@drawable/ic_perfil"
+            android:title="Perfil" />
+        <item
+            android:id="@+id/nav_categorias"
+            android:icon="@drawable/ic_produtos"
+            android:title="Categorias" />
+
+        <item
+            android:id="@+id/nav_avaliacoesCliente"
+            android:icon="@drawable/ic_balao_fala"
+            android:title="Avaliações e Comentarios" />
+        <item
+            android:id="@+id/nav_reclamacoesCliente"
+            android:icon="@drawable/ic_negativo"
+            android:title="Reclamações" />
+        <item
+            android:id="@+id/nav_configCliente"
+            android:icon="@drawable/ic_settings"
+            android:title="Configurações" />
+
+        <item
+            android:id="@+id/nav_mudar_conta"
+            android:icon="@drawable/ic_mudar_conta"
+            android:title="Mudar de Conta" />
+    </group>
+</menu>

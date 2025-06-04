@@ -12,6 +12,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.credentials.webauthn.Cbor;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -37,42 +38,64 @@ public class FormDashboard extends AppCompatActivity {
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_dashboard, R.id.nav_perfil, R.id.nav_produtos, R.id.nav_avaliacoes, R.id.nav_reclamacoes,
-                R.id.nav_config, R.id.nav_mudar_conta)
-                .setOpenableLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_form_dashboard);
+
+        boolean isEmpreendimento = getIntent().getBooleanExtra("tipoConta", false);
+
+        // Obtém o NavHostFragment
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment_content_form_dashboard);
+        NavController navController = navHostFragment.getNavController();
+
+        // Define o grafo de navegação dinamicamente
+        if (isEmpreendimento) {
+            navController.setGraph(R.navigation.nav_empreendimento);
+        } else {
+            navController.setGraph(R.navigation.nav_cliente);
+        }
+
+        // Define o menu lateral correto
+        if (isEmpreendimento) {
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.menu_empresarial);
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_dashboard, R.id.nav_perfil, R.id.nav_produtos, R.id.nav_avaliacoes, R.id.nav_reclamacoes,
+                    R.id.nav_config, R.id.nav_mudar_conta)
+                    .setOpenableLayout(drawer)
+                    .build();
+        } else {
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.menu_cliente);
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_inicial, R.id.nav_perfilCliente, R.id.nav_categorias, R.id.nav_avaliacoesCliente, R.id.nav_reclamacoesCliente,
+                    R.id.nav_configCliente, R.id.nav_mudar_conta)
+                    .setOpenableLayout(drawer)
+                    .build();
+        }
+
+        // Conecta Navigation UI
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        // Menu lateral personalizado
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.nav_mudar_conta) {
-                // Desloga do Firebase
                 FirebaseAuth.getInstance().signOut();
-
-                // Redireciona para a tela de login
-                Intent intent = new Intent(FormDashboard.this, FormLogin.class);
-                startActivity(intent);
-                finish(); // Fecha a dashboard para impedir voltar com botão "voltar"
+                startActivity(new Intent(FormDashboard.this, FormLogin.class));
+                finish();
                 return true;
             }
 
-            // Para os outros itens, deixa o NavigationUI lidar normalmente
             boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
             if (handled) {
-                DrawerLayout drawerLayout = binding.drawerLayout;
-                drawerLayout.closeDrawers(); // Fecha o menu lateral
+                drawer.closeDrawers();
             }
             return handled;
         });
-
-
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

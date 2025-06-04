@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f1f1f1"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/tvNome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#333"
+        android:text="Nome" />
+
+    <TextView
+        android:id="@+id/tvComentario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Comentário"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/tvResposta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#006600"
+        android:textStyle="italic"
+        android:paddingTop="6dp"
+        android:text="Resposta do empreendedor" />
+
+    <TextView
+        android:id="@+id/tvRespostatext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Comentário"
+        android:paddingTop="4dp" />
+</LinearLayout>

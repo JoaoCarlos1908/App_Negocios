@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="160dp"
+        android:layout_height="170dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/conteiner_dashboard"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_home" />
+
+        <TextView
+            android:id="@+id/text_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:text="Confeitaria Doce Sabor"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_categoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="confeitaria"
+            android:textAlignment="center"
+            android:textColor="@color/deepBlue"
+            android:textSize="12sp"
+            android:textStyle="bold"/>
+    </LinearLayout>

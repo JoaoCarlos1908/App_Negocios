@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_perfilCliente">
+
+    <fragment
+        android:id="@+id/nav_inicial"
+        android:name="com.example.appnegocios.ui.TelaPrincipalFragment"
+        android:label="Tela Principal"
+        tools:layout="@layout/fragment_tela_principal" />
+
+    <fragment
+        android:id="@+id/nav_perfilCliente"
+        android:name="com.example.appnegocios.ui.perfilCliente.PerfilClienteFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil_cliente" />
+
+    <fragment
+        android:id="@+id/nav_avaliacoesCliente"
+        android:name="com.example.appnegocios.ui.AvaliacoesClienteFragment"
+        android:label="Avaliações"
+        tools:layout="@layout/fragment_avaliacoes_cliente" />
+
+    <fragment
+        android:id="@+id/nav_reclamacoesCliente"
+        android:name="com.example.appnegocios.ui.ReclamacoesClienteFragment"
+        android:label="Avaliações"
+        tools:layout="@layout/fragment_reclamacoes_cliente" />
+
+    <fragment
+        android:id="@+id/nav_view_perfil_empreedimento"
+        android:name="com.example.appnegocios.ui.ViewPerfilEmpreedimentoFragment"
+        android:label="Perfil do Empreedimento"
+        tools:layout="@layout/fragment_view_perfil_empreendimento">
+    <argument
+        android:name="idEmpreendimento"
+        app:argType="string" />
+    </fragment>
+
+</navigation>

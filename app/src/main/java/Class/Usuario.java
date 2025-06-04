@@ -2,7 +2,7 @@ package Class;
 
 public class Usuario {
     public Usuario() {
-        this.idUser = 0;
+        this.idUser = "";
         this.nome = "";
         this.email = "";
         this.tell = "";
@@ -10,15 +10,14 @@ public class Usuario {
         this.tipoConta = false;
     }
 
-    private int idUser;
-    private String nome, email, tell, senha;
+    private String idUser, nome, email, tell, senha;
     private Boolean tipoConta;
 
-    public int getIdUser() {
+    public String getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
     public String getNome() {

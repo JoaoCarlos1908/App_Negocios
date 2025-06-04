@@ -60,6 +60,32 @@
         app:layout_constraintStart_toEndOf="@+id/text_avaliacoes"
         app:layout_constraintTop_toBottomOf="@+id/text_nomeEmpre" />
 
+
+        <TextView
+            android:id="@+id/ic_estrelaEx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="Avalições"
+            android:textColor="@color/dark_gray"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="@+id/ic_estrela"
+            app:layout_constraintTop_toBottomOf="@id/ic_estrela" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="Resolução de reclamações"
+            android:textColor="@color/dark_gray"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/ic_rec"
+            app:layout_constraintTop_toBottomOf="@id/ic_estrela" />
+
     <TextView
         android:id="@+id/text_avaliacoes"
         android:layout_width="wrap_content"
@@ -86,117 +112,25 @@
         app:layout_constraintStart_toEndOf="@id/ic_rec"
         app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre" />
 
-    <TextView
-        android:id="@+id/text_titulo_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="15dp"
-        android:text="Estatísticas últimos 7 dias"
-        android:textColor="@color/dark_gray"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/ic_estrela"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <View
-        android:id="@+id/conteinerCliks"
-        style="@style/ConteinerDashbord"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/conteinerViews"
-        app:layout_constraintTop_toBottomOf="@+id/text_titulo_status"
-        app:layout_constraintWidth_percent="0.45" />
-
-    <View
-        android:id="@+id/conteinerViews"
-        style="@style/ConteinerDashbord"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toStartOf="@id/conteinerCliks"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_titulo_status"
-        app:layout_constraintWidth_percent="0.45" />
-
-
-    <ImageView
-        android:id="@+id/ic_eye"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_eye"
-        app:layout_constraintStart_toStartOf="@id/conteinerViews"
-        app:layout_constraintTop_toTopOf="@+id/conteinerViews" />
-
-    <TextView
-        android:id="@+id/quant_views"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:text="250"
-        android:textColor="@color/dark_gray"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/conteinerViews"
-        app:layout_constraintTop_toBottomOf="@+id/ic_eye" />
-
-    <TextView
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="Visualizações"
-        android:textColor="@color/dark_gray"
-        android:textSize="14dp"
-        app:layout_constraintEnd_toEndOf="@id/conteinerViews"
-        app:layout_constraintStart_toStartOf="@id/conteinerViews"
-        app:layout_constraintTop_toTopOf="@id/conteinerViews" />
-
-    <ImageView
-        android:id="@+id/ic_tell"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_tell"
-        app:layout_constraintStart_toStartOf="@id/conteinerCliks"
-        app:layout_constraintTop_toTopOf="@+id/conteinerCliks" />
-
-    <TextView
-        android:id="@+id/quant_cliks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:text="87"
-        android:textColor="@color/dark_gray"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/conteinerCliks"
-        app:layout_constraintTop_toBottomOf="@+id/ic_tell" />
-
-    <TextView
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="Clicks contatos"
-        android:textColor="@color/dark_gray"
-        android:textSize="14dp"
-        app:layout_constraintEnd_toEndOf="@id/conteinerCliks"
-        app:layout_constraintStart_toStartOf="@id/conteinerCliks"
-        app:layout_constraintTop_toTopOf="@id/conteinerCliks" />
-
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_detalhes"
+        android:id="@+id/bt_avaliar"
         style="@style/smallButton"
-        android:text="Detalhes"
+        android:text="Avaliar"
+        android:textSize="20dp"
         android:layout_width="150dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/conteinerViews"
+        app:layout_constraintTop_toBottomOf="@+id/ic_estrelaEx"
         />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_reclamar"
+            style="@style/smallButton"
+            android:text="Fazer Reclamação"
+            android:layout_width="150dp"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_estrelaEx"
+            />
 
     <TextView
         android:id="@+id/ultimas_interacoes"
@@ -204,15 +138,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginStart="15dp"
-        android:text="Ultimas interações"
+        android:text="Produtos e Serviços"
         android:textColor="@color/dark_gray"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/bt_detalhes"
+        app:layout_constraintTop_toBottomOf="@+id/bt_avaliar"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <LinearLayout
-        android:id="@+id/containerInteracoes"
+        android:id="@+id/containerProdutos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -223,7 +157,8 @@
         style="@style/ConteinerDashbord"
         app:layout_constraintTop_toBottomOf="@id/ultimas_interacoes"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
