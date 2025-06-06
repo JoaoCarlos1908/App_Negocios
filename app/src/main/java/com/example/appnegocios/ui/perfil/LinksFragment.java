@@ -16,13 +16,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.appnegocios.R;
 import com.example.appnegocios.databinding.FragmentLinksBinding;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -34,10 +31,14 @@ private FragmentLinksBinding binding;
 private EditText nome, link;
 private Button bt_adicionar;
 private FirebaseFirestore db = FirebaseFirestore.getInstance();
-private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+private String idUser;
+private Boolean exibir;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
+        idUser = getArguments().getString("idUser");
+        exibir = getArguments().getBoolean("exibir");
+
         // Infla o layout XML do fragmento
         View view = inflater.inflate(R.layout.fragment_links, container, false);
 
@@ -66,7 +67,7 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     if(isLinkValido(novoLink.getLink())){
                         // Adiciona na subcoleção 'contatos' dentro do usuário 'abc123'
                         db.collection("Cliente")
-                                .document(usuarioID)
+                                .document(idUser)
                                 .collection("links")
                                 .add(novoLink)
                                 .addOnSuccessListener(docRef -> Log.d("FIREBASE", "Link adicionado com ID: " + docRef.getId()))
@@ -90,11 +91,17 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         nome = view.findViewById(R.id.edit_nome_link);
         link = view.findViewById(R.id.edit_link);
         bt_adicionar = view.findViewById(R.id.bt_adicionar);
+
+        if(!exibir){
+            nome.setVisibility(View.GONE);
+            link.setVisibility(View.GONE);
+            bt_adicionar.setVisibility(View.GONE);
+        }
     }
 
     private void mostrarLinks(View view) {
         db.collection("Cliente")
-                .document(usuarioID)
+                .document(idUser)
                 .collection("links")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
@@ -122,7 +129,7 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 @Override
                                 public void onClick(View v) {
                                     db.collection("Cliente")
-                                            .document(usuarioID)
+                                            .document(idUser)
                                             .collection("links")
                                             .document(id_link.getText().toString()) // ID do documento do contato
                                             .delete()
@@ -132,6 +139,9 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                             .addOnFailureListener(e -> {
                                                 Log.e("FIREBASE", "Erro ao excluir link", e);
                                             });
+                                    if(!exibir){
+                                        bt_excluir.setVisibility(View.GONE);
+                                    }
                                     mostrarLinks(view);
                                 }
                             });

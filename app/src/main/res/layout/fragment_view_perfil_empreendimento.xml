@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.core.widget.NestedScrollView
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,151 +13,334 @@
         android:background="@drawable/backgroud"
         tools:context=".ui.dashboard.DashboardFragment">
 
-    <TextView
-        android:id="@+id/text_nomeEmpre"
-        android:layout_width="260dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
-        android:text="Nome do Empreendimento"
-        android:textColor="@color/dark_gray"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.833"
-        app:layout_constraintStart_toEndOf="@id/ic_perfil"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/text_nomeEmpre"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="Nome do Empreendimento"
+            android:textColor="@color/dark_gray"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/ic_perfil"
-        android:layout_width="105dp"
-        android:layout_height="105dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/ic_perfil"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/RoundedImage" />
+        <ImageView
+            android:id="@+id/ic_perfil"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_perfil"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre"
+            app:shapeAppearanceOverlay="@style/RoundedImage" />
 
-    <ImageView
-        android:id="@+id/ic_estrela"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_estrela"
-        app:layout_constraintStart_toEndOf="@+id/ic_perfil"
-        app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre" />
+        <EditText
+            android:id="@+id/edit_descricao"
+            style="@style/edit_text"
+            android:enabled="false"
+            android:hint="Sem descrição"
+            android:maxLines="6"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_endereco" />
 
-    <ImageView
-        android:id="@+id/ic_rec"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_check_circle"
-        app:layout_constraintStart_toEndOf="@+id/text_avaliacoes"
-        app:layout_constraintTop_toBottomOf="@+id/text_nomeEmpre" />
-
+        <ImageView
+            android:id="@+id/ic_estrela"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_estrela"
+            app:layout_constraintStart_toEndOf="@+id/ic_perfil"
+            app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre" />
 
         <TextView
             android:id="@+id/ic_estrelaEx"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:text="Total: 0"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="20dp"
+            android:text="Total avaliações: 0"
             android:textColor="@color/dark_gray"
             android:textSize="16dp"
             android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="@+id/ic_estrela"
-            app:layout_constraintTop_toBottomOf="@id/ic_estrela" />
+            app:layout_constraintStart_toEndOf="@id/text_Res"
+            app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre" />
 
         <TextView
             android:layout_width="100dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="15dp"
             android:text="Taxa de Resposta"
             android:textColor="@color/dark_gray"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/ic_rec"
+            app:layout_constraintStart_toEndOf="@+id/text_Res"
+            app:layout_constraintTop_toBottomOf="@id/ic_estrelaEx" />
+
+        <TextView
+            android:id="@+id/text_avaliacoes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="5.0"
+            android:textColor="@color/dark_gray"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/ic_estrela"
+            app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre" />
+
+        <ImageView
+            android:id="@+id/ic_rec"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_check_circle"
+            app:layout_constraintStart_toEndOf="@+id/ic_perfil"
+            app:layout_constraintTop_toBottomOf="@+id/ic_estrela" />
+
+
+        <TextView
+            android:id="@+id/text_Res"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:text="97%"
+            android:textColor="@color/dark_gray"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/ic_estrela"
             app:layout_constraintTop_toBottomOf="@id/ic_estrela" />
 
-    <TextView
-        android:id="@+id/text_avaliacoes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="5.0"
-        android:textColor="@color/dark_gray"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/ic_estrela"
-        app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre" />
 
-    <TextView
-        android:id="@+id/text_Res"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:text="97%"
-        android:textColor="@color/dark_gray"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/ic_rec"
-        app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_avaliar"
-        style="@style/smallButton"
-        android:text="Avaliar"
-        android:textSize="20dp"
-        android:layout_width="150dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ic_estrelaEx"
-        />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_avaliar"
+            style="@style/smallButton"
+            android:layout_width="150dp"
+            android:text="Avaliar"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_descricao" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/bt_reclamar"
             style="@style/smallButton"
-            android:text="Fazer Reclamação"
             android:layout_width="150dp"
+            android:text="Fazer Reclamação"
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ic_estrelaEx"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/edit_descricao" />
 
-    <TextView
-        android:id="@+id/ultimas_interacoes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="15dp"
-        android:text="Produtos e Serviços"
-        android:textColor="@color/dark_gray"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/bt_avaliar"
-        app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/text_endereco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📍Rua Alguma coisa N°00"
+            android:layout_marginTop="5dp"
+            android:textSize="20dp"
+            android:layout_marginStart="30dp"
+            android:textColor="@color/dark_gray"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/ic_perfil"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/containerProdutos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:orientation="vertical"
-        android:padding="16dp"
-        style="@style/ConteinerDashbord"
-        app:layout_constraintTop_toBottomOf="@id/ultimas_interacoes"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        <View
+            android:id="@+id/bt_localizacao"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_avaliar" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/ic_globo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_globo"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_localizacao"
+            app:layout_constraintStart_toStartOf="@+id/bt_localizacao"
+            app:layout_constraintTop_toTopOf="@+id/bt_localizacao" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Localização"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_localizacao"
+            app:layout_constraintStart_toEndOf="@+id/ic_globo"
+            app:layout_constraintTop_toTopOf="@+id/bt_localizacao" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_localizacao"
+            app:layout_constraintEnd_toEndOf="@+id/bt_localizacao"
+            app:layout_constraintTop_toTopOf="@+id/bt_localizacao" />
+
+        <View
+            android:id="@+id/bt_contatos"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_localizacao" />
+
+        <ImageView
+            android:id="@+id/ic_contato"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_balao_fala"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_contatos"
+            app:layout_constraintStart_toStartOf="@+id/bt_contatos"
+            app:layout_constraintTop_toTopOf="@+id/bt_contatos" />
+
+        <TextView
+            android:id="@+id/text_graficos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Contatos"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_contatos"
+            app:layout_constraintStart_toEndOf="@+id/ic_contato"
+            app:layout_constraintTop_toTopOf="@+id/bt_contatos" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_contatos"
+            app:layout_constraintEnd_toEndOf="@+id/bt_contatos"
+            app:layout_constraintTop_toTopOf="@+id/bt_contatos" />
+
+        <View
+            android:id="@+id/bt_links"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_contatos" />
+
+        <ImageView
+            android:id="@+id/ic_links"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_link"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_links"
+            app:layout_constraintStart_toStartOf="@+id/bt_links"
+            app:layout_constraintTop_toTopOf="@+id/bt_links" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Links"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_links"
+            app:layout_constraintStart_toEndOf="@+id/ic_links"
+            app:layout_constraintTop_toTopOf="@+id/bt_links" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_links"
+            app:layout_constraintEnd_toEndOf="@+id/bt_links"
+            app:layout_constraintTop_toTopOf="@+id/bt_links" />
+
+        <View
+            android:id="@+id/bt_relogio"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bt_links" />
+
+        <ImageView
+            android:id="@+id/ic_relogio"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:src="@drawable/ic_relogio"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_relogio"
+            app:layout_constraintStart_toStartOf="@+id/bt_relogio"
+            app:layout_constraintTop_toTopOf="@+id/bt_relogio" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Horários"
+            android:textColor="@color/dark_gray"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_relogio"
+            app:layout_constraintStart_toEndOf="@+id/ic_relogio"
+            app:layout_constraintTop_toTopOf="@+id/bt_relogio" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_seta_right"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_relogio"
+            app:layout_constraintEnd_toEndOf="@+id/bt_relogio"
+            app:layout_constraintTop_toTopOf="@+id/bt_relogio" />
+
+        <TextView
+            android:id="@+id/ultimas_interacoes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:text="Produtos e Serviços"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bt_relogio" />
+
+        <LinearLayout
+            android:id="@+id/containerProdutos"
+            style="@style/ConteinerDashbord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ultimas_interacoes" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

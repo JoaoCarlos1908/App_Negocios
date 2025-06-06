@@ -36,14 +36,18 @@ import Class.Horarios.HorariosFuncionamento;
 public class HorariosFragment extends Fragment {
 
     private FragmentHorariosBinding binding;
+    private String idUser;
     private Button bt_editTodos, bt_editSabDom, bt_editSegSex;
     private ImageView[] editDia = new ImageView[7];
     private TextView[] editText = new TextView[7];
     private HorariosFuncionamento horarios = new HorariosFuncionamento();
+    private Boolean exibir;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-
             ViewGroup container, Bundle savedInstanceState) {
+        idUser = getArguments().getString("idUser");
+        exibir = getArguments().getBoolean("exibir");
+
         View view = inflater.inflate(R.layout.fragment_horarios, container, false);
 
         iniciarComponentes(view);
@@ -173,16 +177,25 @@ public class HorariosFragment extends Fragment {
         editText[5] = view.findViewById(R.id.text_sexH);
         editText[6] = view.findViewById(R.id.text_sabH);
 
+        if(!exibir){
+            bt_editSabDom.setVisibility(View.GONE);
+            bt_editSegSex.setVisibility(View.GONE);
+            bt_editTodos.setVisibility(View.GONE);
+
+            for (int i = 0; i < editDia.length; i++){
+                editDia[i].setVisibility(View.GONE);
+            }
+        }
+
         recuperarHorarios(horarios);
         preencherHorarios(horarios, editText);
     }
 
     private void recuperarHorarios(HorariosFuncionamento horarios) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         db.collection("Cliente")
-                .document(usuarioID)
+                .document(idUser)
                 .collection("horariosFuncionamento")
                 .document("tabelaHorarios")
                 .get()

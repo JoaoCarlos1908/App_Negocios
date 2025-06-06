@@ -3,9 +3,9 @@ package Class;
 public class Reclamacoes {
     private String idReclamacao;            // ID da avaliação (gerado automaticamente ou pelo Firebase)
     private String idEmpreendimento;       // ID do empreendimento avaliado
-    private String descricao;              // Comentário da avaliação
+    private String reclamacao;              // Comentário da avaliação
     private String idCliente;          // Nome da pessoa que avaliou
-    private boolean anonimo, respondida;               // Se a avaliação é anônima
+    private boolean anonima, respondida;               // Se a avaliação é anônima
     private String resposta;   // Resposta opcional do empreendedor
 
     // Construtor vazio necessário para Firebase
@@ -15,7 +15,7 @@ public class Reclamacoes {
     // Construtor completo (sem idAvaliacao e resposta inicial)
     public Reclamacoes(String idEmpreendimento, String descricao, String nomeCliente, boolean respondida) {
         this.idEmpreendimento = idEmpreendimento;
-        this.descricao = descricao;
+        this.reclamacao = descricao;
         this.idCliente = nomeCliente;
         this.respondida = respondida;
         this.resposta = "";
@@ -55,11 +55,11 @@ public class Reclamacoes {
         this.idEmpreendimento = idEmpreendimento;
     }
 
-    public String getDescricao(){
-        return descricao;
+    public String getReclamacao(){
+        return reclamacao;
     }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setReclamacao(String descricao) {
+        this.reclamacao = descricao;
     }
 
     public String getNomeAvaliador() {
@@ -79,10 +79,10 @@ public class Reclamacoes {
     }
 
     public boolean isAnonima() {
-        return anonimo;
+        return anonima;
     }
 
-    public void setAnonimo(boolean anonimo) {
-        this.anonimo = anonimo;
+    public void setAnonima(boolean anonima) {
+        this.anonima = anonima;
     }
 }

@@ -25,28 +25,29 @@ import Class.Avaliacao;
 public class AvaliacoesFragment extends Fragment {
 
     private FragmentAvaliacoesBinding binding;
+    private View view;
     private Button btnFiltrar;
     private String idEmpreendimento = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_avaliacoes, container, false);
+        view = inflater.inflate(R.layout.fragment_avaliacoes, container, false);
 
         btnFiltrar = view.findViewById(R.id.btnFiltrar);
 
-        carregarAvaliacoes(idEmpreendimento, view);
+        carregarAvaliacoes(idEmpreendimento);
 
         btnFiltrar.setOnClickListener(v -> mostrarMenuFiltrar(v));
 
         return view;
     }
 
-    private void carregarAvaliacoes(String idEmpreendimento, View view) {
+    private void carregarAvaliacoes(String idEmpreendimento) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout container = view.findViewById(R.id.containerAvaliacoes);
         container.removeAllViews(); // Limpar antes de exibir
 
-        db.collection("avaliacoes")
+        db.collection("Avaliacoes")
                 .whereEqualTo("idEmpreendimento", idEmpreendimento)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -66,11 +67,11 @@ public class AvaliacoesFragment extends Fragment {
                                         if (nome != null) {
                                             avaliacao.setNomeAvaliador(nome);
                                         }
-                                        exibirAvaliacao(container, avaliacao, view);
+                                        exibirAvaliacao(container, avaliacao);
                                     });
                         } else {
                             // Se for anônimo, exibe direto
-                            exibirAvaliacao(container, avaliacao, view);
+                            exibirAvaliacao(container, avaliacao);
                         }
                     }
                 })
@@ -79,7 +80,7 @@ public class AvaliacoesFragment extends Fragment {
                 });
     }
 
-    private void exibirAvaliacao(LinearLayout container, Avaliacao avaliacao, View view) {
+    private void exibirAvaliacao(LinearLayout container, Avaliacao avaliacao) {
         View item = LayoutInflater.from(view.getContext()).inflate(R.layout.layout_view_avaliacao, container, false);
 
         RatingBar ratingBar = item.findViewById(R.id.ratingBar);
@@ -124,10 +125,8 @@ public class AvaliacoesFragment extends Fragment {
         popup.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
 
-            String idEmpreendimento = getArguments() != null ? getArguments().getString("idEmpreendimento") : "";
-
             if (id == R.id.menu_todas) {
-                carregarAvaliacoes(idEmpreendimento, getView());
+                carregarAvaliacoes(idEmpreendimento);
             } else {
                 int estrelas = 0;
                 if (id == R.id.menu_5_estrelas) estrelas = 5;
@@ -136,7 +135,7 @@ public class AvaliacoesFragment extends Fragment {
                 else if (id == R.id.menu_2_estrelas) estrelas = 2;
                 else if (id == R.id.menu_1_estrelas) estrelas = 1;
 
-                carregarAvaliacoesFiltradas(idEmpreendimento, estrelas, getView());
+                carregarAvaliacoesFiltradas(idEmpreendimento, estrelas);
             }
 
             return true;
@@ -145,12 +144,12 @@ public class AvaliacoesFragment extends Fragment {
         popup.show();
     }
 
-    private void carregarAvaliacoesFiltradas(String idEmpreendimento, int estrelas, View view) {
+    private void carregarAvaliacoesFiltradas(String idEmpreendimento, int estrelas) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout container = view.findViewById(R.id.containerAvaliacoes);
         container.removeAllViews(); // Limpa as avaliações anteriores
 
-        db.collection("avaliacoes")
+        db.collection("Avaliacoes")
                 .whereEqualTo("idEmpreendimento", idEmpreendimento)
                 .whereEqualTo("estrelas", estrelas)
                 .get()
@@ -170,10 +169,10 @@ public class AvaliacoesFragment extends Fragment {
                                         if (nome != null) {
                                             avaliacao.setNomeAvaliador(nome);
                                         }
-                                        exibirAvaliacao(container, avaliacao, view);
+                                        exibirAvaliacao(container, avaliacao);
                                     });
                         } else {
-                            exibirAvaliacao(container, avaliacao, view);
+                            exibirAvaliacao(container, avaliacao);
                         }
                     }
 

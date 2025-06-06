@@ -3,14 +3,11 @@ package com.example.appnegocios.ui.perfil;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -27,7 +24,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,12 +37,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private FragmentMapsBinding binding;
     private GoogleMap mMap;
     private FirebaseFirestore db;
-    private String usuarioID;
+    private String idUser;
     private FusedLocationProviderClient fusedLocationClient;
     private Marker marcadorSelecionado;
     private double latitude = 0.0;
     private double longitude = 0.0;
-    private boolean edicaoHabilitada = false;
+    private Boolean edicaoHabilitada = false;
+    private Boolean exibir;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private Button bt_editar, bt_salvar, bt_cancelar;
     private TextView text_alterar_loc;
@@ -60,6 +57,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         binding = FragmentMapsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
+        idUser = getArguments().getString("idUser");
+        exibir = getArguments().getBoolean("exibir");
 
         IniciarComponentes(view);
 
@@ -99,7 +99,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         bt_salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.collection("Cliente").document(usuarioID)
+                db.collection("Cliente").document(idUser)
                         .update(
                                 "latitude", latitude,
                                 "longitude", longitude
@@ -136,8 +136,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         bt_salvar = view.findViewById(R.id.bt_salvar);
         bt_cancelar = view.findViewById(R.id.bt_cancelar);
         text_alterar_loc = view.findViewById(R.id.text_selecionar_maps);
-        usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db = FirebaseFirestore.getInstance();
+
+        if(!exibir){
+            bt_editar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -222,7 +225,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // Supondo que você tenha uma coleção "locations" com um documento "userLocation"
         CollectionReference locationsRef = db.collection("Cliente");
 
-        locationsRef.document(usuarioID).get()
+        locationsRef.document(idUser).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();

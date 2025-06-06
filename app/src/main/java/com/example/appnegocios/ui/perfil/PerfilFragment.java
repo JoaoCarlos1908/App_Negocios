@@ -107,9 +107,13 @@ public class PerfilFragment extends Fragment {
                 new android.os.Handler().postDelayed(
                         new Runnable() {
                             public void run() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", usuarioID);
+                                bundle.putBoolean("exibir", true);
+
                                 // Código que será executado após
                                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
-                                navController.navigate(R.id.mapsFragment); // Use o ID correto definido no seu nav_graph
+                                navController.navigate(R.id.mapsFragment, bundle); // Use o ID correto definido no seu nav_graph
                             }
                         },
                         250); // tempo de atraso em milissegundos
@@ -123,9 +127,13 @@ public class PerfilFragment extends Fragment {
                 new android.os.Handler().postDelayed(
                         new Runnable() {
                             public void run() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", usuarioID);
+                                bundle.putBoolean("exibir", true);
+
                                 // Código que será executado após
                                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
-                                navController.navigate(R.id.contatosFragment); // Use o ID correto definido no seu nav_graph
+                                navController.navigate(R.id.contatosFragment, bundle); // Use o ID correto definido no seu nav_graph
                             }
                         },
                         250); // tempo de atraso em milissegundos
@@ -139,9 +147,13 @@ public class PerfilFragment extends Fragment {
                 new android.os.Handler().postDelayed(
                         new Runnable() {
                             public void run() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", usuarioID);
+                                bundle.putBoolean("exibir", true);
+
                                 // Código que será executado após
                                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
-                                navController.navigate(R.id.linksFragment); // Use o ID correto definido no seu nav_graph
+                                navController.navigate(R.id.linksFragment, bundle); // Use o ID correto definido no seu nav_graph
                             }
                         },
                         250); // tempo de atraso em milissegundos
@@ -155,9 +167,13 @@ public class PerfilFragment extends Fragment {
                 new android.os.Handler().postDelayed(
                         new Runnable() {
                             public void run() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", usuarioID);
+                                bundle.putBoolean("exibir", true);
+
                                 // Código que será executado após
                                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
-                                navController.navigate(R.id.horariosFragment); // Use o ID correto definido no seu nav_graph
+                                navController.navigate(R.id.horariosFragment, bundle); // Use o ID correto definido no seu nav_graph
                             }
                         },
                         250); // tempo de atraso em milissegundos

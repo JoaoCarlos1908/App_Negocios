@@ -8,34 +8,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.appnegocios.R;
 import com.example.appnegocios.databinding.FragmentContatosBinding;
-import com.example.appnegocios.ui.dashboard.DashboardViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import Class.Contato;
 
 public class ContatosFragment extends Fragment {
 
-private FragmentContatosBinding binding;
-private EditText tipo, contato;
-private Button bt_adicionar;
-private FirebaseFirestore db = FirebaseFirestore.getInstance();
-private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private FragmentContatosBinding binding;
+    private EditText tipo, contato;
+    private Button bt_adicionar;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String idUser;
+    private Boolean exibir;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
+        idUser = getArguments().getString("idUser");
+        exibir = getArguments().getBoolean("exibir");
+
         // Infla o layout XML do fragmento
         View view = inflater.inflate(R.layout.fragment_contatos, container, false);
 
@@ -45,7 +46,7 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         bt_adicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tipo.getText().toString().trim().isEmpty()){
+                if (tipo.getText().toString().trim().isEmpty()) {
                     Snackbar snackbar = Snackbar.make(view, "Informe o tipo do contato", Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.RED);
                     snackbar.setTextColor(Color.WHITE);
@@ -55,7 +56,7 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     snackbar.setBackgroundTint(Color.RED);
                     snackbar.setTextColor(Color.WHITE);
                     snackbar.show();
-                }else {
+                } else {
                     // Cria o documento de contato
                     Contato novoContato = new Contato();
                     novoContato.setTipo(tipo.getText().toString());
@@ -63,7 +64,7 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                     // Adiciona na subcoleção 'contatos' dentro do usuário 'abc123'
                     db.collection("Cliente")
-                            .document(usuarioID)
+                            .document(idUser)
                             .collection("contatos")
                             .add(novoContato)
                             .addOnSuccessListener(docRef -> Log.d("FIREBASE", "Contato adicionado com ID: " + docRef.getId()))
@@ -78,15 +79,21 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         return view;
     }
 
-    private void iniciarComponentes(View view){
+    private void iniciarComponentes(View view) {
         tipo = view.findViewById(R.id.edit_tipo_contato);
         contato = view.findViewById(R.id.edit_contato);
         bt_adicionar = view.findViewById(R.id.bt_adicionar);
+
+        if(!exibir){
+            tipo.setVisibility(View.GONE);
+            contato.setVisibility(View.GONE);
+            bt_adicionar.setVisibility(View.GONE);
+        }
     }
 
     private void mostrarContatos(View view) {
         db.collection("Cliente")
-                .document(usuarioID)
+                .document(idUser)
                 .collection("contatos")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
@@ -112,7 +119,7 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 @Override
                                 public void onClick(View v) {
                                     db.collection("Cliente")
-                                            .document(usuarioID)
+                                            .document(idUser)
                                             .collection("contatos")
                                             .document(id_contato.getText().toString()) // ID do documento do contato
                                             .delete()
@@ -122,6 +129,9 @@ private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                             .addOnFailureListener(e -> {
                                                 Log.e("FIREBASE", "Erro ao excluir contato", e);
                                             });
+                                    if(!exibir){
+                                        bt_excluir.setVisibility(View.GONE);
+                                    }
                                     mostrarContatos(view);
                                 }
                             });

@@ -1,6 +1,9 @@
 package com.example.appnegocios.ui;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.appnegocios.R;
 import com.example.appnegocios.databinding.FragmentDashboardBinding;
@@ -42,25 +47,21 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private String idEmpreendimento;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private TextView text_nomeEmpre, text_avaliacoes, ic_estrelaEx, text_Res;
+    private TextView text_nomeEmpre, text_avaliacoes, ic_estrelaEx, text_Res, text_endereco;
+    private EditText edit_descricao;
     private Button bt_avaliar, bt_reclamar;
+    private View maps, contatos, links, horas;
     private List<Produto> listaProdutos = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        idEmpreendimento = getArguments().getString("idEmpreendimento");
 
         // Infla o layout XML do fragmento
         View view = inflater.inflate(R.layout.fragment_view_perfil_empreendimento, container, false);
-        // Acessa o LinearLayout dentro do layout do fragment
-        LinearLayout containerInteracoes = view.findViewById(R.id.containerProdutos);
 
-        idEmpreendimento = getArguments().getString("idEmpreendimento");
+        iniciarComponentes(view);
 
-        carregarProdutosDoUsuario(view);
-
-        text_nomeEmpre = view.findViewById(R.id.text_nomeEmpre);
-        ic_estrelaEx = view.findViewById(R.id.ic_estrelaEx);
-        text_Res = view.findViewById(R.id.text_Res);
 
         DocumentReference documentReference = db.collection("Cliente").document(idEmpreendimento);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -68,6 +69,8 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot != null) {
                     text_nomeEmpre.setText(documentSnapshot.getString("nome"));
+                    text_endereco.setText("\uD83D\uDCCD " + documentSnapshot.getString("Endereço"));
+                    edit_descricao.setText(documentSnapshot.getString("descrição"));
                 }
             }
         });
@@ -217,9 +220,9 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                     // Criar objeto Avaliacao
                     Reclamacoes reclamacao = new Reclamacoes();
                     reclamacao.setIdEmpreendimento(idEmpreendimento);
-                    reclamacao.setDescricao(comentario);
+                    reclamacao.setReclamacao(comentario);
                     reclamacao.setIdCliente(idAvaliador);
-                    reclamacao.setAnonimo(anonima);
+                    reclamacao.setAnonima(anonima);
                     reclamacao.setRespondida(false);
                     reclamacao.setResposta(""); // resposta ainda não existe
 
@@ -250,7 +253,116 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
             }
         });
 
+        maps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animarPreenchimento(maps);
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", idEmpreendimento);
+                                bundle.putBoolean("exibir", false);
+
+                                // Código que será executado após
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                                navController.navigate(R.id.mapsFragment, bundle);
+                            }
+                        },
+                        250); // tempo de atraso em milissegundos
+            }
+        });
+
+        contatos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animarPreenchimento(contatos);
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", idEmpreendimento);
+                                bundle.putBoolean("exibir", false);
+
+                                // Código que será executado após
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                                navController.navigate(R.id.contatosFragment, bundle);
+                            }
+                        },
+                        250); // tempo de atraso em milissegundos
+            }
+        });
+
+        links.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animarPreenchimento(links);
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", idEmpreendimento);
+                                bundle.putBoolean("exibir", false);
+
+                                // Código que será executado após
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                                navController.navigate(R.id.linksFragment, bundle); // Use o ID correto definido no seu nav_graph
+                            }
+                        },
+                        250); // tempo de atraso em milissegundos
+            }
+        });
+
+        horas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animarPreenchimento(horas);
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", idEmpreendimento);
+                                bundle.putBoolean("exibir", false);
+
+                                // Código que será executado após
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                                navController.navigate(R.id.horariosFragment, bundle); // Use o ID correto definido no seu nav_graph
+                            }
+                        },
+                        250); // tempo de atraso em milissegundos
+            }
+        });
+
         return view;
+    }
+
+    private void iniciarComponentes(View view) {
+        carregarProdutosDoUsuario(view);
+
+        text_nomeEmpre = view.findViewById(R.id.text_nomeEmpre);
+        ic_estrelaEx = view.findViewById(R.id.ic_estrelaEx);
+        text_Res = view.findViewById(R.id.text_Res);
+        text_endereco = view.findViewById(R.id.text_endereco);
+        edit_descricao = view.findViewById(R.id.edit_descricao);
+        maps = view.findViewById(R.id.bt_localizacao);
+        contatos = view.findViewById(R.id.bt_contatos);
+        links = view.findViewById(R.id.bt_links);
+        horas = view.findViewById(R.id.bt_relogio);
+    }
+
+    public void animarPreenchimento(View view) {
+        int corInicial = Color.TRANSPARENT; // ou qualquer cor de início
+        int corFinal = Color.parseColor("#a7a7a7"); // Cor final
+
+        ObjectAnimator anim = ObjectAnimator.ofObject(
+                view,
+                "backgroundColor",
+                new ArgbEvaluator(),
+                corInicial,
+                corFinal
+        );
+        anim.setDuration(250); // duração da animação em milissegundos
+        anim.start();
     }
 
     private void exibirTaxasAvaliacoesReclamacoes(String idEmpreendimento) {
@@ -312,7 +424,7 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                         Log.d("RECLAMACOES", "Porcentagem respondidas: " + porcentagem + "%");
                         // Aqui você pode exibir o resultado onde quiser, exemplo:
                         text_Res.setText(String.format("%.1f%%", porcentagem));
-                    }else{
+                    } else {
                         text_Res.setText("100%");
                     }
                 })
@@ -320,7 +432,6 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                     Log.e("ERRO", "Erro ao buscar reclamações", e);
                 });
     }
-
 
     private void carregarProdutosDoUsuario(View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -362,7 +473,6 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                     e.printStackTrace();
                 });
     }
-
 
     @Override
     public void onDestroyView() {

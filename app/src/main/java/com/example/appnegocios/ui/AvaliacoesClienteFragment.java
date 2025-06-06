@@ -25,28 +25,29 @@ import Class.Avaliacao;
 public class AvaliacoesClienteFragment extends Fragment {
 
     private FragmentAvaliacoesBinding binding;
+    private View view;
     private Button btnFiltrar;
     private String idCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_avaliacoes_cliente, container, false);
+        view = inflater.inflate(R.layout.fragment_avaliacoes_cliente, container, false);
 
         btnFiltrar = view.findViewById(R.id.btnFiltrar);
 
-        carregarAvaliacoes(idCliente, view);
+        carregarAvaliacoes(idCliente);
 
         btnFiltrar.setOnClickListener(v -> mostrarMenuFiltrar(v));
 
         return view;
     }
 
-    private void carregarAvaliacoes(String idCliente, View view) {
+    private void carregarAvaliacoes(String idCliente) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout container = view.findViewById(R.id.containerAvaliacoes);
         container.removeAllViews(); // Limpar antes de exibir
 
-        db.collection("avaliacoes")
+        db.collection("Avaliacoes")
                 .whereEqualTo("idCliente", idCliente)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -54,17 +55,16 @@ public class AvaliacoesClienteFragment extends Fragment {
                         Avaliacao avaliacao = doc.toObject(Avaliacao.class);
                         avaliacao.setIdAvaliacao(doc.getId());
 
-                        String idEmpreendimento = doc.getString("idEmpreendimento");
 
                             db.collection("Cliente")
-                                    .document(idEmpreendimento)
+                                    .document(idCliente)
                                     .get()
                                     .addOnSuccessListener(userDoc -> {
                                         String nome = userDoc.getString("nome");
                                         if (nome != null) {
                                             avaliacao.setNomeAvaliador(nome);
                                         }
-                                        exibirAvaliacao(container, avaliacao, view);
+                                        exibirAvaliacao(container, avaliacao);
                                     });
 
                     }
@@ -74,7 +74,7 @@ public class AvaliacoesClienteFragment extends Fragment {
                 });
     }
 
-    private void exibirAvaliacao(LinearLayout container, Avaliacao avaliacao, View view) {
+    private void exibirAvaliacao(LinearLayout container, Avaliacao avaliacao) {
         View item = LayoutInflater.from(view.getContext()).inflate(R.layout.layout_view_avaliacao, container, false);
 
         RatingBar ratingBar = item.findViewById(R.id.ratingBar);
@@ -122,7 +122,7 @@ public class AvaliacoesClienteFragment extends Fragment {
             String idCliente = getArguments() != null ? getArguments().getString("idCliente") : "";
 
             if (id == R.id.menu_todas) {
-                carregarAvaliacoes(idCliente, getView());
+                carregarAvaliacoes(idCliente);
             } else {
                 int estrelas = 0;
                 if (id == R.id.menu_5_estrelas) estrelas = 5;
@@ -131,7 +131,7 @@ public class AvaliacoesClienteFragment extends Fragment {
                 else if (id == R.id.menu_2_estrelas) estrelas = 2;
                 else if (id == R.id.menu_1_estrelas) estrelas = 1;
 
-                carregarAvaliacoesFiltradas(idCliente, estrelas, getView());
+                carregarAvaliacoesFiltradas(idCliente, estrelas);
             }
 
             return true;
@@ -140,12 +140,12 @@ public class AvaliacoesClienteFragment extends Fragment {
         popup.show();
     }
 
-    private void carregarAvaliacoesFiltradas(String idCliente, int estrelas, View view) {
+    private void carregarAvaliacoesFiltradas(String idCliente, int estrelas) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout container = view.findViewById(R.id.containerAvaliacoes);
         container.removeAllViews(); // Limpa as avaliações anteriores
 
-        db.collection("avaliacoes")
+        db.collection("Avaliacoes")
                 .whereEqualTo("idCliente", idCliente)
                 .whereEqualTo("estrelas", estrelas)
                 .get()
@@ -165,10 +165,10 @@ public class AvaliacoesClienteFragment extends Fragment {
                                         if (nome != null) {
                                             avaliacao.setNomeAvaliador(nome);
                                         }
-                                        exibirAvaliacao(container, avaliacao, view);
+                                        exibirAvaliacao(container, avaliacao);
                                     });
                         } else {
-                            exibirAvaliacao(container, avaliacao, view);
+                            exibirAvaliacao(container, avaliacao);
                         }
                     }
 

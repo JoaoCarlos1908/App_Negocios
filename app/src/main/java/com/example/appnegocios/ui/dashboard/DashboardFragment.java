@@ -31,7 +31,7 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private TextView text_nomeEmpre, text_avaliacoes;
+    private TextView text_nomeEmpre, text_avaliacoes, text_Res;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,8 +43,9 @@ public class DashboardFragment extends Fragment {
 
         text_nomeEmpre = view.findViewById(R.id.text_nomeEmpre);
         text_avaliacoes = view.findViewById(R.id.text_avaliacoes);
+        text_Res = view.findViewById(R.id.text_Res);
 
-        calcularMediaAvaliacoes(usuarioID);
+        exibirTaxasAvaliacoesReclamacoes(usuarioID);
 
         DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -80,9 +81,10 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 
-    private void calcularMediaAvaliacoes(String idEmpreendimento) {
+    private void exibirTaxasAvaliacoesReclamacoes(String idEmpreendimento) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // Primeiro: calcular média de avaliações
         db.collection("Avaliacoes")
                 .whereEqualTo("idEmpreendimento", idEmpreendimento)
                 .get()
@@ -105,10 +107,43 @@ public class DashboardFragment extends Fragment {
                         text_avaliacoes.setText(String.format("%.1f", media));
                     } else {
                         Log.d("MÉDIA", "Sem avaliações para esse empreendimento.");
+                        text_avaliacoes.setText("#");
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("ERRO", "Erro ao buscar avaliações", e);
+                });
+
+        // Segundo: calcular porcentagem de reclamações respondidas
+        db.collection("Reclamacoes")
+                .whereEqualTo("idEmpreendimento", idEmpreendimento)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int totalReclamacoes = 0;
+                    int reclamacoesRespondidas = 0;
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Boolean respondida = doc.getBoolean("respondida");
+
+                        if (respondida != null) {
+                            totalReclamacoes++;
+                            if (respondida) {
+                                reclamacoesRespondidas++;
+                            }
+                        }
+                    }
+
+                    if (totalReclamacoes > 0) {
+                        double porcentagem = ((double) reclamacoesRespondidas / totalReclamacoes) * 100;
+                        Log.d("RECLAMACOES", "Porcentagem respondidas: " + porcentagem + "%");
+                        // Aqui você pode exibir o resultado onde quiser, exemplo:
+                        text_Res.setText(String.format("%.1f%%", porcentagem));
+                    }else{
+                        text_Res.setText("100%");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ERRO", "Erro ao buscar reclamações", e);
                 });
     }
 

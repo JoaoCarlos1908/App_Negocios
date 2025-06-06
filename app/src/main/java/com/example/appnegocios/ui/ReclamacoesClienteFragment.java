@@ -95,7 +95,7 @@ public class ReclamacoesClienteFragment extends Fragment {
         TextView tvRespostatext = item.findViewById(R.id.tvRespostatext);
 
         tvNome.setText("Para: " + reclamacao.getNomeAvaliador());
-        tvComentario.setText(reclamacao.getDescricao());
+        tvComentario.setText(reclamacao.getReclamacao());
 
         tvResposta.setOnClickListener(new View.OnClickListener() {
             @Override

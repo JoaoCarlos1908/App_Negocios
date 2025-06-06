@@ -39,4 +39,28 @@
         app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.appnegocios.ui.perfil.MapsFragment"
+        android:label="Localização de Atendimento"
+        tools:layout="@layout/fragment_maps" />
+
+    <fragment
+        android:id="@+id/contatosFragment"
+        android:name="com.example.appnegocios.ui.perfil.ContatosFragment"
+        android:label="Contatos"
+        tools:layout="@layout/fragment_contatos" />
+
+    <fragment
+        android:id="@+id/linksFragment"
+        android:name="com.example.appnegocios.ui.perfil.LinksFragment"
+        android:label="Links"
+        tools:layout="@layout/fragment_links" />
+
+    <fragment
+        android:id="@+id/horariosFragment"
+        android:name="com.example.appnegocios.ui.perfil.HorariosFragment"
+        android:label="Horarios"
+        tools:layout="@layout/fragment_horarios" />
+
 </navigation>
