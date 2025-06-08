@@ -164,10 +164,7 @@ public class ProdutosFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 Bundle bundle = new Bundle();
-                                bundle.putString("titulo", produto.getTitulo());
-                                bundle.putString("descricao", produto.getDescricao());
-                                String valor = Double.toString(produto.getValor());
-                                bundle.putString("valor", valor);
+                                bundle.putString("idUser", usuarioID);
                                 bundle.putString("idProduto", produto.getIdProduto());
 
                                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);

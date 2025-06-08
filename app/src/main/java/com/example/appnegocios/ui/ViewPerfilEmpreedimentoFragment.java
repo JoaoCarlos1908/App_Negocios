@@ -30,11 +30,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import Class.Avaliacao;
@@ -61,7 +64,7 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_view_perfil_empreendimento, container, false);
 
         iniciarComponentes(view);
-
+        registrarVisualizacaoPerfil(idEmpreendimento);
 
         DocumentReference documentReference = db.collection("Cliente").document(idEmpreendimento);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -285,6 +288,8 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                                 bundle.putBoolean("exibir", false);
 
                                 // Código que será executado após
+                                registrarClicksContatos(idEmpreendimento);
+
                                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
                                 navController.navigate(R.id.contatosFragment, bundle);
                             }
@@ -464,6 +469,21 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
 
                         ImageButton btneditar = viewProduto.findViewById(R.id.btnEditar);
                         btneditar.setVisibility(View.GONE);
+
+                        viewProduto.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idUser", idEmpreendimento);
+                                bundle.putString("idProduto", produto.getIdProduto());
+                                bundle.putBoolean("modExibir", true);
+
+                                // Código que será executado após
+                                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                                navController.navigate(R.id.addProdutos, bundle);
+                            }
+                        });
+
                         // Adiciona a view ao container
                         conteinerProdutos.addView(viewProduto);
                     }
@@ -471,6 +491,46 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                 .addOnFailureListener(e -> {
                     //Toast.makeText(getContext(), "Erro ao carregar produtos", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
+                });
+    }
+
+    private void registrarVisualizacaoPerfil(String idEmpreendimento) {
+        if (idEmpreendimento == null || idEmpreendimento.trim().isEmpty()) {
+            Log.e("Firestore", "ID do empreendimento inválido.");
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference docRef = db.collection("Cliente").document(idEmpreendimento);
+
+        docRef.update("views", FieldValue.increment(1))
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Visualização registrada com sucesso."))
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Erro ao registrar visualização: ", e);
+
+                    // Caso o campo "visualizacoes" ainda não exista, cria com valor 1
+                    docRef.set(Collections.singletonMap("visualizacoes", 1), SetOptions.merge());
+                });
+    }
+
+    private void registrarClicksContatos(String idEmpreendimento) {
+        if (idEmpreendimento == null || idEmpreendimento.trim().isEmpty()) {
+            Log.e("Firestore", "ID do empreendimento inválido.");
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference docRef = db.collection("Cliente").document(idEmpreendimento);
+
+        docRef.update("clicksContatos", FieldValue.increment(1))
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Visualização registrada com sucesso."))
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Erro ao registrar visualização: ", e);
+
+                    // Caso o campo "visualizacoes" ainda não exista, cria com valor 1
+                    docRef.set(Collections.singletonMap("visualizacoes", 1), SetOptions.merge());
                 });
     }
 

@@ -43,6 +43,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import Class.Empreendimento;
 import Class.Cliente;
+import Class.Contato;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -279,6 +280,21 @@ public class FormCadastro extends AppCompatActivity {
             usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
+
+            // Cria o documento de contato
+            Contato novoContato = new Contato();
+            novoContato.setTipo("E-mail");
+            novoContato.setContato(empreendimento.getEmail());
+
+            // Adiciona na subcoleção 'contatos' dentro do usuário 'abc123'
+            db.collection("Cliente")
+                    .document(usuarioID)
+                    .collection("contatos")
+                    .add(novoContato)
+                    .addOnSuccessListener(docRef -> Log.d("FIREBASE", "Contato adicionado com ID: " + docRef.getId()))
+                    .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao adicionar contato", e));
+
+
             documentReference.set(empresa).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {

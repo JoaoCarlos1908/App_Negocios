@@ -63,4 +63,16 @@
         android:label="Horarios"
         tools:layout="@layout/fragment_horarios" />
 
+    <fragment
+        android:id="@+id/addProdutos"
+        android:name="com.example.appnegocios.ui.produtos.ProdutosAddFragment"
+        android:label="Adiconar Produtos/Serviços"
+        tools:layout="@layout/fragment_add_produtos" />
+
+    <fragment
+        android:id="@+id/nav_categorias"
+        android:name="com.example.appnegocios.ui.CategoriasFragment"
+        android:label="Categorias"
+        tools:layout="@layout/fragment_categorias" />
+
 </navigation>

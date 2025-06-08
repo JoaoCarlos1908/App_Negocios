@@ -9,8 +9,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:background="@drawable/backgroud"
         android:layout_height="match_parent"
+        android:background="@drawable/backgroud"
         tools:context=".ui.perfil.PerfilFragment">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -41,22 +41,49 @@
 
             />
 
+        <TextView
+            android:id="@+id/text_nome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/nome"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconUser" />
+
         <EditText
             android:id="@+id/edit_nome"
             style="@style/edit_text"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="-dp"
             android:enabled="false"
-            android:hint="@string/nome"
+            android:hint="Nome de seu emprendimento"
             android:inputType="text"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iconUser" />
+            app:layout_constraintTop_toBottomOf="@+id/text_nome" />
+
+        <TextView
+            android:id="@+id/text_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="24dp"
+            android:text="Descrição"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_nome" />
 
         <EditText
             android:id="@+id/edit_descricao"
             style="@style/edit_text"
+            android:layout_marginTop="-dp"
             android:enabled="false"
             android:hint="Sem descrição"
             android:maxLines="6"
@@ -64,11 +91,25 @@
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_nome" />
+            app:layout_constraintTop_toBottomOf="@+id/text_desc" />
+
+        <TextView
+            android:id="@+id/text_endereco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="24dp"
+            android:text="Endereço"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_descricao" />
 
         <EditText
             android:id="@+id/edit_endereco"
             style="@style/edit_text"
+            android:layout_marginTop="-dp"
             android:enabled="false"
             android:hint="Endereço não cadastrado"
             android:maxLines="6"
@@ -76,7 +117,7 @@
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_descricao" />
+            app:layout_constraintTop_toBottomOf="@+id/text_endereco" />
 
         <View
             android:id="@+id/bt_localizacao"
@@ -245,41 +286,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bt_relogio">
 
-        <ImageView
-            android:id="@+id/ic_categoria"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="50dp"
-            android:src="@drawable/ic_categorias"
-            app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
-            app:layout_constraintStart_toStartOf="@+id/bt_categoria"
-            app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
+            <ImageView
+                android:id="@+id/ic_categoria"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="50dp"
+                android:src="@drawable/ic_categorias"
+                app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
+                app:layout_constraintStart_toStartOf="@+id/bt_categoria"
+                app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
 
-        <TextView
-            android:id="@+id/text_categoria"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="Categoria"
-            android:gravity="center"
-            android:textColor="@color/dark_gray"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:singleLine="false"
-            android:ellipsize="none"
-            android:scrollHorizontally="false"
-            app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
-            app:layout_constraintStart_toEndOf="@+id/ic_categoria"
-            app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
+            <TextView
+                android:id="@+id/text_categoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:ellipsize="none"
+                android:gravity="center"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:text="Categoria"
+                android:textColor="@color/dark_gray"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
+                app:layout_constraintStart_toEndOf="@+id/ic_categoria"
+                app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginEnd="50dp"
-            android:src="@drawable/ic_seta_right"
-            app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
-            app:layout_constraintEnd_toEndOf="@+id/bt_categoria"
-            app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="50dp"
+                android:src="@drawable/ic_seta_right"
+                app:layout_constraintBottom_toBottomOf="@+id/bt_categoria"
+                app:layout_constraintEnd_toEndOf="@+id/bt_categoria"
+                app:layout_constraintTop_toTopOf="@+id/bt_categoria" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

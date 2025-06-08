@@ -31,28 +31,33 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private TextView text_nomeEmpre, text_avaliacoes, text_Res;
+    private TextView text_nomeEmpre, text_avaliacoes, text_Res, quant_views, quant_cliks;
+    private LinearLayout containerInteracoes;
+    private DocumentReference documentReference;
+    private Button btnAbrirOutroFragmento;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         // Infla o layout XML do fragmento
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        // Acessa o LinearLayout dentro do layout do fragment
-        LinearLayout containerInteracoes = view.findViewById(R.id.containerInteracoes);
 
-        text_nomeEmpre = view.findViewById(R.id.text_nomeEmpre);
-        text_avaliacoes = view.findViewById(R.id.text_avaliacoes);
-        text_Res = view.findViewById(R.id.text_Res);
+        iniciarComponentes(view);
 
-        exibirTaxasAvaliacoesReclamacoes(usuarioID);
-
-        DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
         documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot != null) {
                     text_nomeEmpre.setText(documentSnapshot.getString("nome"));
+
+                    Long views = documentSnapshot.getLong("views");
+                    if (views != null) {quant_views.setText(String.valueOf(views));}
+                    else {quant_views.setText("0");}
+
+                    Long clicksContatos = documentSnapshot.getLong("clicksContatos");
+                    if (clicksContatos != null) {quant_cliks.setText(String.valueOf(views));}
+                    else {quant_cliks.setText("0");}
+
                 }
             }
         });
@@ -69,7 +74,6 @@ public class DashboardFragment extends Fragment {
             containerInteracoes.addView(item);
         }
 
-        Button btnAbrirOutroFragmento = view.findViewById(R.id.bt_detalhes);
         btnAbrirOutroFragmento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +83,22 @@ public class DashboardFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void iniciarComponentes(View view){
+        // Acessa o LinearLayout dentro do layout do fragment
+        containerInteracoes = view.findViewById(R.id.containerInteracoes);
+
+        text_nomeEmpre = view.findViewById(R.id.text_nomeEmpre);
+        text_avaliacoes = view.findViewById(R.id.text_avaliacoes);
+        text_Res = view.findViewById(R.id.text_Res);
+        quant_views = view.findViewById(R.id.quant_views);
+        quant_cliks = view.findViewById(R.id.quant_cliks);
+        btnAbrirOutroFragmento = view.findViewById(R.id.bt_detalhes);
+
+        exibirTaxasAvaliacoesReclamacoes(usuarioID);
+
+        documentReference = db.collection("Cliente").document(usuarioID);
     }
 
     private void exibirTaxasAvaliacoesReclamacoes(String idEmpreendimento) {

@@ -1,36 +1,25 @@
 package com.example.appnegocios.ui.produtos;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.appnegocios.R;
 import com.example.appnegocios.databinding.FragmentProdutosBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import Class.Produto;
@@ -38,9 +27,10 @@ import Class.Produto;
 public class ProdutosAddFragment extends Fragment {
 
     private FragmentProdutosBinding binding;
-    private Button bt_adiconarVar, bt_cancelar, bt_excluir, bt_salvar;
+    private Button bt_adicinarVar, bt_cancelar, bt_excluir, bt_salvar;
     private EditText text_titulo, text_desc, text_valor;
     private TextView IDProduto;
+    private String idUser, idProduto;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -50,23 +40,29 @@ public class ProdutosAddFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            String titulo = args.getString("titulo", "");
-            String descricao = args.getString("descricao", "");
-            String valor = args.getString("valor", "");
-            String idProduto = args.getString("idProduto", "");
+            idUser = args.getString("idUser", "");
+            idProduto = args.getString("idProduto", "");
 
             // Verifica se é modo edição
             if (!idProduto.isEmpty()) {
-                // Preencher os campos com os dados
-                text_titulo.setText(titulo);
-                text_desc.setText(descricao);
-                text_valor.setText(valor);
-                IDProduto.setText(idProduto);
+
+                obterProdutoPorID();
 
                 // Você pode também ocultar o botão "Salvar" e mostrar "Atualizar", por exemplo
                 bt_salvar.setText("Atualizar");
                 bt_excluir.setVisibility(View.VISIBLE);
                 ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Editar Produto/Serviço");
+
+                if (args != null && args.containsKey("modExibir")) {
+                    boolean modExibir = args.getBoolean("modExibir");
+                    if (modExibir) {
+                        bt_salvar.setVisibility(View.GONE);
+                        bt_cancelar.setVisibility(View.GONE);
+                        bt_excluir.setVisibility(View.GONE);
+                        bt_adicinarVar.setVisibility(View.GONE);
+                    }
+                }
+
             }
         }
 
@@ -105,7 +101,7 @@ public class ProdutosAddFragment extends Fragment {
                     salvarProdutoFirebase(produto, v);
                 } else {
                     produto.setIdProduto(id);
-                    atualizarProdutoFirebase(id, produto, viewAdd);
+                    atualizarProdutoFirebase(idUser,id, produto, viewAdd);
                 }
 
                 requireActivity().getSupportFragmentManager().popBackStack();
@@ -117,7 +113,7 @@ public class ProdutosAddFragment extends Fragment {
         bt_excluir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                excluirProdutoFirebase(IDProduto.getText().toString(), viewAdd);
+                excluirProdutoFirebase(viewAdd);
                 requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
@@ -126,7 +122,7 @@ public class ProdutosAddFragment extends Fragment {
     }
 
     private void iniciarComponentes(View viewAdd){
-        bt_adiconarVar = viewAdd.findViewById(R.id.btnAdicionarVariacao);
+        bt_adicinarVar = viewAdd.findViewById(R.id.btnAdicionarVariacao);
         bt_cancelar = viewAdd.findViewById(R.id.btnCancelar);
         bt_excluir = viewAdd.findViewById(R.id.btnExcluir);
         bt_salvar = viewAdd.findViewById(R.id.btnSalvar);
@@ -136,6 +132,31 @@ public class ProdutosAddFragment extends Fragment {
         text_desc = viewAdd.findViewById(R.id.etDescricaoProduto);
         text_valor = viewAdd.findViewById(R.id.etValorProduto);
 
+    }
+
+    public void obterProdutoPorID() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Cliente")
+                .document(idUser)
+                .collection("produtos")
+                .document(idProduto)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Produto produto = documentSnapshot.toObject(Produto.class);
+                        produto.setIdProduto(documentSnapshot.getId()); // se tiver id
+
+                        // Preencher os campos com os dados
+                        text_titulo.setText(produto.getTitulo());
+                        text_desc.setText(produto.getDescricao());
+                        text_valor.setText("R$" + String.format(Locale.getDefault(), "%.2f", produto.getValor()));
+
+                    } else {
+                    }
+                })
+                .addOnFailureListener(e -> {
+                });
     }
 
     private void mostrarSnackbar(String mensagem, boolean status, View viewAdd) {
@@ -152,11 +173,10 @@ public class ProdutosAddFragment extends Fragment {
 
     private void salvarProdutoFirebase(Produto produto, View  viewAdd) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Adiciona sem ID definido (Firebase gera automaticamente)
         db.collection("Cliente")
-                .document(usuarioID)
+                .document(idUser)
                 .collection("produtos")
                 .add(produto)
                 .addOnSuccessListener(documentReference -> {
@@ -165,7 +185,7 @@ public class ProdutosAddFragment extends Fragment {
                     produto.setIdProduto(idGerado);
 
                     // Agora atualize o documento com o ID salvo dentro dele
-                    atualizarProdutoFirebase(idGerado, produto, viewAdd);
+                    atualizarProdutoFirebase(idUser, idGerado, produto, viewAdd);
 
                     documentReference.set(produto)
                             .addOnSuccessListener(aVoid -> {
@@ -181,9 +201,8 @@ public class ProdutosAddFragment extends Fragment {
     }
 
 
-    private void atualizarProdutoFirebase(String idDocumento, Produto produto, View viewAdd) {
+    private void atualizarProdutoFirebase(String idUser, String idDocumento, Produto produto, View viewAdd) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Map<String, Object> produtoMap = new HashMap<>();
         produtoMap.put("idProduto", idDocumento);
@@ -192,7 +211,7 @@ public class ProdutosAddFragment extends Fragment {
         produtoMap.put("valor", produto.getValor());
 
         db.collection("Cliente")
-                .document(usuarioID)
+                .document(idUser)
                 .collection("produtos")
                 .document(idDocumento)
                 .set(produtoMap) // substitui os dados do documento
@@ -204,12 +223,11 @@ public class ProdutosAddFragment extends Fragment {
                 });
     }
 
-    private void excluirProdutoFirebase(String idProduto, View viewAdd) {
+    private void excluirProdutoFirebase(View viewAdd) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         db.collection("Cliente")
-                .document(usuarioID)
+                .document(idUser)
                 .collection("produtos")
                 .document(idProduto)
                 .delete()

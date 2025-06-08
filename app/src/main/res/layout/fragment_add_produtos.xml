@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/gray_light"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="16dp">
@@ -13,7 +13,8 @@
         android:id="@+id/viewPagerImagens"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/conteiner_dashboard" />
 
     <!-- Indicadores do carrossel (opcional) -->
     <LinearLayout
@@ -30,11 +31,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:backgroundTint="@color/dark_gray"
         android:hint="Título do Produto"
         android:inputType="textCapWords"
         android:textColor="@color/dark_gray"
-        android:textSize="16sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <!-- Campo descrição -->
     <EditText
@@ -42,24 +43,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:backgroundTint="@color/dark_gray"
-        android:gravity="top|start"
+        android:background="@drawable/edit_text"
         android:hint="Descrição"
         android:inputType="textMultiLine"
         android:maxLines="6"
         android:minLines="3"
-        android:textColor="@color/dark_gray" />
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
 
     <!-- Campo valor -->
     <EditText
         android:id="@+id/etValorProduto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginBottom="12dp"
-        android:backgroundTint="@color/dark_gray"
+        android:background="@drawable/edit_valor"
         android:hint="Valor (R$)"
         android:inputType="numberDecimal"
-        android:textColor="@color/dark_gray"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:textSize="16sp" />
 
     <!-- Botão de adicionar variação -->

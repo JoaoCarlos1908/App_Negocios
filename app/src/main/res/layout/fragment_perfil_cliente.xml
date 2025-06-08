@@ -9,8 +9,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:background="@drawable/backgroud"
         android:layout_height="match_parent"
+        android:background="@drawable/backgroud"
         tools:context=".ui.perfilCliente.PerfilClienteFragment">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -41,42 +41,85 @@
 
             />
 
+        <TextView
+            android:id="@+id/text_nome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="24dp"
+            android:text="Nome"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconUser" />
+
         <EditText
             android:id="@+id/edit_nome"
             style="@style/edit_text"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="-dp"
             android:enabled="false"
-            android:hint="Nome"
+            android:hint="Seu Nome"
             android:inputType="text"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iconUser" />
+            app:layout_constraintTop_toBottomOf="@+id/text_nome" />
+
+        <!-- Título: Telefone -->
+        <TextView
+            android:id="@+id/text_tell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="24dp"
+            android:text="Telefone"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_nome" />
 
         <EditText
             android:id="@+id/edit_telefone"
             style="@style/edit_text"
+            android:layout_marginTop="-dp"
             android:enabled="false"
-            android:hint="Telefone"
-            android:maxLines="6"
+            android:hint="Seu Telefone"
+            android:inputType="phone"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_nome" />
+            app:layout_constraintTop_toBottomOf="@+id/text_tell" />
+
+        <!-- Título: CEP -->
+        <TextView
+            android:id="@+id/text_cep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="24dp"
+            android:text="CEP"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_telefone" />
 
         <EditText
             android:id="@+id/edit_cep"
             style="@style/edit_text"
+            android:layout_marginTop="-dp"
             android:enabled="false"
-            android:hint="CEP"
-            android:maxLines="6"
+            android:hint="Seu CEP"
+            android:inputType="textPostalAddress"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_telefone" />
+            app:layout_constraintTop_toBottomOf="@+id/text_cep" />
 
 
         <androidx.appcompat.widget.AppCompatButton
