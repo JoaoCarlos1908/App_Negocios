@@ -57,7 +57,7 @@
         <EditText
             android:id="@+id/edit_nome"
             style="@style/edit_text"
-            android:layout_marginTop="-dp"
+            android:layout_marginTop="0dp"
             android:enabled="false"
             android:hint="Nome de seu emprendimento"
             android:inputType="text"
@@ -83,7 +83,7 @@
         <EditText
             android:id="@+id/edit_descricao"
             style="@style/edit_text"
-            android:layout_marginTop="-dp"
+            android:layout_marginTop="0dp"
             android:enabled="false"
             android:hint="Sem descrição"
             android:maxLines="6"
@@ -109,7 +109,7 @@
         <EditText
             android:id="@+id/edit_endereco"
             style="@style/edit_text"
-            android:layout_marginTop="-dp"
+            android:layout_marginTop="0dp"
             android:enabled="false"
             android:hint="Endereço não cadastrado"
             android:maxLines="6"
