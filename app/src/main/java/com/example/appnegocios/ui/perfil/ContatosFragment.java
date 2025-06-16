@@ -88,6 +88,7 @@ public class ContatosFragment extends Fragment {
             tipo.setVisibility(View.GONE);
             contato.setVisibility(View.GONE);
             bt_adicionar.setVisibility(View.GONE);
+
         }
     }
 
@@ -115,6 +116,9 @@ public class ContatosFragment extends Fragment {
                             text_contato.setText(contato.getContato());
                             id_contato.setText(doc.getId());
 
+                            if(!exibir){
+                                bt_excluir.setVisibility(View.GONE);
+                            }
                             bt_excluir.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -129,9 +133,7 @@ public class ContatosFragment extends Fragment {
                                             .addOnFailureListener(e -> {
                                                 Log.e("FIREBASE", "Erro ao excluir contato", e);
                                             });
-                                    if(!exibir){
-                                        bt_excluir.setVisibility(View.GONE);
-                                    }
+
                                     mostrarContatos(view);
                                 }
                             });

@@ -1,5 +1,7 @@
 package com.example.appnegocios;
 
+import static java.security.AccessController.getContext;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,13 +42,17 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import Class.Empreendimento;
 import Class.Cliente;
 import Class.Contato;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class FormCadastro extends AppCompatActivity {
     private Empreendimento empreendimento;
@@ -65,6 +71,8 @@ public class FormCadastro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tipoConta = getIntent().getBooleanExtra("Tipo_Conta", false);
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_form_cadastro);
 
@@ -140,27 +148,58 @@ public class FormCadastro extends AppCompatActivity {
 
         SelecaoDeCategorias();
 
+        autoCompleteCategorias.postDelayed(() -> autoCompleteCategorias.showDropDown(), 500);
+
 
     }//Fim do OnCreate
 
     private void SelecaoDeCategorias() {
-        String[] categorias = getResources().getStringArray(R.array.categorias_array);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_dropdown_item_1line,
-                categorias);
+        buscarCategorias(categorias -> {
+            if (categorias != null && !categorias.isEmpty()) {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_dropdown_item_1line,
+                        categorias
+                );
+                Toast.makeText(FormCadastro.this, "Categorias: " + categorias.toString(), Toast.LENGTH_LONG).show();
+                autoCompleteCategorias.setAdapter(adapter);
 
-        autoCompleteCategorias.setAdapter(adapter);
+                autoCompleteCategorias.setOnClickListener(v -> autoCompleteCategorias.showDropDown());
 
-        // Exibe as opções ao clicar no campo
-        autoCompleteCategorias.setOnClickListener(v -> autoCompleteCategorias.showDropDown());
-
-        // Captura a categoria selecionada
-        autoCompleteCategorias.setOnItemClickListener((parent, view, position, id) -> {
-            categoria = parent.getItemAtPosition(position).toString();
-    });
+                autoCompleteCategorias.setOnItemClickListener((parent, view, position, id) -> {
+                    categoria = parent.getItemAtPosition(position).toString();
+                });
+            } else {
+                Log.d("CATEGORIAS", "Nenhuma categoria encontrada.");
+                Toast.makeText(FormCadastro.this, "Categorias: " + categorias.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(FormCadastro.this, "Nenhuma categoria encontrada.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    public interface FirebaseCallback {
+        void onCallback(List<String> categorias);
+    }
+
+    private void buscarCategorias(FirebaseCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("categorias")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<String> ids = new ArrayList<>();
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        ids.add(doc.getId());
+                    }
+
+                    Log.d("FIREBASE", "Categorias encontradas: " + ids);
+                    callback.onCallback(ids);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIREBASE", "Erro ao buscar categorias", e);
+                    callback.onCallback(new ArrayList<>()); // Retorna lista vazia em caso de erro
+                });
+    }
 
     // Método auxiliar para exibir Snackbar
     private void mostrarSnackbar(View view, String mensagem, int corFundo) {
@@ -199,7 +238,6 @@ public class FormCadastro extends AppCompatActivity {
         iconUser = findViewById(R.id.iconUser);
         autoCompleteCategorias = findViewById(R.id.autoCompleteCategorias);
 
-        tipoConta = getIntent().getBooleanExtra("Tipo_Conta", false);
         if (!tipoConta) {
             cliente = new Cliente();
             edit_nome.setHint("Nome");
@@ -211,6 +249,7 @@ public class FormCadastro extends AppCompatActivity {
         }
 
     }
+
     private void CadastrarUsuario(View v){
 
         String email = edit_email.getText().toString();
@@ -259,6 +298,7 @@ public class FormCadastro extends AppCompatActivity {
             imm.hideSoftInputFromWindow(viewAtual.getWindowToken(), 0);
         }
     }
+
     private void SalvarDadosUsuario(){
         if(tipoConta){
             empreendimento.setNome(edit_nome.getText().toString());
@@ -271,11 +311,11 @@ public class FormCadastro extends AppCompatActivity {
 
             Map<String, Object> empresa = new HashMap<>();
             empresa.put("nome",empreendimento.getNome());
-            empresa.put("descrição", empreendimento.getDescricao());
+            empresa.put("descricao", empreendimento.getDescricao());
             empresa.put("TipoConta", empreendimento.getTipoConta());
             empresa.put("categoria", empreendimento.getCategoria());
             empresa.put("E-mail", empreendimento.getEmail());
-            empresa.put("Endereço", empreendimento.getEndereco());
+            empresa.put("endereco", empreendimento.getEndereco());
 
             usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -342,11 +382,12 @@ public class FormCadastro extends AppCompatActivity {
                             Log.d("db_erro","Erro ao salvar os dados" + e.toString());
                         }
                     });
-            Intent intent = new Intent(FormCadastro.this, FormTelaPrincipal.class);
+            Intent intent = new Intent(FormCadastro.this, FormDashboard.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
 
     }
+
 
 }

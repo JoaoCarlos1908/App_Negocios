@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appnegocios.R;
-import com.example.appnegocios.ui.dashboard.DashboardViewModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -25,12 +23,13 @@ import java.util.Map;
 
 import Class.CategoriaAdapter;
 import Class.SubcategoriaAdapter;
+import Class.Empreendimento;
+import Class.EmpreendimentoAdapter;
 
 public class CategoriasFragment extends Fragment {
 
-    private RecyclerView containerLateral;
-    private LinearLayout conteinerTop;
-    private RecyclerView recyclerHorizontal;
+    private RecyclerView recyclerLateral, recyclerHorizontal, recyclerConteudo;
+    private Map<String, List<Empreendimento>> mapaEmpreendimentos = new HashMap<>();
 
 
     private Map<String, List<String>> mapaSubcategorias = new HashMap<>();
@@ -41,11 +40,13 @@ public class CategoriasFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_categorias, container, false);
 
-        containerLateral = view.findViewById(R.id.recyclerLateral);
+        recyclerLateral = view.findViewById(R.id.recyclerLateral);
         recyclerHorizontal = view.findViewById(R.id.recyclerHorizontal);
+        recyclerConteudo = view.findViewById(R.id.recyclerConteudo);
 
 
         carregarCategorias();
+        carregarEmpreendimentos();
 
         return view;
     }
@@ -68,13 +69,19 @@ public class CategoriasFragment extends Fragment {
                             mapaSubcategorias.put(nomeCategoria, subcategorias != null ? subcategorias : new ArrayList<>());
                         }
 
-                        containerLateral.setLayoutManager(new LinearLayoutManager(getContext()));
-                        CategoriaAdapter adapter = new CategoriaAdapter(nomesCategorias, this::exibirSubcategorias);
-                        containerLateral.setAdapter(adapter);
 
+
+                        recyclerLateral.setLayoutManager(new LinearLayoutManager(getContext()));
+                        CategoriaAdapter adapter = new CategoriaAdapter(nomesCategorias, categoria -> {
+                            exibirSubcategorias(categoria);
+                            exibirEmpreendimentos(categoria); // Mostra os empreendimentos ao clicar na categoria
+
+                        });
+                        recyclerLateral.setAdapter(adapter);
                     } else {
                         Log.d("Categorias", "Nenhuma categoria encontrada.");
                     }
+
                 })
                 .addOnFailureListener(e -> Log.e("Categorias", "Erro ao carregar categorias", e));
     }
@@ -84,8 +91,8 @@ public class CategoriasFragment extends Fragment {
 
         if (subcats != null && !subcats.isEmpty()) {
             SubcategoriaAdapter subAdapter = new SubcategoriaAdapter(subcats, sub -> {
-                // 👇 Aqui você pode carregar os cards ou conteúdo relacionado à subcategoria
                 Log.d("Subcategoria", "Selecionada: " + sub);
+                exibirEmpreendimentos(sub); // Mostra os empreendimentos da subcategoria
             });
 
             recyclerHorizontal.setLayoutManager(
@@ -96,5 +103,63 @@ public class CategoriasFragment extends Fragment {
             recyclerHorizontal.setAdapter(null); // limpa o RecyclerView se não houver subcategorias
         }
     }
+
+    private void exibirEmpreendimentos(String chave) {
+        List<Empreendimento> lista = mapaEmpreendimentos.get(chave);
+        if (lista != null && !lista.isEmpty()) {
+            EmpreendimentoAdapter adapter = new EmpreendimentoAdapter(lista);
+            recyclerConteudo.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerConteudo.setAdapter(adapter);
+        } else {
+            recyclerConteudo.setAdapter(null);
+        }
+    }
+
+    private void carregarEmpreendimentos() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("empreendimentos")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mapaEmpreendimentos.clear();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Empreendimento emp = new Empreendimento();
+
+                        emp.setNome(doc.getString("nome")); // herdado de Usuario
+                        emp.setDescricao(doc.getString("descrição"));
+                        emp.setEndereco(doc.getString("Endereço"));
+                        emp.setCategoria(doc.getString("categoria"));
+
+                        // Carregando subcategorias do Firestore para a classe Empreendimento
+                        List<String> subcategorias = (List<String>) doc.get("subcategorias");
+                        if (subcategorias != null) {
+                            emp.setSubcategorias(subcategorias);
+                        }
+
+                        // Mapeando por categoria principal
+                        String categoria = emp.getCategoria();
+                        if (!mapaEmpreendimentos.containsKey(categoria)) {
+                            mapaEmpreendimentos.put(categoria, new ArrayList<>());
+                        }
+                        mapaEmpreendimentos.get(categoria).add(emp);
+
+                        // Mapeando por subcategorias também
+                        if (subcategorias != null) {
+                            for (String sub : subcategorias) {
+                                if (!mapaEmpreendimentos.containsKey(sub)) {
+                                    mapaEmpreendimentos.put(sub, new ArrayList<>());
+                                }
+                                mapaEmpreendimentos.get(sub).add(emp);
+                            }
+                        }
+                    }
+
+                    Log.d("Empreendimentos", "Empreendimentos carregados com sucesso.");
+                })
+                .addOnFailureListener(e -> Log.e("Empreendimentos", "Erro ao carregar empreendimentos", e));
+    }
+
+
+
 }
 

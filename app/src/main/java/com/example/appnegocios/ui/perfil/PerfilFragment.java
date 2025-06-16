@@ -38,7 +38,7 @@ import org.checkerframework.common.subtyping.qual.Bottom;
 public class PerfilFragment extends Fragment {
     private FragmentPerfilBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String usuarioID;
+    private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private TextView editFoto, text_categoria;
     private EditText nome, desc, endereco;
     private ImageView iconUser;
@@ -71,7 +71,7 @@ public class PerfilFragment extends Fragment {
                 db.collection("Cliente").document(usuarioID)
                         .update(
                                 "nome", nome.getText().toString(),
-                                "descrição", desc.getText().toString(), // sem acento
+                                "descricao", desc.getText().toString(), // sem acento
                                 "endereco", endereco.getText().toString() // padronize campos
                         )
                         .addOnSuccessListener(aVoid -> {
@@ -224,17 +224,18 @@ public class PerfilFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot != null) {
                     nome.setText(documentSnapshot.getString("nome"));
-                    desc.setText(documentSnapshot.getString("descrição"));
-                    endereco.setText(documentSnapshot.getString("Endereço"));
+                    desc.setText(documentSnapshot.getString("descricao"));
+                    endereco.setText(documentSnapshot.getString("endereco"));
                     String text = documentSnapshot.getString("categoria");
                     text_categoria.setText("Categoria: " + text);
-                    text_categoria.setText(inserirQuebraEntrePalavras(text_categoria.getText().toString(),25));
+                    text_categoria.setText(inserirQuebraEntrePalavras(text_categoria.getText().toString(), 25));
                 }
             }
         });
     }
 
     private void iniciarComponentes(LayoutInflater inflater, ViewGroup container, View view) {
+
         nome = view.findViewById(R.id.edit_nome);
         desc = view.findViewById(R.id.edit_descricao);
         endereco = view.findViewById(R.id.edit_endereco);
@@ -273,7 +274,5 @@ public class PerfilFragment extends Fragment {
 
         return resultado.toString().trim();
     }
-
-
 
 }

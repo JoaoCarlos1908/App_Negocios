@@ -60,6 +60,10 @@ public class ProdutosAddFragment extends Fragment {
                         bt_cancelar.setVisibility(View.GONE);
                         bt_excluir.setVisibility(View.GONE);
                         bt_adicinarVar.setVisibility(View.GONE);
+
+                        text_titulo.setEnabled(false);
+                        text_desc.setEnabled(false);
+                        text_valor.setEnabled(false);
                     }
                 }
 

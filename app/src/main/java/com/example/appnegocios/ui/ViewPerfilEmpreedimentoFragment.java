@@ -72,8 +72,8 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot != null) {
                     text_nomeEmpre.setText(documentSnapshot.getString("nome"));
-                    text_endereco.setText("\uD83D\uDCCD " + documentSnapshot.getString("Endereço"));
-                    edit_descricao.setText(documentSnapshot.getString("descrição"));
+                    text_endereco.setText("\uD83D\uDCCD " + documentSnapshot.getString("endereco"));
+                    edit_descricao.setText(documentSnapshot.getString("descricao"));
                 }
             }
         });

@@ -21,11 +21,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
                 android:background="@drawable/edit_text"
                 android:hint="Pesquisar"
-                android:padding="8dp" />
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
 
             <ImageView
                 android:layout_width="30dp"
@@ -39,42 +41,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
-            android:textColor="@color/dark_gray"
-            android:text="📍Vazante MG" />
+            android:text="📍Vazante MG"
+            android:textColor="@color/dark_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:paddingTop="8dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="Negócios"
                 android:textColor="@color/dark_gray"
-                android:textStyle="bold"
-                android:gravity="center" />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="Promoções"
                 android:textColor="@color/dark_gray"
-                android:textStyle="bold"
-                android:gravity="center" />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="Produtos e Serviços"
                 android:textColor="@color/dark_gray"
-                android:textStyle="bold"
-                android:gravity="center" />
+                android:textStyle="bold" />
         </LinearLayout>
 
 
@@ -363,7 +365,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/deepBlue"
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -402,14 +404,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="Bob Sorveteria e Açaí"
-                        android:textStyle="bold"
-                        android:textSize="20dp"/>
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="Rua Osorio Soares n°376"
-                        android:textSize="16dp"/>
+                        android:textSize="16dp" />
 
                     <RatingBar
                         style="?android:attr/ratingBarStyleSmall"

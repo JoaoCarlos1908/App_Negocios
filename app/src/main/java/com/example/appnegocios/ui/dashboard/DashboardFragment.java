@@ -55,7 +55,7 @@ public class DashboardFragment extends Fragment {
                     else {quant_views.setText("0");}
 
                     Long clicksContatos = documentSnapshot.getLong("clicksContatos");
-                    if (clicksContatos != null) {quant_cliks.setText(String.valueOf(views));}
+                    if (clicksContatos != null) {quant_cliks.setText(String.valueOf(clicksContatos));}
                     else {quant_cliks.setText("0");}
 
                 }

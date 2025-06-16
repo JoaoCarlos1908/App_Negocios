@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +43,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private Marker marcadorSelecionado;
     private double latitude = 0.0;
     private double longitude = 0.0;
-    private Boolean edicaoHabilitada = false;
-    private Boolean exibir;
+    private boolean edicaoHabilitada = false;
+    private boolean exibir = false;
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private Button bt_editar, bt_salvar, bt_cancelar;
     private TextView text_alterar_loc;
@@ -55,11 +56,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentMapsBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        Bundle bundle = getArguments();
 
-        idUser = getArguments().getString("idUser");
-        exibir = getArguments().getBoolean("exibir");
+        View view = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        if(bundle != null){
+            assert getArguments() != null;
+            idUser = bundle.getString("idUser");
+            exibir = bundle.getBoolean("exibir", false);
+        } else{
+            Log.e("MapsFragment", "Bundle de argumentos está nulo");
+        }
+
 
         IniciarComponentes(view);
 
@@ -138,26 +146,34 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         text_alterar_loc = view.findViewById(R.id.text_selecionar_maps);
         db = FirebaseFirestore.getInstance();
 
-        if(!exibir){
+        if (!Boolean.TRUE.equals(exibir)) {
             bt_editar.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        if (googleMap == null) return;
+
         mMap = googleMap;
 
         if (verificarPermissaoLocalizacao()) {
             try {
-                mMap.setMyLocationEnabled(true); // ATIVA A BOLINHA AZUL
+                mMap.setMyLocationEnabled(true);
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
         }
+
+        if (latitudeFirebase != 0.0 && longitudeFirebase != 0.0) {
+            addMarkerToMap(latitudeFirebase, longitudeFirebase);
+        }
+
         if (edicaoHabilitada) {
             ativarEdicaoDeLocalizacao();
         }
     }
+
 
     @Override
     public void onStart() {
@@ -172,6 +188,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void ativarEdicaoDeLocalizacao() {
+        latitude = latitudeFirebase;
+        longitude = longitudeFirebase;
+
         if (!verificarPermissaoLocalizacao()) {
             return;
         }
@@ -216,9 +235,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void atualizarTela() {
+        Bundle bundle = new Bundle();
+        bundle.putString("idUser", idUser);
+        bundle.putBoolean("exibir", exibir);
+
         NavController navController = NavHostFragment.findNavController(this);
         navController.popBackStack(); // Remove o fragment atual da pilha
-        navController.navigate(R.id.mapsFragment); // Reinsere o mesmo fragment
+        navController.navigate(R.id.mapsFragment, bundle); // Reinsere o mesmo fragment
     }
 
     private void carregarDadosDoFirebase() {

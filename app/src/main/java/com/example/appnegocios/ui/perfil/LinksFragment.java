@@ -32,7 +32,7 @@ private EditText nome, link;
 private Button bt_adicionar;
 private FirebaseFirestore db = FirebaseFirestore.getInstance();
 private String idUser;
-private Boolean exibir;
+private boolean exibir;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -125,6 +125,9 @@ private Boolean exibir;
                             text_link.setText(resumirLink(links.getLink()));
                             id_link.setText(doc.getId());
 
+                            if(!exibir){
+                                bt_excluir.setVisibility(View.GONE);
+                            }
                             bt_excluir.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -139,9 +142,7 @@ private Boolean exibir;
                                             .addOnFailureListener(e -> {
                                                 Log.e("FIREBASE", "Erro ao excluir link", e);
                                             });
-                                    if(!exibir){
-                                        bt_excluir.setVisibility(View.GONE);
-                                    }
+
                                     mostrarLinks(view);
                                 }
                             });
