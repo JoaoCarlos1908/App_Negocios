@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:padding="16dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <!-- 🔍 Barra de Pesquisa -->
+    <EditText
+        android:id="@+id/editTextPesquisa"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="16dp">
-        <!-- 🔍 Barra de Pesquisa -->
-        <EditText
-            android:id="@+id/editTextPesquisa"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text"
-            android:hint="Pesquisar"
-            android:inputType="text"
-            android:maxLines="1"
-            android:padding="12dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:background="@drawable/edit_text"
+        android:hint="Pesquisar"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="12dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 📌 Lista lateral (RecyclerView) -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerLateral"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editTextPesquisa"
-            app:layout_constraintWidth_percent="0.25" />
+    <!-- 📌 Lista lateral (RecyclerView) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerLateral"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextPesquisa"
+        app:layout_constraintWidth_percent="0.25" />
 
-        <!-- 📚 Categorias Topo Horizontal -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="12dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/recyclerLateral"
-            app:layout_constraintTop_toBottomOf="@id/editTextPesquisa" />
+    <!-- 📚 Categorias Topo Horizontal -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/recyclerLateral"
+        app:layout_constraintTop_toBottomOf="@id/editTextPesquisa" />
 
-        <!-- 📦 Conteúdo principal (RecyclerView de cards ou lista) -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerConteudo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/recyclerLateral"
-            app:layout_constraintTop_toBottomOf="@id/recyclerHorizontal" />
+    <!-- 📦 Conteúdo principal -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerConteudo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        app:layout_constraintTop_toBottomOf="@id/recyclerHorizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/recyclerLateral"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/layout_view_negocio3" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

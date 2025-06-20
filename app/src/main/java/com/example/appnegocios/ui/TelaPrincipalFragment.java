@@ -1,43 +1,49 @@
 package com.example.appnegocios.ui;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appnegocios.R;
-import com.example.appnegocios.databinding.FragmentAvaliacoesBinding;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import Class.Empreendimento;
 
 public class TelaPrincipalFragment extends Fragment {
 
-    private FragmentAvaliacoesBinding binding;
+    private View view;
+    private EditText editTextPesquisa;
+    private Map<String, List<Empreendimento>> mapaEmpreendimentos = new HashMap<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tela_principal, container, false);
+        view = inflater.inflate(R.layout.fragment_tela_principal, container, false);
+        iniciarComponentes();
 
+        carregarEmpreendimentos();
         carregarEmpreendimentos(new FirebaseCallback() {
             @Override
             public void onCallback(List<Empreendimento> lista) {
@@ -45,14 +51,114 @@ public class TelaPrincipalFragment extends Fragment {
             }
         });
 
+        editTextPesquisa.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrarEmpreendimentos(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
 
         return view;
     }
+
+    private void iniciarComponentes(){
+        editTextPesquisa = view.findViewById(R.id.editTextPesquisa);
+    }
+
+    private void filtrarEmpreendimentos(String texto) {
+        String termo = texto.toLowerCase().trim();
+        List<Empreendimento> filtrados = new ArrayList<>();
+        Set<String> idsAdicionados = new HashSet<>(); // <- evita duplicatas
+
+        for (List<Empreendimento> lista : mapaEmpreendimentos.values()) {
+            for (Empreendimento emp : lista) {
+                if (idsAdicionados.contains(emp.getIdUser())) continue;
+
+                String nome = emp.getNome() != null ? emp.getNome().toLowerCase() : "";
+                String categoria = emp.getCategoria() != null ? emp.getCategoria().toLowerCase() : "";
+                List<String> subcategorias = emp.getSubcategorias() != null ? emp.getSubcategorias() : new ArrayList<>();
+
+                boolean nomeMatch = nome.contains(termo);
+                boolean categoriaMatch = categoria.contains(termo);
+                boolean subMatch = false;
+                for (String sub : subcategorias) {
+                    if (sub.toLowerCase().contains(termo)) {
+                        subMatch = true;
+                        break;
+                    }
+                }
+
+                if (nomeMatch || categoriaMatch || subMatch) {
+                    filtrados.add(emp);
+                    idsAdicionados.add(emp.getIdUser()); // <- marca como já adicionado
+                }
+            }
+        }
+
+        // Atualiza o RecyclerView com os itens filtrados
+        exibirEmpreendimentosAleatorios(filtrados, 10, view);
+    }
+
+
 
     public interface FirebaseCallback {
         void onCallback(List<Empreendimento> listaEmpreendimentos);
     }
 
+    private void carregarEmpreendimentos() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Cliente")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mapaEmpreendimentos.clear();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        Empreendimento emp = new Empreendimento();
+
+                        Boolean tipoConta = doc.getBoolean("TipoConta");
+                        if (tipoConta != null && tipoConta) {
+                            emp.setIdUser(doc.getId());
+                            emp.setNome(doc.getString("nome")); // herdado de Usuario
+                            emp.setCategoria(doc.getString("categoria"));
+
+                            // Carregando subcategorias do Firestore para a classe Empreendimento
+                            List<String> subcategorias = (List<String>) doc.get("subcategorias");
+                            if (subcategorias != null) {
+                                emp.setSubcategorias(subcategorias);
+                            }
+
+                            // Mapeando por categoria principal
+                            String categoria = emp.getCategoria();
+                            if (!mapaEmpreendimentos.containsKey(categoria)) {
+                                mapaEmpreendimentos.put(categoria, new ArrayList<>());
+                            }
+                            mapaEmpreendimentos.get(categoria).add(emp);
+
+                            // Mapeando por subcategorias também
+                            if (subcategorias != null) {
+                                for (String sub : subcategorias) {
+                                    if (!mapaEmpreendimentos.containsKey(sub)) {
+                                        mapaEmpreendimentos.put(sub, new ArrayList<>());
+                                    }
+                                    mapaEmpreendimentos.get(sub).add(emp);
+                                }
+                            }
+                        } else {
+                            Log.d("Empreendimentos", "Erro ao carregar empreendimentos ou conta não cadastrada como cliente");
+                        }
+                    }
+
+                    Log.d("Empreendimentos", "Empreendimentos carregados com sucesso.");
+                })
+                .addOnFailureListener(e -> Log.e("Empreendimentos", "Erro ao carregar empreendimentos", e));
+    }
     private void carregarEmpreendimentos(FirebaseCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<Empreendimento> listaEmpreendimentos = new ArrayList<>();
@@ -74,7 +180,6 @@ public class TelaPrincipalFragment extends Fragment {
                     callback.onCallback(new ArrayList<>()); // Retorna lista vazia em caso de erro
                 });
     }
-
 
     private void exibirEmpreendimentosAleatorios(List<Empreendimento> listaOriginal, int limite, View view) {
         // Embaralha e limita
@@ -134,10 +239,9 @@ public class TelaPrincipalFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+
     }
 }

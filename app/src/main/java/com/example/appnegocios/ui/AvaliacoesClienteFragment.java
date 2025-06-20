@@ -24,7 +24,6 @@ import Class.Avaliacao;
 
 public class AvaliacoesClienteFragment extends Fragment {
 
-    private FragmentAvaliacoesBinding binding;
     private View view;
     private Button btnFiltrar;
     private String idCliente = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -35,42 +34,50 @@ public class AvaliacoesClienteFragment extends Fragment {
 
         btnFiltrar = view.findViewById(R.id.btnFiltrar);
 
-        carregarAvaliacoes(idCliente);
+        carregarAvaliacoes();
 
         btnFiltrar.setOnClickListener(v -> mostrarMenuFiltrar(v));
 
         return view;
     }
 
-    private void carregarAvaliacoes(String idCliente) {
+    private void carregarAvaliacoes() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout container = view.findViewById(R.id.containerAvaliacoes);
         container.removeAllViews(); // Limpar antes de exibir
 
+        // Busca apenas as avaliações feitas pelo usuário logado
         db.collection("Avaliacoes")
-                .whereEqualTo("idCliente", idCliente)
+                .whereEqualTo("idAvaliador", idCliente) // ← Aqui é o filtro correto
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Avaliacao avaliacao = doc.toObject(Avaliacao.class);
                         avaliacao.setIdAvaliacao(doc.getId());
 
-
+                        String idEmp = avaliacao.getIdEmpreendimento();
+                        if (idEmp != null) {
                             db.collection("Cliente")
-                                    .document(idCliente)
+                                    .document(idEmp)
                                     .get()
-                                    .addOnSuccessListener(userDoc -> {
-                                        String nome = userDoc.getString("nome");
-                                        if (nome != null) {
-                                            avaliacao.setNomeAvaliador(nome);
+                                    .addOnSuccessListener(empDoc -> {
+                                        String nomeEmp = empDoc.getString("nome");
+                                        if (nomeEmp != null) {
+                                            avaliacao.setNomeEmpre(nomeEmp); // agora esse campo armazena o nome do empreendimento
                                         }
                                         exibirAvaliacao(container, avaliacao);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        exibirAvaliacao(container, avaliacao); // mesmo que falhe, ainda mostra
                                     });
+                        } else {
+                            exibirAvaliacao(container, avaliacao);
+                        }
 
                     }
                 })
                 .addOnFailureListener(e -> {
-                    //Toast.makeText(this, "Erro ao carregar avaliações", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Erro ao carregar avaliações", Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -84,22 +91,27 @@ public class AvaliacoesClienteFragment extends Fragment {
         TextView tvRespostatext = item.findViewById(R.id.tvRespostatext);
 
         ratingBar.setRating(avaliacao.getEstrelas());
-        tvNome.setText("Para: " + avaliacao.getNomeAvaliador());
+        tvNome.setText("Empreendimento: " + avaliacao.getNomeEmpre());
         tvComentario.setText(avaliacao.getDescricao());
 
-        tvResposta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (avaliacao.getResposta() != null && !avaliacao.getResposta().isEmpty()) {
-                    tvRespostatext.setText(avaliacao.getResposta());
-                    tvRespostatext.setVisibility(View.VISIBLE);
-                    tvResposta.setVisibility(View.GONE);
-                } else {
+        tvResposta.setOnClickListener(v -> {
+            String resposta = avaliacao.getResposta();
+
+            if (resposta != null && !resposta.isEmpty()) {
+                if (tvRespostatext.getVisibility() == View.VISIBLE) {
                     tvRespostatext.setVisibility(View.GONE);
-                    tvResposta.setVisibility(View.VISIBLE);
+                } else {
+                    tvRespostatext.setText(resposta);
+                    tvRespostatext.setTextColor(getResources().getColor(android.R.color.black)); // cor normal
+                    tvRespostatext.setVisibility(View.VISIBLE);
                 }
+            } else {
+                tvRespostatext.setText("Sem resposta");
+                tvRespostatext.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                tvRespostatext.setVisibility(View.VISIBLE);
             }
         });
+
 
         tvRespostatext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,10 +131,8 @@ public class AvaliacoesClienteFragment extends Fragment {
         popup.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
 
-            String idCliente = getArguments() != null ? getArguments().getString("idCliente") : "";
-
             if (id == R.id.menu_todas) {
-                carregarAvaliacoes(idCliente);
+                carregarAvaliacoes();
             } else {
                 int estrelas = 0;
                 if (id == R.id.menu_5_estrelas) estrelas = 5;
@@ -131,7 +141,7 @@ public class AvaliacoesClienteFragment extends Fragment {
                 else if (id == R.id.menu_2_estrelas) estrelas = 2;
                 else if (id == R.id.menu_1_estrelas) estrelas = 1;
 
-                carregarAvaliacoesFiltradas(idCliente, estrelas);
+                carregarAvaliacoesFiltradas(estrelas);
             }
 
             return true;
@@ -140,13 +150,13 @@ public class AvaliacoesClienteFragment extends Fragment {
         popup.show();
     }
 
-    private void carregarAvaliacoesFiltradas(String idCliente, int estrelas) {
+    private void carregarAvaliacoesFiltradas(int estrelas) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout container = view.findViewById(R.id.containerAvaliacoes);
         container.removeAllViews(); // Limpa as avaliações anteriores
 
         db.collection("Avaliacoes")
-                .whereEqualTo("idCliente", idCliente)
+                .whereEqualTo("idAvaliador", idCliente) // ← Correção aqui
                 .whereEqualTo("estrelas", estrelas)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -154,22 +164,25 @@ public class AvaliacoesClienteFragment extends Fragment {
                         Avaliacao avaliacao = doc.toObject(Avaliacao.class);
                         avaliacao.setIdAvaliacao(doc.getId());
 
-                        String idAvaliador = doc.getString("idAvaliador");
-
-                        if (!avaliacao.isAnonima()) {
+                        String idEmp = avaliacao.getIdEmpreendimento();
+                        if (idEmp != null) {
                             db.collection("Cliente")
-                                    .document(idAvaliador)
+                                    .document(idEmp)
                                     .get()
-                                    .addOnSuccessListener(userDoc -> {
-                                        String nome = userDoc.getString("nome");
-                                        if (nome != null) {
-                                            avaliacao.setNomeAvaliador(nome);
+                                    .addOnSuccessListener(empDoc -> {
+                                        String nomeEmp = empDoc.getString("nome");
+                                        if (nomeEmp != null) {
+                                            avaliacao.setNomeEmpre(nomeEmp); // agora esse campo armazena o nome do empreendimento
                                         }
                                         exibirAvaliacao(container, avaliacao);
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        exibirAvaliacao(container, avaliacao); // mesmo que falhe, ainda mostra
                                     });
                         } else {
                             exibirAvaliacao(container, avaliacao);
                         }
+
                     }
 
                     if (queryDocumentSnapshots.isEmpty()) {
@@ -181,10 +194,8 @@ public class AvaliacoesClienteFragment extends Fragment {
                 });
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

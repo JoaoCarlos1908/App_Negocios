@@ -7,6 +7,7 @@ public class Reclamacoes {
     private String idCliente;          // Nome da pessoa que avaliou
     private boolean anonima, respondida;               // Se a avaliação é anônima
     private String resposta;   // Resposta opcional do empreendedor
+    private String nomeClinete, nomeEmpre;
 
     // Construtor vazio necessário para Firebase
     public Reclamacoes() {
@@ -29,6 +30,22 @@ public class Reclamacoes {
 
     public void setIdCliente(String idCliente) {
         this.idCliente = idCliente;
+    }
+    
+    public String getNomeClinete() {
+        return nomeClinete;
+    }
+
+    public void setNomeClinete(String nomeClinete) {
+        this.nomeClinete = nomeClinete;
+    }
+
+    public String getNomeEmpre() {
+        return nomeEmpre;
+    }
+
+    public void setNomeEmpre(String nomeEmpre) {
+        this.nomeEmpre = nomeEmpre;
     }
 
     public boolean getRespondida() {
@@ -58,16 +75,9 @@ public class Reclamacoes {
     public String getReclamacao(){
         return reclamacao;
     }
+
     public void setReclamacao(String descricao) {
         this.reclamacao = descricao;
-    }
-
-    public String getNomeAvaliador() {
-        return idCliente;
-    }
-
-    public void setNomeAvaliador(String nomeAvaliador) {
-        this.idCliente = nomeAvaliador;
     }
 
     public String getResposta() {

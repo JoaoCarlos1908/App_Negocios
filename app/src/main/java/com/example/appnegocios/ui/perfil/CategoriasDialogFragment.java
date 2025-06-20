@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -24,6 +27,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategoriasDialogFragment extends DialogFragment {
 
@@ -41,27 +47,48 @@ public class CategoriasDialogFragment extends DialogFragment {
         categoria = view.findViewById(R.id.spinnerCategoria);
         categoriaAtual = view.findViewById(R.id.text_CategoriaAtual);
 
+// 1. Buscar categorias no Firebase
+        db.collection("categorias")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<String> listaCategorias = new ArrayList<>();
 
-        DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
-        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                if (documentSnapshot != null) {
-                    String text = documentSnapshot.getString("categoria");
-                    categoriaAtual.setText("Categoria: " + text);
-                    String valorDesejado = text;
-                    ArrayAdapter<String> adapter = (ArrayAdapter<String>) categoria.getAdapter();
-
-                    for (int i = 0; i < adapter.getCount(); i++) {
-                        if (adapter.getItem(i).equals(valorDesejado)) {
-                            categoria.setSelection(i);
-                            break;
-                        }
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        listaCategorias.add(doc.getId()); // nome da categoria = ID do documento
                     }
 
-                }
-            }
-        });
+                    // 2. Criar o adapter com os dados obtidos
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            getContext(), // ou "this" se for Activity
+                            android.R.layout.simple_spinner_item,
+                            listaCategorias
+                    );
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    categoria.setAdapter(adapter);
+
+                    // 3. Buscar categoria atual do usuário e setar no Spinner
+                    DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
+                    documentReference.addSnapshotListener((documentSnapshot, error) -> {
+                        if (documentSnapshot != null) {
+                            String text = documentSnapshot.getString("categoria");
+                            categoriaAtual.setText("Categoria: " + text);
+
+                            // Selecionar a categoria atual no spinner
+                            for (int i = 0; i < adapter.getCount(); i++) {
+                                if (adapter.getItem(i).equals(text)) {
+                                    categoria.setSelection(i);
+                                    break;
+                                }
+                            }
+                        }
+                    });
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIREBASE", "Erro ao buscar categorias", e);
+                    Toast.makeText(getContext(), "Erro ao carregar categorias", Toast.LENGTH_SHORT).show();
+                });
+
 
         salvar.setOnClickListener(new View.OnClickListener() {
             @Override

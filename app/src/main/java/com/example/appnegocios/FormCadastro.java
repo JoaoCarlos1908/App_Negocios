@@ -153,6 +153,29 @@ public class FormCadastro extends AppCompatActivity {
 
     }//Fim do OnCreate
 
+    private void IniciarComponentes(){
+        text_alterFoto = findViewById(R.id.text_alterFoto);
+        edit_nome = findViewById(R.id.edit_nome);
+        edit_desc = findViewById(R.id.edit_descricao);
+        edit_email  = findViewById(R.id.edit_email);
+        edit_senha  = findViewById(R.id.edit_senha);
+        edit_confirme_senha = findViewById(R.id.edit_confirme_senha);
+        bt_cadastrar  = findViewById(R.id.bt_seguir);
+        iconUser = findViewById(R.id.iconUser);
+        autoCompleteCategorias = findViewById(R.id.autoCompleteCategorias);
+
+        if (!tipoConta) {
+            cliente = new Cliente();
+            edit_nome.setHint("Nome");
+            edit_desc.setHint("CEP");     // altera o hint
+            edit_desc.setMaxLines(1);     // altera o número máximo de linhas
+            autoCompleteCategorias.setVisibility(View.GONE);
+        }else {
+            empreendimento = new Empreendimento();
+        }
+
+    }
+
     private void SelecaoDeCategorias() {
         buscarCategorias(categorias -> {
             if (categorias != null && !categorias.isEmpty()) {
@@ -225,29 +248,6 @@ public class FormCadastro extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Ação cancelada", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void IniciarComponentes(){
-        text_alterFoto = findViewById(R.id.text_alterFoto);
-        edit_nome = findViewById(R.id.edit_nome);
-        edit_desc = findViewById(R.id.edit_descricao);
-        edit_email  = findViewById(R.id.edit_email);
-        edit_senha  = findViewById(R.id.edit_senha);
-        edit_confirme_senha = findViewById(R.id.edit_confirme_senha);
-        bt_cadastrar  = findViewById(R.id.bt_seguir);
-        iconUser = findViewById(R.id.iconUser);
-        autoCompleteCategorias = findViewById(R.id.autoCompleteCategorias);
-
-        if (!tipoConta) {
-            cliente = new Cliente();
-            edit_nome.setHint("Nome");
-            edit_desc.setHint("CEP");     // altera o hint
-            edit_desc.setMaxLines(1);     // altera o número máximo de linhas
-            autoCompleteCategorias.setVisibility(View.GONE);
-        }else {
-            empreendimento = new Empreendimento();
-        }
-
     }
 
     private void CadastrarUsuario(View v){

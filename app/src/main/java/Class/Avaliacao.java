@@ -9,6 +9,8 @@ public class Avaliacao {
     private boolean anonima;               // Se a avaliação é anônima
     private String resposta;   // Resposta opcional do empreendedor
 
+    private String nomeClinete, nomeEmpre;
+
     // Construtor vazio necessário para Firebase
     public Avaliacao() {
     }
@@ -41,6 +43,22 @@ public class Avaliacao {
         this.idEmpreendimento = idEmpreendimento;
     }
 
+    public String getNomeClinete() {
+        return nomeClinete;
+    }
+
+    public void setNomeClinete(String nomeClinete) {
+        this.nomeClinete = nomeClinete;
+    }
+
+    public String getNomeEmpre() {
+        return nomeEmpre;
+    }
+
+    public void setNomeEmpre(String nomeEmpre) {
+        this.nomeEmpre = nomeEmpre;
+    }
+
     public String getIdAvaliador() {
         return idAvaliador;
     }
@@ -63,14 +81,6 @@ public class Avaliacao {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public String getNomeAvaliador() {
-        return anonima ? "Anônimo" : idAvaliador;
-    }
-
-    public void setNomeAvaliador(String nomeAvaliador) {
-        this.idAvaliador = nomeAvaliador;
     }
 
     public boolean isAnonima() {

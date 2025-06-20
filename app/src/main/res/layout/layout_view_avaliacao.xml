@@ -34,18 +34,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Avaliação Anônima"
-        android:visibility="gone"
-        android:textStyle="bold"
         android:textColor="@color/dark_gray"
+        android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ratingBar"  />
+        app:layout_constraintTop_toBottomOf="@id/ratingBar" />
 
     <TextView
         android:id="@+id/tvComentario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingTop="4dp"
         android:layout_marginTop="20dp"
+        android:paddingTop="4dp"
         android:text="Comentário"
         android:textColor="@color/dark_gray"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,12 +57,12 @@
         style="@style/edit_text"
         android:layout_width="0dp"
         android:layout_margin="0dp"
-        android:maxLines="6"
-        android:visibility="gone"
         android:inputType="textMultiLine"
+        android:maxLines="6"
         android:scrollHorizontally="false"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvComentario" />
@@ -76,6 +76,7 @@
         android:text="Resposta do empreendedor"
         android:textColor="#006600"
         android:textStyle="italic"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_comentario" />

@@ -76,16 +76,16 @@ public class ReclamacoesFragment extends Fragment {
                         String idCliente = doc.getString("idCliente");
                         reclamacao.setReclamacao(doc.getString("reclamacao"));
 
-                            db.collection("Cliente")
-                                    .document(idCliente)
-                                    .get()
-                                    .addOnSuccessListener(userDoc -> {
-                                        String nome = userDoc.getString("nome");
+                        db.collection("Cliente")
+                                .document(idCliente)
+                                .get()
+                                .addOnSuccessListener(userDoc -> {
+                                    String nome = userDoc.getString("nome");
 
-                                        reclamacao.setNomeAvaliador(nome);
+                                    reclamacao.setNomeClinete(nome);
 
-                                        exibirReclamacao(container, reclamacao, view, exibirTudo, exibirRN);
-                                    });
+                                    exibirReclamacao(container, reclamacao, view, exibirTudo, exibirRN);
+                                });
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -98,25 +98,25 @@ public class ReclamacoesFragment extends Fragment {
 
         //Acessar componentes
         TextView tvNome = item.findViewById(R.id.tvNome);
-        EditText edit_reclamacao = item.findViewById(R.id.edit_reclamacao);
+        TextView tvComentario = item.findViewById(R.id.tvComentario);
+        EditText edit_comentario = item.findViewById(R.id.edit_comentario);
         TextView tvResposta = item.findViewById(R.id.tvResposta);
-        EditText tvRespostatext = item.findViewById(R.id.tvRespostatext);
+        TextView tvRespostatext = item.findViewById(R.id.tvRespostatext);
+        EditText edit_resposta = item.findViewById(R.id.edit_resposta);
         LinearLayout llbotoes = item.findViewById(R.id.llbotoes);
         Button btnSalvar = item.findViewById(R.id.btnSalvar);
         Button btnCancear = item.findViewById(R.id.btnCancelar);
 
         //Editar conteudo componentes
-        if(reclamacao.isAnonima()){
+        if (reclamacao.isAnonima()) {
             tvNome.setText("Por: Anônimo");
-        }else{
-            tvNome.setText("Por: " + reclamacao.getNomeAvaliador());
+        } else {
+            tvNome.setText("Por: " + reclamacao.getNomeClinete());
         }
 
-        edit_reclamacao.setText(reclamacao.getReclamacao());
-        edit_reclamacao.setEnabled(false);
-        edit_reclamacao.setVisibility(View.VISIBLE);
+        tvComentario.setText(reclamacao.getReclamacao());
 
-        if (reclamacao.getRespondida()){
+        if (reclamacao.getRespondida()) {
             tvResposta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,38 +125,34 @@ public class ReclamacoesFragment extends Fragment {
                     } else {
                         tvRespostatext.setText(reclamacao.getResposta());
                         tvRespostatext.setVisibility(View.VISIBLE);
-                        tvRespostatext.setFocusable(false);
-                        tvRespostatext.setClickable(false);
-                        tvRespostatext.setCursorVisible(false);
-                        tvRespostatext.setKeyListener(null);
                     }
                 }
             });
 
-        }else{
+        } else {
             tvResposta.setText("Responder reclamação");
             tvResposta.setTextColor(Color.RED);
 
             tvResposta.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tvRespostatext.setVisibility(View.VISIBLE);
+                    edit_resposta.setVisibility(View.VISIBLE);
                     llbotoes.setVisibility(View.VISIBLE);
-                    ConstraintLayout constraintLayout = item.findViewById(R.id.constraintLayout);
+
+                    ConstraintLayout constraintLayout = item.findViewById(R.id.layoutPai);
                     ConstraintSet constraintSet = new ConstraintSet();
 
                     constraintSet.clone(constraintLayout);
 
-// Altera apenas o constraint TOP (deixa os outros intactos)
+                    // Altera apenas o constraint TOP (deixa os outros intactos)
                     constraintSet.connect(
                             R.id.llbotoes,                          // ID do componente que será movido
                             ConstraintSet.TOP,                             // Lado a ser conectado
-                            R.id.tvRespostatext,                            // Novo componente de referência
+                            R.id.edit_resposta,                            // Novo componente de referência
                             ConstraintSet.BOTTOM);
 
-// Aplica as mudanças
+                    // Aplica as mudanças
                     constraintSet.applyTo(constraintLayout);
-
                 }
             });
         }
@@ -164,7 +160,7 @@ public class ReclamacoesFragment extends Fragment {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String resposta = tvRespostatext.getText().toString().trim();
+                String resposta = edit_resposta.getText().toString().trim();
                 if (resposta.length() < 10) {
                     Toast.makeText(getContext(), "A resposta deve ter pelo menos 10 caracteres.", Toast.LENGTH_SHORT).show();
                 } else {
@@ -178,12 +174,12 @@ public class ReclamacoesFragment extends Fragment {
         btnCancear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvRespostatext.setVisibility(View.GONE);
+                edit_resposta.setVisibility(View.GONE);
                 llbotoes.setVisibility(View.GONE);
             }
         });
 
-        if(exibirTudo){
+        if (exibirTudo) {
             container.addView(item);
         } else {
             if (reclamacao.getRespondida() == exibirRN) {

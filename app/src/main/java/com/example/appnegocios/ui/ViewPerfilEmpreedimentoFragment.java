@@ -72,7 +72,14 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot != null) {
                     text_nomeEmpre.setText(documentSnapshot.getString("nome"));
-                    text_endereco.setText("\uD83D\uDCCD " + documentSnapshot.getString("endereco"));
+
+                    String endereco = documentSnapshot.getString("endereco");
+                    if (endereco != null && !endereco.trim().isEmpty()) {
+                        text_endereco.setText("\uD83D\uDCCD " + endereco);
+                    } else {
+                        text_endereco.setText("📍 Endereço não informado");
+                    }
+
                     edit_descricao.setText(documentSnapshot.getString("descricao"));
                 }
             }
@@ -192,8 +199,8 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                 TextView tvNome = dialog.findViewById(R.id.tvNome);
                 tvNome.setVisibility(View.GONE);
 
-                EditText edit_reclamacao = dialog.findViewById(R.id.edit_reclamacao);
-                edit_reclamacao.setVisibility(View.VISIBLE);
+                EditText edit_comentario = dialog.findViewById(R.id.edit_comentario);
+                edit_comentario.setVisibility(View.VISIBLE);
 
                 LinearLayout llbotoes = dialog.findViewById(R.id.llbotoes);
                 llbotoes.setVisibility(View.VISIBLE);
@@ -201,8 +208,8 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                 TextView tvResposta = dialog.findViewById(R.id.tvResposta);
                 tvResposta.setVisibility(View.GONE);
 
-                EditText editReclamacao = dialog.findViewById(R.id.edit_reclamacao);
-                editReclamacao.setVisibility(View.VISIBLE);
+                TextView tvRespostatext = dialog.findViewById(R.id.tvRespostatext);
+                tvRespostatext.setVisibility(View.GONE);
 
                 CheckBox cb_anonimo = dialog.findViewById(R.id.cb_anonimo);
                 cb_anonimo.setVisibility(View.VISIBLE);
@@ -216,7 +223,7 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
 
                 btnSalvar.setOnClickListener(view -> {
                     // Coletar dados da interface
-                    String comentario = editReclamacao.getText().toString().trim();
+                    String comentario = edit_comentario.getText().toString().trim();
                     String idAvaliador = FirebaseAuth.getInstance().getCurrentUser().getUid(); // ou outro ID do usuário logado
                     boolean anonima = cb_anonimo.isChecked(); // ou true, dependendo de sua lógica de anonimato
 

@@ -65,7 +65,7 @@ public class AvaliacoesFragment extends Fragment {
                                     .addOnSuccessListener(userDoc -> {
                                         String nome = userDoc.getString("nome");
                                         if (nome != null) {
-                                            avaliacao.setNomeAvaliador(nome);
+                                            avaliacao.setNomeClinete(nome);
                                         }
                                         exibirAvaliacao(container, avaliacao);
                                     });
@@ -90,7 +90,7 @@ public class AvaliacoesFragment extends Fragment {
         TextView tvRespostatext = item.findViewById(R.id.tvRespostatext);
 
         ratingBar.setRating(avaliacao.getEstrelas());
-        tvNome.setText("Por: " + avaliacao.getNomeAvaliador());
+        tvNome.setText("Por: " + avaliacao.getNomeClinete());
         tvComentario.setText(avaliacao.getDescricao());
 
         tvResposta.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +167,7 @@ public class AvaliacoesFragment extends Fragment {
                                     .addOnSuccessListener(userDoc -> {
                                         String nome = userDoc.getString("nome");
                                         if (nome != null) {
-                                            avaliacao.setNomeAvaliador(nome);
+                                            avaliacao.setNomeClinete(nome);
                                         }
                                         exibirAvaliacao(container, avaliacao);
                                     });
