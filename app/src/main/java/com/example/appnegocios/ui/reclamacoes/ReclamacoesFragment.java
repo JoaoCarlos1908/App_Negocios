@@ -170,7 +170,6 @@ public class ReclamacoesFragment extends Fragment {
             }
         });
 
-
         btnCancear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

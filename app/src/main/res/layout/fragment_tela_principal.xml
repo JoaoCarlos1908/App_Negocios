@@ -17,6 +17,17 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/btnBuscar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_lupa"
+                android:contentDescription="Buscar"
+                app:tint="@color/dark_gray" />
+
             <EditText
                 android:id="@+id/editTextPesquisa"
                 android:layout_width="0dp"
@@ -27,6 +38,7 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:padding="12dp"
+                android:drawablePadding="8dp"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white" />
 
@@ -49,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:paddingTop="8dp">
 
@@ -85,6 +98,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="180dp"
+            android:visibility="gone"
             android:layout_marginTop="8dp"
             android:background="@drawable/conteiner_dashboard">
             <!-- Aqui você pode usar um ViewPager ou ImageView -->
@@ -111,15 +125,16 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/btSaude"
                     style="@style/CategoryStyle"
-                    android:text="R" />
+                    android:text="S" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:text="Roupa"
+                    android:text="Saúde"
                     android:textColor="#000"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -135,6 +150,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/btComercios"
                     style="@style/CategoryStyle"
                     android:text="P" />
 
@@ -143,7 +159,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:text="Pet"
+                    android:text="Comércios"
                     android:textColor="#000"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -157,6 +173,54 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/btRestaurantes"
+                    style="@style/CategoryStyle"
+                    android:text="A" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:text="Restauran- tes"
+                    android:textColor="#000"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/btBeleza"
+                    style="@style/CategoryStyle"
+                    android:text="B" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:text="Beleza"
+                    android:textColor="#000"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/btEsportes"
                     style="@style/CategoryStyle"
                     android:text="E" />
 
@@ -165,7 +229,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:text="Eletrônicos"
+                    android:text="Esportes"
                     android:textColor="#000"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -179,51 +243,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/CategoryStyle"
-                    android:text="L" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center"
-                    android:text="Livros"
-                    android:textColor="#000"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/CategoryStyle"
-                    android:text="F" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center"
-                    android:text="Festa"
-                    android:textColor="#000"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
+                    android:id="@+id/btModa"
                     style="@style/CategoryStyle"
                     android:text="M" />
 
@@ -232,7 +252,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:text="Móveis"
+                    android:text="Moda"
                     android:textColor="#000"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -246,15 +266,16 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/btPets"
                     style="@style/CategoryStyle"
-                    android:text="+" />
+                    android:text="P" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:text="Mais"
+                    android:text="Pets"
                     android:textColor="#000"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -268,15 +289,16 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/btAutomotivo"
                     style="@style/CategoryStyle"
-                    android:text="+" />
+                    android:text="A" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:text="Mais"
+                    android:text="Automotivo"
                     android:textColor="#000"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -290,15 +312,16 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/btManutencao"
                     style="@style/CategoryStyle"
-                    android:text="+" />
+                    android:text="M" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:text="Mais"
+                    android:text="Manuten-  ção"
                     android:textColor="#000"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -312,6 +335,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/btOutros"
                     style="@style/CategoryStyle"
                     android:text="💡" />
 

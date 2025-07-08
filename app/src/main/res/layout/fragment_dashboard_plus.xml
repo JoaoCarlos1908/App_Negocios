@@ -9,8 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:background="@drawable/backgroud"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/backgroud">
 
         <TextView
             android:id="@+id/text_visaoGeral"
@@ -256,15 +256,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/graficoViews" />
 
-        <View
-            android:id="@+id/graficoAvaliacoes"
-            style="@style/ConteinerDashbord"
-            android:layout_height="200dp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_taxaAvaliacoes"
-            app:layout_constraintWidth_percent="0.95" />
-
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
             android:layout_width="0dp"
@@ -274,15 +265,23 @@
             app:layout_constraintStart_toStartOf="@+id/graficoViews"
             app:layout_constraintTop_toTopOf="@+id/graficoViews" />
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChart"
+        <LinearLayout
+            android:id="@+id/graficoAvaliacoes"
+            style="@style/ConteinerDashbord"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:foregroundGravity="right"
-            app:layout_constraintBottom_toBottomOf="@+id/graficoAvaliacoes"
-            app:layout_constraintEnd_toEndOf="@+id/graficoAvaliacoes"
-            app:layout_constraintStart_toStartOf="@+id/graficoAvaliacoes"
-            app:layout_constraintTop_toTopOf="@+id/graficoAvaliacoes" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_taxaAvaliacoes"
+            app:layout_constraintWidth_percent="0.95">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

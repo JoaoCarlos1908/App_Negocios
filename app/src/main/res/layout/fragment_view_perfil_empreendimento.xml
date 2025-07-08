@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/ic_perfil"
+            android:id="@+id/iconUser"
             android:layout_width="105dp"
             android:layout_height="105dp"
             android:layout_marginStart="15dp"
@@ -59,7 +59,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_estrela"
-            app:layout_constraintStart_toEndOf="@+id/ic_perfil"
+            app:layout_constraintStart_toEndOf="@+id/iconUser"
             app:layout_constraintTop_toBottomOf="@id/text_nomeEmpre" />
 
         <TextView
@@ -107,7 +107,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_check_circle"
-            app:layout_constraintStart_toEndOf="@+id/ic_perfil"
+            app:layout_constraintStart_toEndOf="@+id/iconUser"
             app:layout_constraintTop_toBottomOf="@+id/ic_estrela" />
 
 
@@ -154,7 +154,7 @@
             android:layout_marginStart="30dp"
             android:textColor="@color/dark_gray"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/ic_perfil"
+            app:layout_constraintTop_toBottomOf="@id/iconUser"
             app:layout_constraintStart_toStartOf="parent" />
 
         <View

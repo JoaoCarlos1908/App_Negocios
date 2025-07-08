@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -37,13 +38,14 @@ public class CategoriasFragment extends Fragment {
     private RecyclerView recyclerLateral, recyclerHorizontal, recyclerConteudo;
     private Map<String, List<Empreendimento>> mapaEmpreendimentos = new HashMap<>();
     private Map<String, List<String>> mapaSubcategorias = new HashMap<>();
+    private ImageView btnBuscar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_categorias, container, false);
         EditText editTextPesquisa = view.findViewById(R.id.editTextPesquisa);
+        btnBuscar = view.findViewById(R.id.btnBuscar);
 
         editTextPesquisa.addTextChangedListener(new TextWatcher() {
             @Override
@@ -58,6 +60,10 @@ public class CategoriasFragment extends Fragment {
             public void afterTextChanged(Editable s) { }
         });
 
+        btnBuscar.setOnClickListener(v -> {
+            String texto = editTextPesquisa.getText().toString().trim();
+            filtrarEmpreendimentos(texto);
+        });
 
         recyclerLateral = view.findViewById(R.id.recyclerLateral);
         recyclerHorizontal = view.findViewById(R.id.recyclerHorizontal);
@@ -67,7 +73,13 @@ public class CategoriasFragment extends Fragment {
 
 
         carregarCategorias();
-        carregarEmpreendimentos();
+        carregarEmpreendimentos(() -> {
+            if (getArguments() != null && getArguments().containsKey("categoria")) {
+                String categoria = getArguments().getString("categoria");
+                exibirSubcategorias(categoria);
+                exibirEmpreendimentos(categoria);
+            }
+        });
 
         return view;
     }
@@ -171,7 +183,7 @@ public class CategoriasFragment extends Fragment {
         }
     }
 
-    private void carregarEmpreendimentos() {
+    private void carregarEmpreendimentos(Runnable callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Cliente")
                 .get()
@@ -184,23 +196,20 @@ public class CategoriasFragment extends Fragment {
                         Boolean tipoConta = doc.getBoolean("TipoConta");
                         if (tipoConta != null && tipoConta) {
                             emp.setIdUser(doc.getId());
-                            emp.setNome(doc.getString("nome")); // herdado de Usuario
+                            emp.setNome(doc.getString("nome"));
                             emp.setCategoria(doc.getString("categoria"));
 
-                            // Carregando subcategorias do Firestore para a classe Empreendimento
                             List<String> subcategorias = (List<String>) doc.get("subcategorias");
                             if (subcategorias != null) {
                                 emp.setSubcategorias(subcategorias);
                             }
 
-                            // Mapeando por categoria principal
                             String categoria = emp.getCategoria();
                             if (!mapaEmpreendimentos.containsKey(categoria)) {
                                 mapaEmpreendimentos.put(categoria, new ArrayList<>());
                             }
                             mapaEmpreendimentos.get(categoria).add(emp);
 
-                            // Mapeando por subcategorias também
                             if (subcategorias != null) {
                                 for (String sub : subcategorias) {
                                     if (!mapaEmpreendimentos.containsKey(sub)) {
@@ -209,15 +218,18 @@ public class CategoriasFragment extends Fragment {
                                     mapaEmpreendimentos.get(sub).add(emp);
                                 }
                             }
-                        } else {
-                            Log.d("Empreendimentos", "Erro ao carregar empreendimentos ou conta não cadastrada como cliente");
                         }
                     }
 
                     Log.d("Empreendimentos", "Empreendimentos carregados com sucesso.");
+
+                    if (callback != null) {
+                        callback.run(); // Chama o que você quiser fazer depois
+                    }
                 })
                 .addOnFailureListener(e -> Log.e("Empreendimentos", "Erro ao carregar empreendimentos", e));
     }
+
 
 }
 

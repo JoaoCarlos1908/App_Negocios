@@ -44,6 +44,13 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
+
+
 import Class.Empreendimento;
 import Class.Cliente;
 import Class.Contato;
@@ -57,7 +64,7 @@ import java.util.function.Consumer;
 public class FormCadastro extends AppCompatActivity {
     private Empreendimento empreendimento;
     private Cliente cliente;
-    private EditText edit_nome, edit_desc,edit_email, edit_senha, edit_confirme_senha;
+    private EditText edit_nome, edit_desc, edit_email, edit_senha, edit_confirme_senha;
     private TextView text_alterFoto;
     private Button bt_cadastrar;
     private String[] menssagens = {"Preencha todos os campos", "Cadastro realizado com sucesso"};
@@ -78,14 +85,13 @@ public class FormCadastro extends AppCompatActivity {
 
         imagePicklauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if(result.getResultCode() == Activity.RESULT_OK){
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        if(data!=null && data.getData()!=null){
+                        if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
                         }
                     }
-                }
-                );
+                });
         IniciarComponentes();
 
         bt_cadastrar.setOnClickListener(new View.OnClickListener() {
@@ -153,14 +159,14 @@ public class FormCadastro extends AppCompatActivity {
 
     }//Fim do OnCreate
 
-    private void IniciarComponentes(){
+    private void IniciarComponentes() {
         text_alterFoto = findViewById(R.id.text_alterFoto);
         edit_nome = findViewById(R.id.edit_nome);
         edit_desc = findViewById(R.id.edit_descricao);
-        edit_email  = findViewById(R.id.edit_email);
-        edit_senha  = findViewById(R.id.edit_senha);
+        edit_email = findViewById(R.id.edit_email);
+        edit_senha = findViewById(R.id.edit_senha);
         edit_confirme_senha = findViewById(R.id.edit_confirme_senha);
-        bt_cadastrar  = findViewById(R.id.bt_seguir);
+        bt_cadastrar = findViewById(R.id.bt_seguir);
         iconUser = findViewById(R.id.iconUser);
         autoCompleteCategorias = findViewById(R.id.autoCompleteCategorias);
 
@@ -170,10 +176,9 @@ public class FormCadastro extends AppCompatActivity {
             edit_desc.setHint("CEP");     // altera o hint
             edit_desc.setMaxLines(1);     // altera o número máximo de linhas
             autoCompleteCategorias.setVisibility(View.GONE);
-        }else {
+        } else {
             empreendimento = new Empreendimento();
         }
-
     }
 
     private void SelecaoDeCategorias() {
@@ -237,12 +242,11 @@ public class FormCadastro extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && data != null) {
-            // O URI da imagem estará presente
             Uri uri = data.getData();
-
-            // Use o URI diretamente no ImageView
-            iconUser.setImageURI(uri);
-
+            if (uri != null) {
+                selectedImageUri = uri; // <- Atualiza aqui!
+                iconUser.setImageURI(uri);
+            }
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
         } else {
@@ -250,7 +254,8 @@ public class FormCadastro extends AppCompatActivity {
         }
     }
 
-    private void CadastrarUsuario(View v){
+
+    private void CadastrarUsuario(View v) {
 
         String email = edit_email.getText().toString();
         String senha = edit_senha.getText().toString();
@@ -259,7 +264,7 @@ public class FormCadastro extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     SalvarDadosUsuario();
 
@@ -267,17 +272,17 @@ public class FormCadastro extends AppCompatActivity {
                     snackbar.setBackgroundTint(Color.GREEN);
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
-                }else {
+                } else {
                     String erro;
                     try {
                         throw task.getException();
-                    }catch(FirebaseAuthWeakPasswordException e){
+                    } catch (FirebaseAuthWeakPasswordException e) {
                         erro = "Digite uma senha com o mínimo de 6 caracteres";
-                    }catch(FirebaseAuthUserCollisionException e){
+                    } catch (FirebaseAuthUserCollisionException e) {
                         erro = "E-mail já cadastrado";
-                    }catch(FirebaseAuthInvalidCredentialsException e) {
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
                         erro = "E-mail invalido";
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         erro = "Erro ao cadastrar usuário";
                     }
 
@@ -290,7 +295,7 @@ public class FormCadastro extends AppCompatActivity {
         });
     }
 
-    private void RemoveTeclado(){
+    private void RemoveTeclado() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         View viewAtual = getCurrentFocus();
 
@@ -299,8 +304,8 @@ public class FormCadastro extends AppCompatActivity {
         }
     }
 
-    private void SalvarDadosUsuario(){
-        if(tipoConta){
+    private void SalvarDadosUsuario() {
+        if (tipoConta) {
             empreendimento.setNome(edit_nome.getText().toString());
             empreendimento.setDescricao(edit_desc.getText().toString());
             empreendimento.setTipoConta(tipoConta);
@@ -310,7 +315,7 @@ public class FormCadastro extends AppCompatActivity {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             Map<String, Object> empresa = new HashMap<>();
-            empresa.put("nome",empreendimento.getNome());
+            empresa.put("nome", empreendimento.getNome());
             empresa.put("descricao", empreendimento.getDescricao());
             empresa.put("TipoConta", empreendimento.getTipoConta());
             empresa.put("categoria", empreendimento.getCategoria());
@@ -334,24 +339,20 @@ public class FormCadastro extends AppCompatActivity {
                     .addOnSuccessListener(docRef -> Log.d("FIREBASE", "Contato adicionado com ID: " + docRef.getId()))
                     .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao adicionar contato", e));
 
-
-            documentReference.set(empresa).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Log.d("db","Sucesso ao salvar os dados");
-
-                        }
+            documentReference.set(empresa)
+                    .addOnSuccessListener(unused -> {
+                        Log.d("db", "Sucesso ao salvar os dados");
+                        salvarImagemPerfil(usuarioID, true, empresa);
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("db_erro","Erro ao salvar os dados" + e.toString());
-                        }
+                    .addOnFailureListener(e -> {
+                        Log.d("db_erro", "Erro ao salvar os dados" + e.toString());
                     });
+
+
             Intent intent = new Intent(FormCadastro.this, FormDashboard.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-        }else{
+        } else {
             cliente.setNome(edit_nome.getText().toString());
             cliente.setTipoConta(tipoConta);
             cliente.setCep(edit_desc.getText().toString());
@@ -360,7 +361,7 @@ public class FormCadastro extends AppCompatActivity {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             Map<String, Object> user = new HashMap<>();
-            user.put("nome",cliente.getNome());
+            user.put("nome", cliente.getNome());
             user.put("telefone", cliente.getTell());
             user.put("TipoConta", cliente.getTipoConta());
             user.put("E-mail", cliente.getEmail());
@@ -369,19 +370,16 @@ public class FormCadastro extends AppCompatActivity {
             usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             DocumentReference documentReference = db.collection("Cliente").document(usuarioID);
-            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Log.d("db","Sucesso ao salvar os dados");
-
-                        }
+            documentReference.set(user)
+                    .addOnSuccessListener(unused -> {
+                        Log.d("db", "Sucesso ao salvar os dados");
+                        salvarImagemPerfil(usuarioID, false, user);
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("db_erro","Erro ao salvar os dados" + e.toString());
-                        }
+                    .addOnFailureListener(e -> {
+                        Log.d("db_erro", "Erro ao salvar os dados" + e.toString());
                     });
+
+
             Intent intent = new Intent(FormCadastro.this, FormDashboard.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -389,5 +387,36 @@ public class FormCadastro extends AppCompatActivity {
 
     }
 
+    private void salvarImagemPerfil(String userId, boolean isEmpreendimento, Map<String, Object> dadosUsuario) {
+        if (selectedImageUri == null) {
+            Log.e("FIREBASE", "selectedImageUri está nulo! Não há imagem para enviar.");
+            return;
+        }
 
+        Log.d("FIREBASE", "Iniciando upload da imagem: " + selectedImageUri.toString());
+
+        StorageReference storageRef = FirebaseStorage.getInstance()
+                .getReference()
+                .child("fotos_perfil/" + userId + ".jpg");
+
+        storageRef.putFile(selectedImageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d("FIREBASE", "Upload concluído com sucesso.");
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        Log.d("FIREBASE", "URL da imagem: " + imageUrl);
+                        dadosUsuario.put("fotoPerfil", imageUrl);
+
+                        FirebaseFirestore.getInstance()
+                                .collection("Cliente")
+                                .document(userId)
+                                .update(dadosUsuario)
+                                .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "Foto salva no Firestore"))
+                                .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao salvar foto no Firestore", e));
+                    }).addOnFailureListener(e -> {
+                        Log.e("FIREBASE", "Erro ao obter URL da imagem", e);
+                    });
+                });
+
+    }
 }

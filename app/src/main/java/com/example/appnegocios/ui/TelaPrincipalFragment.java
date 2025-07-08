@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -36,7 +37,11 @@ public class TelaPrincipalFragment extends Fragment {
 
     private View view;
     private EditText editTextPesquisa;
+    private ImageView btnBuscar;
     private Map<String, List<Empreendimento>> mapaEmpreendimentos = new HashMap<>();
+
+    private  TextView btSaude, btComercios, btRestaurantes, btBeleza, btEsportes, btModa, btPets, btAutomotivo,
+                      btManutencao, btOutros;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -64,12 +69,138 @@ public class TelaPrincipalFragment extends Fragment {
             public void afterTextChanged(Editable s) { }
         });
 
+        btnBuscar.setOnClickListener(v -> {
+            String texto = editTextPesquisa.getText().toString().trim();
+            filtrarEmpreendimentos(texto);
+        });
+
+        //Categorias principais
+        btSaude.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Saúde");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btComercios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Comércio Local");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btRestaurantes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Alimentação");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btBeleza.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Beleza e Estética");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btEsportes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Esportes e Lazer");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btModa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Moda e Acessórios");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btPets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Pets");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btAutomotivo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Automotivo");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btManutencao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("categoria", "Manutenção e Reparos");
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias, bundle);
+            }
+        });
+        btOutros.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.popBackStack(R.id.nav_inicial, true);
+                navController.navigate(R.id.nav_categorias);
+            }
+        });
+
 
         return view;
     }
 
     private void iniciarComponentes(){
         editTextPesquisa = view.findViewById(R.id.editTextPesquisa);
+        btnBuscar = view.findViewById(R.id.btnBuscar);
+
+        btSaude = view.findViewById(R.id.btSaude);
+        btComercios = view.findViewById(R.id.btComercios);
+        btRestaurantes = view.findViewById(R.id.btRestaurantes);
+        btBeleza = view.findViewById(R.id.btBeleza);
+        btEsportes = view.findViewById(R.id.btEsportes);
+        btModa = view.findViewById(R.id.btModa);
+        btPets = view.findViewById(R.id.btPets);
+        btAutomotivo = view.findViewById(R.id.btAutomotivo);
+        btManutencao = view.findViewById(R.id.btManutencao);
+        btOutros = view.findViewById(R.id.btOutros);
     }
 
     private void filtrarEmpreendimentos(String texto) {
@@ -101,12 +232,9 @@ public class TelaPrincipalFragment extends Fragment {
                 }
             }
         }
-
         // Atualiza o RecyclerView com os itens filtrados
         exibirEmpreendimentosAleatorios(filtrados, 10, view);
     }
-
-
 
     public interface FirebaseCallback {
         void onCallback(List<Empreendimento> listaEmpreendimentos);
@@ -159,6 +287,7 @@ public class TelaPrincipalFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> Log.e("Empreendimentos", "Erro ao carregar empreendimentos", e));
     }
+
     private void carregarEmpreendimentos(FirebaseCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<Empreendimento> listaEmpreendimentos = new ArrayList<>();

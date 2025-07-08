@@ -27,6 +27,7 @@ import androidx.navigation.Navigation;
 import com.example.appnegocios.R;
 import com.example.appnegocios.databinding.FragmentDashboardBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -36,9 +37,15 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import Class.Avaliacao;
 import Class.Produto;
@@ -176,6 +183,59 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                             .addOnFailureListener(e -> {
                                 Toast.makeText(getContext(), "Erro ao salvar avaliação: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             });
+
+                    // --- Parte 1: Atualiza/Cria documento diário em 'dadosSemana' ---
+                    String dataAtual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                    DocumentReference docSemanaRef = db.collection("Cliente")
+                            .document(idEmpreendimento)
+                            .collection("dadosSemana")
+                            .document(dataAtual);
+
+                    docSemanaRef.get().addOnSuccessListener(documentSnapshot -> {
+                        Map<String, Object> update = new HashMap<>();
+                        update.put("avaliacoes", FieldValue.increment(1));
+
+                        // Adiciona campos 'cliques' e 'avaliacoes' se ainda não existem
+                        if (!documentSnapshot.exists() || !documentSnapshot.contains("cliques")) {
+                            update.put("cliques", 0);
+                        }
+                        if (!documentSnapshot.exists() || !documentSnapshot.contains("contador")) {
+                            update.put("contador", 0);
+                        }
+
+                        docSemanaRef.set(update, SetOptions.merge())
+                                .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "View do dia registrada com sucesso"))
+                                .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao registrar view diária", e));
+                    });
+
+                    // --- Parte 2: Excluir documentos mais antigos que 7 registros ---
+                    CollectionReference viewsRef = db.collection("Cliente")
+                            .document(idEmpreendimento)
+                            .collection("dadosSemana");
+
+                    viewsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<QueryDocumentSnapshot> documentos = new ArrayList<>();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            documentos.add(doc);
+                        }
+
+                        if (documentos.size() <= 7) {
+                            Log.d("FIREBASE", "Nada a excluir. Apenas " + documentos.size() + " dias registrados.");
+                            return;
+                        }
+
+                        // Ordena por ID (datas no formato yyyy-MM-dd)
+                        Collections.sort(documentos, Comparator.comparing(QueryDocumentSnapshot::getId));
+
+                        int quantidadeParaRemover = documentos.size() - 7;
+                        for (int i = 0; i < quantidadeParaRemover; i++) {
+                            QueryDocumentSnapshot doc = documentos.get(i);
+                            viewsRef.document(doc.getId())
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "Documento " + doc.getId() + " excluído"))
+                                    .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao excluir documento " + doc.getId(), e));
+                        }
+                    }).addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao buscar documentos de views", e));
                 });
 
                 dialog.show();
@@ -508,17 +568,68 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
         }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         DocumentReference docRef = db.collection("Cliente").document(idEmpreendimento);
 
+        // Atualiza contador geral de views
         docRef.update("views", FieldValue.increment(1))
                 .addOnSuccessListener(aVoid -> Log.d("Firestore", "Visualização registrada com sucesso."))
                 .addOnFailureListener(e -> {
                     Log.e("Firestore", "Erro ao registrar visualização: ", e);
-
-                    // Caso o campo "visualizacoes" ainda não exista, cria com valor 1
                     docRef.set(Collections.singletonMap("visualizacoes", 1), SetOptions.merge());
                 });
+
+        // --- Parte 1: Atualiza/Cria documento diário em 'dadosSemana' ---
+        String dataAtual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        DocumentReference docSemanaRef = db.collection("Cliente")
+                .document(idEmpreendimento)
+                .collection("dadosSemana")
+                .document(dataAtual);
+
+        docSemanaRef.get().addOnSuccessListener(documentSnapshot -> {
+            Map<String, Object> update = new HashMap<>();
+            update.put("contador", FieldValue.increment(1));
+
+            // Adiciona campos 'cliques' e 'avaliacoes' se ainda não existem
+            if (!documentSnapshot.exists() || !documentSnapshot.contains("cliques")) {
+                update.put("cliques", 0);
+            }
+            if (!documentSnapshot.exists() || !documentSnapshot.contains("avaliacoes")) {
+                update.put("avaliacoes", 0);
+            }
+
+            docSemanaRef.set(update, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "View do dia registrada com sucesso"))
+                    .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao registrar view diária", e));
+        });
+
+        // --- Parte 2: Excluir documentos mais antigos que 7 registros ---
+        CollectionReference viewsRef = db.collection("Cliente")
+                .document(idEmpreendimento)
+                .collection("dadosSemana");
+
+        viewsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<QueryDocumentSnapshot> documentos = new ArrayList<>();
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                documentos.add(doc);
+            }
+
+            if (documentos.size() <= 7) {
+                Log.d("FIREBASE", "Nada a excluir. Apenas " + documentos.size() + " dias registrados.");
+                return;
+            }
+
+            // Ordena por ID (datas no formato yyyy-MM-dd)
+            Collections.sort(documentos, Comparator.comparing(QueryDocumentSnapshot::getId));
+
+            int quantidadeParaRemover = documentos.size() - 7;
+            for (int i = 0; i < quantidadeParaRemover; i++) {
+                QueryDocumentSnapshot doc = documentos.get(i);
+                viewsRef.document(doc.getId())
+                        .delete()
+                        .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "Documento " + doc.getId() + " excluído"))
+                        .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao excluir documento " + doc.getId(), e));
+            }
+        }).addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao buscar documentos de views", e));
     }
 
     private void registrarClicksContatos(String idEmpreendimento) {
@@ -529,16 +640,68 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // Atualiza contador geral de cliques
         DocumentReference docRef = db.collection("Cliente").document(idEmpreendimento);
-
         docRef.update("clicksContatos", FieldValue.increment(1))
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Visualização registrada com sucesso."))
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "clicksContatos registrada com sucesso."))
                 .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Erro ao registrar visualização: ", e);
-
-                    // Caso o campo "visualizacoes" ainda não exista, cria com valor 1
-                    docRef.set(Collections.singletonMap("visualizacoes", 1), SetOptions.merge());
+                    Log.e("Firestore", "Erro ao registrar clicksContatos: ", e);
+                    docRef.set(Collections.singletonMap("clicksContatos", 1), SetOptions.merge());
                 });
+
+        // Data do dia
+        String dataAtual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        DocumentReference docSemanaRef = db.collection("Cliente")
+                .document(idEmpreendimento)
+                .collection("dadosSemana")
+                .document(dataAtual);
+
+        // Verifica se visualizações e avaliações existem, e registra clique
+        docSemanaRef.get().addOnSuccessListener(documentSnapshot -> {
+            Map<String, Object> update = new HashMap<>();
+            update.put("cliques", FieldValue.increment(1));
+
+            // Se os campos 'contador' (visualizações) e 'avaliacoes' não existirem, inicializa com 0
+            if (!documentSnapshot.exists() || !documentSnapshot.contains("contador")) {
+                update.put("contador", 0);
+            }
+            if (!documentSnapshot.exists() || !documentSnapshot.contains("avaliacoes")) {
+                update.put("avaliacoes", 0);
+            }
+
+            docSemanaRef.set(update, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "clicksContatos diária registrada com sucesso"))
+                    .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao registrar clique diário", e));
+        });
+
+        // Excluir dados com mais de 7 dias
+        CollectionReference viewsRef = db.collection("Cliente")
+                .document(idEmpreendimento)
+                .collection("dadosSemana");
+
+        viewsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<QueryDocumentSnapshot> documentos = new ArrayList<>();
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                documentos.add(doc);
+            }
+
+            if (documentos.size() <= 7) {
+                Log.d("FIREBASE", "Nada a excluir. Apenas " + documentos.size() + " dias registrados.");
+                return;
+            }
+
+            // Ordenar os documentos pela data (ID)
+            Collections.sort(documentos, Comparator.comparing(QueryDocumentSnapshot::getId));
+
+            int quantidadeParaRemover = documentos.size() - 7;
+            for (int i = 0; i < quantidadeParaRemover; i++) {
+                QueryDocumentSnapshot doc = documentos.get(i);
+                viewsRef.document(doc.getId())
+                        .delete()
+                        .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "Documento " + doc.getId() + " excluído"))
+                        .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao excluir documento " + doc.getId(), e));
+            }
+        }).addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao buscar documentos de clicksContatos", e));
     }
 
     @Override

@@ -59,7 +59,7 @@ private boolean exibir;
                     snackbar.setTextColor(Color.WHITE);
                     snackbar.show();
                 }else {
-                    // Cria o documento de contato
+                    // Cria o documento de links
                     Links novoLink = new Links();
                     novoLink.setNomeLink(nome.getText().toString());
                     novoLink.setLink(link.getText().toString());

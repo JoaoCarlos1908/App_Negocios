@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,20 +7,40 @@
     android:padding="16dp">
 
     <!-- 🔍 Barra de Pesquisa -->
-    <EditText
-        android:id="@+id/editTextPesquisa"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/areaPesquisa"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/edit_text"
-        android:hint="Pesquisar"
-        android:inputType="text"
-        android:maxLines="1"
-        android:padding="12dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBuscar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Buscar"
+            android:src="@drawable/ic_lupa"
+            app:tint="@color/dark_gray" />
+
+        <EditText
+            android:id="@+id/editTextPesquisa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text"
+            android:hint="Pesquisar"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="12dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+    </LinearLayout>
 
     <!-- 📌 Lista lateral (RecyclerView) -->
     <androidx.recyclerview.widget.RecyclerView
@@ -31,7 +50,7 @@
         android:layout_marginTop="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPesquisa"
+        app:layout_constraintTop_toBottomOf="@id/areaPesquisa"
         app:layout_constraintWidth_percent="0.25" />
 
     <!-- 📚 Categorias Topo Horizontal -->
@@ -45,7 +64,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/recyclerLateral"
-        app:layout_constraintTop_toBottomOf="@id/editTextPesquisa" />
+        app:layout_constraintTop_toBottomOf="@id/areaPesquisa" />
 
     <!-- 📦 Conteúdo principal -->
     <androidx.recyclerview.widget.RecyclerView
@@ -53,11 +72,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
-        app:layout_constraintTop_toBottomOf="@id/recyclerHorizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/recyclerLateral"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/recyclerLateral"
+        app:layout_constraintTop_toBottomOf="@id/recyclerHorizontal"
+        app:spanCount="3"
         tools:listitem="@layout/layout_view_negocio3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

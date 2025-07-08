@@ -16,8 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.appnegocios.R;
 import com.example.appnegocios.databinding.FragmentDashboardBinding;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,6 +37,8 @@ public class DashboardFragment extends Fragment {
     private LinearLayout containerInteracoes;
     private DocumentReference documentReference;
     private Button btnAbrirOutroFragmento;
+    private ShapeableImageView iconUser;
+    private String caminhoIcon;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +62,15 @@ public class DashboardFragment extends Fragment {
                     if (clicksContatos != null) {quant_cliks.setText(String.valueOf(clicksContatos));}
                     else {quant_cliks.setText("0");}
 
+                    caminhoIcon = documentSnapshot.getString("fotoPerfil");
+
+                    if (isAdded() && caminhoIcon != null && !caminhoIcon.isEmpty()) {
+                        Glide.with(requireContext())
+                                .load(caminhoIcon)
+                                .placeholder(R.drawable.ic_perfil)
+                                .error(R.drawable.ic_perfil)
+                                .into(iconUser);
+                    }
                 }
             }
         });
@@ -95,6 +108,7 @@ public class DashboardFragment extends Fragment {
         quant_views = view.findViewById(R.id.quant_views);
         quant_cliks = view.findViewById(R.id.quant_cliks);
         btnAbrirOutroFragmento = view.findViewById(R.id.bt_detalhes);
+        iconUser = view.findViewById(R.id.iconUser);
 
         exibirTaxasAvaliacoesReclamacoes(usuarioID);
 
