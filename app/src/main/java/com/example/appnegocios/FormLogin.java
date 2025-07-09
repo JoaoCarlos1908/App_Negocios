@@ -1,9 +1,11 @@
 package com.example.appnegocios;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,10 +28,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FormLogin extends AppCompatActivity {
 
@@ -60,7 +62,15 @@ public class FormLogin extends AppCompatActivity {
                     snackbar.setTextColor(Color.WHITE);
                     snackbar.show();
                 }else{
-                    AutenticarUsuario(v);
+                    verificarEmail(verificado -> {
+
+                        if (verificado) {
+                            // e-mail verificado, continue
+                            AutenticarUsuario(v);
+                        } else {
+                            // e-mail não verificado, o alerta já foi exibido
+                        }
+                    });
                 }
             }
         });
@@ -207,14 +217,63 @@ public class FormLogin extends AppCompatActivity {
 
         });
     }
+    private void emialValido() {
+        String email = edit_email.getText().toString();
+        String senha = edit_senha.getText().toString();
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        View rootView = findViewById(android.R.id.content); // ✅ raiz da tela
+
+                        if (task.isSuccessful()) {
+                            // Autenticado com sucesso
+                        } else {
+                            String erro;
+                            try {
+                                throw task.getException();
+                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                                erro = "E-mail ou senha inválido";
+                            } catch (Exception e) {
+                                erro = "Erro ao realizar login do Usuário";
+                            }
+
+                            Snackbar snackbar = Snackbar.make(rootView, erro, Snackbar.LENGTH_SHORT);
+                            snackbar.setBackgroundTint(Color.RED);
+                            snackbar.setTextColor(Color.WHITE);
+                            snackbar.show();
+                        }
+                    }
+                });
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        String email = edit_email.getText().toString();
+        String senha = edit_senha.getText().toString();
+        View rootView = findViewById(android.R.id.content); // ✅ raiz da tela
         if (user != null) {
-            validarUsuarioLogado(user);
+            if(email.isEmpty() || senha.isEmpty()){
+                Snackbar snackbar = Snackbar.make(rootView, menssagens[0], Snackbar.LENGTH_SHORT);
+                snackbar.setBackgroundTint(Color.RED);
+                snackbar.setTextColor(Color.WHITE);
+                snackbar.show();
+            }else{
+                verificarEmail(verificado -> {
+
+                    if (verificado) {
+                        // e-mail verificado, continue
+                        validarUsuarioLogado(user);
+                    } else {
+                        // e-mail não verificado, o alerta já foi exibido
+                    }
+                });
+            }
         }
     }
 
@@ -263,4 +322,64 @@ public class FormLogin extends AppCompatActivity {
         bt_entrar = findViewById(R.id.bt_entrar);
         progressBar = findViewById(R.id.progessbar);
     }
+
+    public interface EmailVerificadoCallback {
+        void onResult(boolean verificado);
+    }
+
+    public void verificarEmail(EmailVerificadoCallback callback) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        mAuth.signInWithEmailAndPassword(edit_email.getText().toString(), edit_senha.getText().toString())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+
+                        if (user != null) {
+                            user.reload().addOnCompleteListener(reloadTask -> {
+                                if (user.isEmailVerified()) {
+                                    callback.onResult(true);
+                                } else {
+                                    mostrarDialogVerificacaoEmail();
+                                    callback.onResult(false);
+                                }
+                            });
+                        } else {
+                            callback.onResult(false);
+                        }
+                    } else {
+                        emialValido();
+                        callback.onResult(false);
+                    }
+                });
+    }
+
+    private void mostrarDialogVerificacaoEmail() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(FormLogin.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_verificacao_email, null);
+
+        Button btnReenviarEmail = view.findViewById(R.id.btnReenviarEmail);
+        Button btnFechar = view.findViewById(R.id.btnFechar);
+
+        AlertDialog dialog = builder.setView(view).create();
+
+        btnReenviarEmail.setOnClickListener(v -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null && !user.isEmailVerified()) {
+                user.sendEmailVerification()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(this, "E-mail de verificação reenviado.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        });
+
+        btnFechar.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+
 }

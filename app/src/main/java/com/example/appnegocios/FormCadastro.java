@@ -1,14 +1,17 @@
 package com.example.appnegocios;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
 import static java.security.AccessController.getContext;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -30,6 +33,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.appnegocios.ui.perfil.CategoriasDialogFragment;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,6 +45,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -348,10 +353,6 @@ public class FormCadastro extends AppCompatActivity {
                         Log.d("db_erro", "Erro ao salvar os dados" + e.toString());
                     });
 
-
-            Intent intent = new Intent(FormCadastro.this, FormDashboard.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
         } else {
             cliente.setNome(edit_nome.getText().toString());
             cliente.setTipoConta(tipoConta);
@@ -378,13 +379,37 @@ public class FormCadastro extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                         Log.d("db_erro", "Erro ao salvar os dados" + e.toString());
                     });
-
-
-            Intent intent = new Intent(FormCadastro.this, FormDashboard.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
         }
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(FormCadastro.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_verificacao_email, null);
+
+        Button btnReenviarEmail = view.findViewById(R.id.btnReenviarEmail);
+        Button btnFechar = view.findViewById(R.id.btnFechar);
+
+        AlertDialog dialog = builder.setView(view).create();
+
+        btnReenviarEmail.setOnClickListener(v -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null && !user.isEmailVerified()) {
+                user.sendEmailVerification()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(this, "E-mail de verificação reenviado.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        });
+
+        btnFechar.setOnClickListener(v -> {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(FormCadastro.this, FormLogin.class));
+                    finish();
+                    dialog.dismiss();
+                });
+
+        dialog.show();
     }
 
     private void salvarImagemPerfil(String userId, boolean isEmpreendimento, Map<String, Object> dadosUsuario) {
