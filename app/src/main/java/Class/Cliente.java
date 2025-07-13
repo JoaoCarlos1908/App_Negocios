@@ -1,17 +1,15 @@
 package Class;
 
 public class Cliente extends Usuario{
-    public Cliente() {
-        this.cep = "";
+    public Cliente() {}
+
+    private int idade;
+
+    public int getIdade() {
+        return idade;
     }
 
-    private String cep;
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 }

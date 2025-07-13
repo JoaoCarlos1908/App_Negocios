@@ -254,28 +254,17 @@ public class FormLogin extends AppCompatActivity {
         super.onStart();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        String email = edit_email.getText().toString();
-        String senha = edit_senha.getText().toString();
-        View rootView = findViewById(android.R.id.content); // ✅ raiz da tela
         if (user != null) {
-            if(email.isEmpty() || senha.isEmpty()){
-                Snackbar snackbar = Snackbar.make(rootView, menssagens[0], Snackbar.LENGTH_SHORT);
-                snackbar.setBackgroundTint(Color.RED);
-                snackbar.setTextColor(Color.WHITE);
-                snackbar.show();
-            }else{
-                verificarEmail(verificado -> {
-
-                    if (verificado) {
-                        // e-mail verificado, continue
-                        validarUsuarioLogado(user);
-                    } else {
-                        // e-mail não verificado, o alerta já foi exibido
-                    }
-                });
-            }
+            user.reload().addOnCompleteListener(task -> {
+                if (user.isEmailVerified()) {
+                    validarUsuarioLogado(user);
+                } else {
+                    mostrarDialogVerificacaoEmail(); // se quiser mostrar aviso de verificação
+                }
+            });
         }
     }
+
 
     private void validarUsuarioLogado(FirebaseUser user) {
         String usuarioID = user.getUid();

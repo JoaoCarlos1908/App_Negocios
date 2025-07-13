@@ -10,7 +10,7 @@ public class Usuario {
         this.tipoConta = false;
     }
 
-    private String idUser, nome, email, tell, senha;
+    private String idUser, nome, email, tell, senha, cep;
     private Boolean tipoConta;
 
     public String getIdUser() {
@@ -58,6 +58,14 @@ public class Usuario {
 
     public void setTipoConta(Boolean tipoConta) {
         this.tipoConta = tipoConta;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 }
 

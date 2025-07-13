@@ -64,51 +64,67 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_nome"
         />
 
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteCategorias"
+        android:hint="Selecione ou digite a categoria"
+        style="@style/edit_text"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/edit_cep"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <EditText
+        android:id="@+id/edit_cep"
+        style="@style/edit_text"
+        android:hint="CEP"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:inputType="text|number"
+        android:drawableEnd="@drawable/ic_localizacao"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_descricao"
+        />
+
     <EditText
         android:id="@+id/edit_email"
         style="@style/edit_text"
         android:hint="@string/email"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:inputType="textEmailAddress"
         android:drawableEnd="@drawable/ic_email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_descricao"
+        app:layout_constraintTop_toBottomOf="@+id/text_alterFoto"
         />
 
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteCategorias"
-        android:hint="Selecione ou digite a categoria"
-        style="@style/edit_text"
-        android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!--
     <EditText
-        android:id="@+id/edit_telefone"
+        android:id="@+id/edit_confirme_email"
         style="@style/edit_text"
-        android:hint="Telefone"
+        android:hint="Confirme seu Email"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
+        android:inputType="textEmailAddress"
+        android:drawableEnd="@drawable/ic_email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_email"
         />
-    -->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_senha"
         app:endIconMode="password_toggle"
         android:hint="Senha"
         style="@style/layout_senha"
+        android:visibility="gone"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autoCompleteCategorias">
+        app:layout_constraintTop_toBottomOf="@+id/edit_confirme_email">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_senha"
@@ -126,6 +142,7 @@
         app:endIconMode="password_toggle"
         android:hint="Confirme sua Senha"
         style="@style/layout_senha"
+        android:visibility="gone"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         app:layout_constraintStart_toStartOf="parent"

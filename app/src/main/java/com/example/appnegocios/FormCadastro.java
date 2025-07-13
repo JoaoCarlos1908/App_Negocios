@@ -1,8 +1,5 @@
 package com.example.appnegocios;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-import static java.security.AccessController.getContext;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -33,13 +30,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.appnegocios.ui.perfil.CategoriasDialogFragment;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -51,9 +46,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.UploadTask;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.OnFailureListener;
 
 
 import Class.Empreendimento;
@@ -64,18 +56,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class FormCadastro extends AppCompatActivity {
     private Empreendimento empreendimento;
     private Cliente cliente;
-    private EditText edit_nome, edit_desc, edit_email, edit_senha, edit_confirme_senha;
+    private EditText edit_nome, edit_desc, edit_cep, edit_email, edit_confirme_email, edit_senha, edit_confirme_senha;
+    private TextInputLayout layout_senha, layout_confirme_senha;
     private TextView text_alterFoto;
-    private Button bt_cadastrar;
+    private Button bt_seguir;
     private String[] menssagens = {"Preencha todos os campos", "Cadastro realizado com sucesso"};
     private String usuarioID, categoria;
     private ImageView iconUser;
-    private Boolean tipoConta;
+    private Boolean tipoConta,control;
     private ActivityResultLauncher<Intent> imagePicklauncher;
     private Uri selectedImageUri;
     private AutoCompleteTextView autoCompleteCategorias;
@@ -99,33 +91,68 @@ public class FormCadastro extends AppCompatActivity {
                 });
         IniciarComponentes();
 
-        bt_cadastrar.setOnClickListener(new View.OnClickListener() {
+        bt_seguir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RemoveTeclado();
 
                 String nome = edit_nome.getText().toString().trim();
+                String cep = edit_cep.getText().toString().trim();
                 String email = edit_email.getText().toString().trim();
+                String confirmeEmail = edit_confirme_email.getText().toString().trim();
                 String senha = edit_senha.getText().toString();
                 String confirmeSenha = edit_confirme_senha.getText().toString();
 
-                if (nome.isEmpty() || email.isEmpty() || senha.isEmpty()) {
-                    mostrarSnackbar(v, menssagens[0], Color.RED);
+                if (nome.isEmpty()) {
+                    mostrarSnackbar(v, "Informe o nome do empreendimento", Color.RED);
                     return;
                 }
-
-                if (confirmeSenha.isEmpty()) {
-                    mostrarSnackbar(v, "Confirme sua senha", Color.RED);
+                if(cep.isEmpty()) {
+                    mostrarSnackbar(v, "Informe seu CEP", Color.RED);
                     return;
                 }
+                if (!control){
+                    edit_nome.setVisibility(View.GONE);
+                    edit_desc.setVisibility(View.GONE);
+                    edit_cep.setVisibility(View.GONE);
+                    autoCompleteCategorias.setVisibility(View.GONE);
 
-                if (!senha.equals(confirmeSenha)) {
-                    mostrarSnackbar(v, "As senhas não coincidem", Color.RED);
-                    return;
+                    edit_email.setVisibility(View.VISIBLE);
+                    edit_confirme_email.setVisibility(View.VISIBLE);
+                    layout_senha.setVisibility(View.VISIBLE);
+                    layout_confirme_senha.setVisibility(View.VISIBLE);
                 }
 
-                // Todos os campos estão preenchidos corretamente
-                CadastrarUsuario(v);
+                if(control){
+                    if (email.isEmpty() || senha.isEmpty()) {
+                        mostrarSnackbar(v, menssagens[0], Color.RED);
+                        return;
+                    }
+
+                    if (confirmeEmail.isEmpty()) {
+                        mostrarSnackbar(v, "Confirme sua senha", Color.RED);
+                        return;
+                    }
+
+                    if (!email.equals(confirmeEmail)) {
+                        mostrarSnackbar(v, "Os Emails não coincidem", Color.RED);
+                        return;
+                    }
+
+                    if (confirmeSenha.isEmpty()) {
+                        mostrarSnackbar(v, "Confirme sua senha", Color.RED);
+                        return;
+                    }
+
+                    if (!senha.equals(confirmeSenha)) {
+                        mostrarSnackbar(v, "As senhas não coincidem", Color.RED);
+                        return;
+                    }
+
+                    // Todos os campos estão preenchidos corretamente
+                    CadastrarUsuario(v);
+                }
+                control = true;
             }
         });
 
@@ -168,22 +195,27 @@ public class FormCadastro extends AppCompatActivity {
         text_alterFoto = findViewById(R.id.text_alterFoto);
         edit_nome = findViewById(R.id.edit_nome);
         edit_desc = findViewById(R.id.edit_descricao);
+        edit_cep = findViewById(R.id.edit_cep);
+        edit_confirme_email = findViewById(R.id.edit_confirme_email);
         edit_email = findViewById(R.id.edit_email);
+        layout_senha = findViewById(R.id.layout_senha);
+        layout_confirme_senha = findViewById(R.id.layout_confirme_senha);
         edit_senha = findViewById(R.id.edit_senha);
         edit_confirme_senha = findViewById(R.id.edit_confirme_senha);
-        bt_cadastrar = findViewById(R.id.bt_seguir);
+        bt_seguir = findViewById(R.id.bt_seguir);
         iconUser = findViewById(R.id.iconUser);
         autoCompleteCategorias = findViewById(R.id.autoCompleteCategorias);
 
         if (!tipoConta) {
             cliente = new Cliente();
             edit_nome.setHint("Nome");
-            edit_desc.setHint("CEP");     // altera o hint
-            edit_desc.setMaxLines(1);     // altera o número máximo de linhas
+            edit_desc.setHint("Idade");     // altera o hint
+            edit_desc.setMaxLines(1);
             autoCompleteCategorias.setVisibility(View.GONE);
         } else {
             empreendimento = new Empreendimento();
         }
+        control = false;
     }
 
     private void SelecaoDeCategorias() {
@@ -194,7 +226,7 @@ public class FormCadastro extends AppCompatActivity {
                         android.R.layout.simple_dropdown_item_1line,
                         categorias
                 );
-                Toast.makeText(FormCadastro.this, "Categorias: " + categorias.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(FormCadastro.this, "Categorias: " + categorias.toString(), Toast.LENGTH_LONG).show();
                 autoCompleteCategorias.setAdapter(adapter);
 
                 autoCompleteCategorias.setOnClickListener(v -> autoCompleteCategorias.showDropDown());
@@ -313,6 +345,7 @@ public class FormCadastro extends AppCompatActivity {
         if (tipoConta) {
             empreendimento.setNome(edit_nome.getText().toString());
             empreendimento.setDescricao(edit_desc.getText().toString());
+            empreendimento.setCep(edit_cep.getText().toString());
             empreendimento.setTipoConta(tipoConta);
             empreendimento.setCategoria(categoria);
             empreendimento.setEmail(edit_email.getText().toString());
@@ -322,6 +355,7 @@ public class FormCadastro extends AppCompatActivity {
             Map<String, Object> empresa = new HashMap<>();
             empresa.put("nome", empreendimento.getNome());
             empresa.put("descricao", empreendimento.getDescricao());
+            empresa.put("CEP", empreendimento.getCep());
             empresa.put("TipoConta", empreendimento.getTipoConta());
             empresa.put("categoria", empreendimento.getCategoria());
             empresa.put("E-mail", empreendimento.getEmail());
@@ -347,7 +381,6 @@ public class FormCadastro extends AppCompatActivity {
             documentReference.set(empresa)
                     .addOnSuccessListener(unused -> {
                         Log.d("db", "Sucesso ao salvar os dados");
-                        salvarImagemPerfil(usuarioID, true, empresa);
                     })
                     .addOnFailureListener(e -> {
                         Log.d("db_erro", "Erro ao salvar os dados" + e.toString());
@@ -356,13 +389,15 @@ public class FormCadastro extends AppCompatActivity {
         } else {
             cliente.setNome(edit_nome.getText().toString());
             cliente.setTipoConta(tipoConta);
-            cliente.setCep(edit_desc.getText().toString());
+            cliente.setIdade(Integer.parseInt(edit_desc.getText().toString()));
+            cliente.setCep(edit_cep.getText().toString());
             cliente.setEmail(edit_email.getText().toString());
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             Map<String, Object> user = new HashMap<>();
             user.put("nome", cliente.getNome());
+            user.put("idade", cliente.getIdade());
             user.put("telefone", cliente.getTell());
             user.put("TipoConta", cliente.getTipoConta());
             user.put("E-mail", cliente.getEmail());
@@ -374,16 +409,60 @@ public class FormCadastro extends AppCompatActivity {
             documentReference.set(user)
                     .addOnSuccessListener(unused -> {
                         Log.d("db", "Sucesso ao salvar os dados");
-                        salvarImagemPerfil(usuarioID, false, user);
                     })
                     .addOnFailureListener(e -> {
                         Log.d("db_erro", "Erro ao salvar os dados" + e.toString());
                     });
         }
 
+        salvarImagemPerfil(usuarioID);
+
+    }
+
+    private void salvarImagemPerfil(String userId) {
+        if (selectedImageUri == null) {
+            Log.e("FIREBASE", "selectedImageUri está nulo! Não há imagem para enviar.");
+            return;
+        }
+
+        StorageReference storageRef = FirebaseStorage.getInstance()
+                .getReference()
+                .child("fotos_perfil/" + userId + ".jpg");
+
+        storageRef.putFile(selectedImageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        Log.d("FIREBASE", "Imagem enviada. URL: " + imageUrl);
+
+                        FirebaseFirestore.getInstance()
+                                .collection("Cliente")
+                                .document(userId)
+                                .update("fotoPerfil", imageUrl)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("FIREBASE", "fotoPerfil atualizado com sucesso");
+                                    avisoVerificacaoEmail(); // <- mover para aqui
+                                })
+                                .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao salvar fotoPerfil", e));
+                    });
+                })
+                .addOnFailureListener(e -> Log.e("FIREBASE", "Falha ao fazer upload da imagem", e));
+    }
+
+    private void avisoVerificacaoEmail(){
         AlertDialog.Builder builder = new AlertDialog.Builder(FormCadastro.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_verificacao_email, null);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && !user.isEmailVerified()) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "E-mail de verificação enviado.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
 
         Button btnReenviarEmail = view.findViewById(R.id.btnReenviarEmail);
         Button btnFechar = view.findViewById(R.id.btnFechar);
@@ -391,7 +470,6 @@ public class FormCadastro extends AppCompatActivity {
         AlertDialog dialog = builder.setView(view).create();
 
         btnReenviarEmail.setOnClickListener(v -> {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null && !user.isEmailVerified()) {
                 user.sendEmailVerification()
                         .addOnCompleteListener(task -> {
@@ -403,45 +481,13 @@ public class FormCadastro extends AppCompatActivity {
         });
 
         btnFechar.setOnClickListener(v -> {
-                    FirebaseAuth.getInstance().signOut();
-                    startActivity(new Intent(FormCadastro.this, FormLogin.class));
-                    finish();
-                    dialog.dismiss();
-                });
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(FormCadastro.this, FormLogin.class));
+            finish();
+            dialog.dismiss();
+        });
 
         dialog.show();
     }
 
-    private void salvarImagemPerfil(String userId, boolean isEmpreendimento, Map<String, Object> dadosUsuario) {
-        if (selectedImageUri == null) {
-            Log.e("FIREBASE", "selectedImageUri está nulo! Não há imagem para enviar.");
-            return;
-        }
-
-        Log.d("FIREBASE", "Iniciando upload da imagem: " + selectedImageUri.toString());
-
-        StorageReference storageRef = FirebaseStorage.getInstance()
-                .getReference()
-                .child("fotos_perfil/" + userId + ".jpg");
-
-        storageRef.putFile(selectedImageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    Log.d("FIREBASE", "Upload concluído com sucesso.");
-                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String imageUrl = uri.toString();
-                        Log.d("FIREBASE", "URL da imagem: " + imageUrl);
-                        dadosUsuario.put("fotoPerfil", imageUrl);
-
-                        FirebaseFirestore.getInstance()
-                                .collection("Cliente")
-                                .document(userId)
-                                .update(dadosUsuario)
-                                .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "Foto salva no Firestore"))
-                                .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao salvar foto no Firestore", e));
-                    }).addOnFailureListener(e -> {
-                        Log.e("FIREBASE", "Erro ao obter URL da imagem", e);
-                    });
-                });
-
-    }
 }
