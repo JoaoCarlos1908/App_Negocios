@@ -1,17 +1,22 @@
 package com.example.appnegocios.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,6 +24,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.appnegocios.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,18 +36,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import Class.Empreendimento;
+import Class.CepSession;
+import Class.Endereco;
+import Class.CepUtils;
 
 public class TelaPrincipalFragment extends Fragment {
 
     private View view;
-    private EditText editTextPesquisa;
+    private EditText editTextPesquisa, editCep;
     private ImageView btnBuscar;
     private Map<String, List<Empreendimento>> mapaEmpreendimentos = new HashMap<>();
-
     private  TextView btSaude, btComercios, btRestaurantes, btBeleza, btEsportes, btModa, btPets, btAutomotivo,
-                      btManutencao, btOutros;
+                      btManutencao, btOutros, textLocalizacao;
+    private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private final boolean[] isLigado = {false};
+    private Endereco cepPesquisa;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -183,12 +196,56 @@ public class TelaPrincipalFragment extends Fragment {
             }
         });
 
+        textLocalizacao.setOnClickListener(v -> {
+            isLigado[0] = !isLigado[0]; // Alterna estado
+
+            if (isLigado[0]) {
+                editCep.setVisibility(View.VISIBLE);
+            } else {
+                editCep.setVisibility(View.GONE);
+            }
+        });
+
+        editCep.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+
+                // 1. Esconde o teclado
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(editCep.getWindowToken(), 0);
+                }
+
+                // 2. Continua com sua lógica atual
+                String cepDigitado = editCep.getText().toString().trim();
+                CepSession.getInstance().setCep(cepDigitado);
+
+                carregarCidadeUf(cepDigitado, () -> {
+                    if (cepPesquisa != null && cepPesquisa.getLocalidade() != null && cepPesquisa.getUf() != null) {
+                        textLocalizacao.setText("📍 " + cepPesquisa.getLocalidade() + " - " + cepPesquisa.getUf());
+                    }
+
+                    carregarEmpreendimentos(new FirebaseCallback() {
+                        @Override
+                        public void onCallback(List<Empreendimento> lista) {
+                            exibirEmpreendimentosAleatorios(lista, 10, view);
+                        }
+                    });
+
+                    editCep.setVisibility(View.GONE);
+                });
+
+                return true;
+            }
+            return false;
+        });
 
         return view;
     }
 
     private void iniciarComponentes(){
         editTextPesquisa = view.findViewById(R.id.editTextPesquisa);
+        editCep = view.findViewById(R.id.editTextCepLocalizacao);
         btnBuscar = view.findViewById(R.id.btnBuscar);
 
         btSaude = view.findViewById(R.id.btSaude);
@@ -201,6 +258,9 @@ public class TelaPrincipalFragment extends Fragment {
         btAutomotivo = view.findViewById(R.id.btAutomotivo);
         btManutencao = view.findViewById(R.id.btManutencao);
         btOutros = view.findViewById(R.id.btOutros);
+
+        textLocalizacao = view.findViewById(R.id.textLocalizacao);
+        buscarCidadeEstadoDoCliente(usuarioID, textLocalizacao);
     }
 
     private void filtrarEmpreendimentos(String texto) {
@@ -311,10 +371,33 @@ public class TelaPrincipalFragment extends Fragment {
     }
 
     private void exibirEmpreendimentosAleatorios(List<Empreendimento> listaOriginal, int limite, View view) {
-        // Embaralha e limita
-        Collections.shuffle(listaOriginal);
-        List<Empreendimento> listaLimitada = listaOriginal.subList(0, Math.min(limite, listaOriginal.size()));
+        String cepPrioritario = CepSession.getInstance().getCep(); // Obtém o CEP atual da sessão
 
+        List<Empreendimento> comCep = new ArrayList<>();
+        List<Empreendimento> outros = new ArrayList<>();
+
+        // Separa os empreendimentos com base no CEP
+        for (Empreendimento emp : listaOriginal) {
+            if (cepPrioritario != null && cepPrioritario.equals(emp.getCep())) {
+                comCep.add(emp);
+            } else {
+                outros.add(emp);
+            }
+        }
+
+        // Embaralha os dois grupos separadamente
+        Collections.shuffle(comCep);
+        Collections.shuffle(outros);
+
+        // Junta os grupos, com os prioritários primeiro
+        List<Empreendimento> listaOrdenada = new ArrayList<>();
+        listaOrdenada.addAll(comCep);
+        listaOrdenada.addAll(outros);
+
+        // Aplica o limite
+        List<Empreendimento> listaLimitada = listaOrdenada.subList(0, Math.min(limite, listaOrdenada.size()));
+
+        // Atualiza a interface
         LinearLayout horizontalContainer = view.findViewById(R.id.linearHorizontalContainer);
         LinearLayout verticalContainer = view.findViewById(R.id.linearVerticalContainer);
 
@@ -324,49 +407,93 @@ public class TelaPrincipalFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(view.getContext());
 
         for (Empreendimento emp : listaLimitada) {
-            // Inflate item horizontal
+            // Item horizontal
             View itemHorizontal = inflater.inflate(R.layout.layout_view_negocio1, horizontalContainer, false);
             ((TextView) itemHorizontal.findViewById(R.id.text_nome)).setText(emp.getNome());
             ((TextView) itemHorizontal.findViewById(R.id.text_categoria)).setText(emp.getCategoria());
-            // TODO: Defina imagem se houver
 
-            //Função de Click visualizar perfil empreendimento.
-            itemHorizontal.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("idEmpreendimento", emp.getIdUser()); // Substitua pelo ID real do empreendimento
+            itemHorizontal.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("idEmpreendimento", emp.getIdUser());
 
-                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
-                    navController.navigate(R.id.nav_view_perfil_empreedimento, bundle);
-
-                }
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.navigate(R.id.nav_view_perfil_empreedimento, bundle);
             });
 
             horizontalContainer.addView(itemHorizontal);
 
-            // Inflate item vertical
+            // Item vertical
             View itemVertical = inflater.inflate(R.layout.layout_view_negocio2, verticalContainer, false);
             ((TextView) itemVertical.findViewById(R.id.text_nome)).setText(emp.getNome());
             ((TextView) itemVertical.findViewById(R.id.text_endereco)).setText(emp.getEndereco());
-            ((RatingBar) itemVertical.findViewById(R.id.estrelas)).setRating(4.0f); // exemplo fixo
-            // TODO: Defina imagem se houver
+            ((RatingBar) itemVertical.findViewById(R.id.estrelas)).setRating(4.0f); // Exemplo fixo
 
-            //Função de Click visualizar perfil empreendimento.
-            itemVertical.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("idEmpreendimento", emp.getIdUser()); // Substitua pelo ID real do empreendimento
+            itemVertical.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("idEmpreendimento", emp.getIdUser());
 
-                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
-                    navController.navigate(R.id.nav_view_perfil_empreedimento, bundle);
-                }
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_form_dashboard);
+                navController.navigate(R.id.nav_view_perfil_empreedimento, bundle);
             });
 
             verticalContainer.addView(itemVertical);
         }
     }
+
+    private void buscarCidadeEstadoDoCliente(String clienteId, TextView textEndereco) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Cliente")
+                .document(clienteId)
+                .collection("Endereco")
+                .limit(1) // Pega o único documento existente
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+
+                        String cidade = document.getString("localidade"); // ou "cidade", dependendo do nome usado
+                        String estado = document.getString("uf"); // ou "estado", dependendo do nome usado
+                        CepSession.getInstance().setCep(document.getString("cep"));
+
+                        if (cidade != null && estado != null) {
+                            textEndereco.setText("\uD83D\uDCCD " + cidade + " - " + estado);
+                        } else {
+                            Toast.makeText(getContext(), "Campos cidade ou estado não encontrados.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Endereço não encontrado.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Erro ao buscar endereço: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void carregarCidadeUf(String cep, Runnable onFinished) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                cepPesquisa = CepUtils.buscarCep(cep);
+
+                requireActivity().runOnUiThread(() -> {
+                    onFinished.run(); // <-- executa callback no fim
+                });
+
+            } catch (IllegalArgumentException e) {
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+
+            } catch (Exception e) {
+                Log.e("CEP_ERRO", "Erro ao buscar CEP", e);
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), "Erro ao buscar CEP", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+
 
     @Override
     public void onDestroyView() {

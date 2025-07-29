@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10dp"
             android:text="@string/nome"
             android:textColor="@color/dark_gray"
             android:textSize="18sp"
@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10dp"
             android:text="Descrição"
             android:textColor="@color/dark_gray"
             android:textSize="18sp"
@@ -95,17 +95,43 @@
             app:layout_constraintTop_toBottomOf="@+id/text_desc" />
 
         <TextView
-            android:id="@+id/text_endereco"
+            android:id="@+id/text_cep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="24dp"
-            android:text="Endereço"
+            android:layout_marginTop="10dp"
+            android:text="CEP"
             android:textColor="@color/dark_gray"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_descricao" />
+
+        <EditText
+            android:id="@+id/edit_cep"
+            style="@style/edit_text"
+            android:layout_marginTop="0dp"
+            android:enabled="false"
+            android:hint="CEP"
+            android:maxLines="6"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_cep" />
+
+        <TextView
+            android:id="@+id/text_endereco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:text="Endereço"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_cep" />
 
         <EditText
             android:id="@+id/edit_endereco"

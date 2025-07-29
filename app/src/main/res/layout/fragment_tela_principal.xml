@@ -24,8 +24,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_lupa"
                 android:contentDescription="Buscar"
+                android:src="@drawable/ic_lupa"
                 app:tint="@color/dark_gray" />
 
             <EditText
@@ -34,11 +34,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/edit_text"
+                android:drawablePadding="8dp"
                 android:hint="Pesquisar"
                 android:inputType="text"
                 android:maxLines="1"
                 android:padding="12dp"
-                android:drawablePadding="8dp"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white" />
 
@@ -49,21 +49,47 @@
                 android:src="@drawable/ic_sino" />
         </LinearLayout>
 
-        <!-- Localização -->
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Localização com EditText ao lado -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:text="📍Vazante MG"
-            android:textColor="@color/dark_gray" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="4dp">
+
+            <TextView
+                android:id="@+id/textLocalizacao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="📍Vazante MG"
+                android:textColor="@color/dark_gray"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/editTextCepLocalizacao"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text"
+                android:hint="Digite o CEP de pesquisa"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:visibility="gone" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:visibility="gone"
             android:orientation="horizontal"
-            android:paddingTop="8dp">
+            android:paddingTop="8dp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"
@@ -98,9 +124,9 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:visibility="gone"
             android:layout_marginTop="8dp"
-            android:background="@drawable/conteiner_dashboard">
+            android:background="@drawable/conteiner_dashboard"
+            android:visibility="gone">
             <!-- Aqui você pode usar um ViewPager ou ImageView -->
         </FrameLayout>
 
@@ -108,7 +134,7 @@
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="4dp"
             android:alignmentMode="alignMargins"
             android:columnCount="5"
             android:orientation="horizontal"

@@ -52,19 +52,26 @@ import org.checkerframework.common.subtyping.qual.Bottom;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import Class.Endereco;
+import Class.CepUtils;
 
 public class PerfilFragment extends Fragment {
     private FragmentPerfilBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String usuarioID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private TextView editFoto, text_categoria, text_alterFoto;
-    private EditText nome, desc, endereco;
+    private EditText nome, desc, endereco, edit_cep;
     private Button bt_editar, bt_salvar, bt_cancelar;
     private View maps, contatos, links, horas, categoria;
     private ShapeableImageView iconUser;
     private String caminhoIcon;
     private Uri selectedImageUri;
     private ListenerRegistration perfilListener;
+
+    private Endereco novoEndereco;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -86,6 +93,7 @@ public class PerfilFragment extends Fragment {
                 editFoto.setVisibility(View.VISIBLE);
                 text_alterFoto.setVisibility(View.VISIBLE);
                 iconUser.setClickable(true);
+                edit_cep.setEnabled(true);
             }
         });
 
@@ -118,11 +126,39 @@ public class PerfilFragment extends Fragment {
                 Map<String, Object> dadosUsuario = new HashMap<>();
                 dadosUsuario.put("nome", nome.getText().toString());
                 dadosUsuario.put("descricao", desc.getText().toString());
+                dadosUsuario.put("CEP", edit_cep.getText().toString());
                 dadosUsuario.put("endereco", endereco.getText().toString());
 
                 if (selectedImageUri != null) {
                     salvarImagemPerfil(usuarioID);
                 }
+
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    try {
+                        novoEndereco = CepUtils.buscarCep(edit_cep.getText().toString());
+                        if (isAdded() && getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(), "Endereço encontrado: " + novoEndereco.toString(), Toast.LENGTH_LONG).show();
+                            });
+                        }
+                        atualizarEnderecoDoCliente(usuarioID, novoEndereco);
+                    } catch (IllegalArgumentException e) {
+                        if (isAdded() && getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("CEP_ERRO", "Erro ao buscar CEP", e);
+                        if (isAdded() && getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    }
+                });
 
                 db.collection("Cliente").document(usuarioID)
                         .update(dadosUsuario)
@@ -257,7 +293,6 @@ public class PerfilFragment extends Fragment {
         }
     }
 
-
     public void animarPreenchimento(View view) {
         int corInicial = Color.TRANSPARENT; // ou qualquer cor de início
         int corFinal = Color.parseColor("#a7a7a7"); // Cor final
@@ -290,6 +325,7 @@ public class PerfilFragment extends Fragment {
             if (documentSnapshot != null) {
                 nome.setText(documentSnapshot.getString("nome"));
                 desc.setText(documentSnapshot.getString("descricao"));
+                edit_cep.setText(documentSnapshot.getString("CEP"));
                 endereco.setText(documentSnapshot.getString("endereco"));
                 String text = documentSnapshot.getString("categoria");
                 text_categoria.setText("Categoria: " + text);
@@ -311,6 +347,7 @@ public class PerfilFragment extends Fragment {
 
         nome = view.findViewById(R.id.edit_nome);
         desc = view.findViewById(R.id.edit_descricao);
+        edit_cep = view.findViewById(R.id.edit_cep);
         endereco = view.findViewById(R.id.edit_endereco);
         iconUser = view.findViewById(R.id.iconUser);
         iconUser.setEnabled(false);
@@ -390,6 +427,21 @@ public class PerfilFragment extends Fragment {
                 });
     }
 
+    private void atualizarEnderecoDoCliente(String clienteId, Endereco endereco) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Cliente")
+                .document(clienteId)
+                .collection("Endereco")
+                .document("principal") // ID fixo
+                .set(endereco)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("FIREBASE", "Endereço salvo/atualizado com sucesso.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIREBASE", "Erro ao salvar/atualizar endereço: ", e);
+                });
+    }
 
     @Override
     public void onStop() {

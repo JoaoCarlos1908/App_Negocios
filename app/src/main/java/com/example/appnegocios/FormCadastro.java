@@ -51,11 +51,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import Class.Empreendimento;
 import Class.Cliente;
 import Class.Contato;
+import Class.Endereco;
+import Class.CepUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FormCadastro extends AppCompatActivity {
     private Empreendimento empreendimento;
@@ -71,6 +75,7 @@ public class FormCadastro extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePicklauncher;
     private Uri selectedImageUri;
     private AutoCompleteTextView autoCompleteCategorias;
+    private Endereco endereco;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +102,7 @@ public class FormCadastro extends AppCompatActivity {
                 RemoveTeclado();
 
                 String nome = edit_nome.getText().toString().trim();
-                String cep = edit_cep.getText().toString().trim();
+                String cep = edit_cep.getText().toString();
                 String email = edit_email.getText().toString().trim();
                 String confirmeEmail = edit_confirme_email.getText().toString().trim();
                 String senha = edit_senha.getText().toString();
@@ -111,6 +116,30 @@ public class FormCadastro extends AppCompatActivity {
                     mostrarSnackbar(v, "Informe seu CEP", Color.RED);
                     return;
                 }
+
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    try {
+                        endereco = CepUtils.buscarCep(cep);
+
+                        runOnUiThread(() -> {
+                            // Aqui você pode atualizar a interface com os dados do endereço
+                            Toast.makeText(getApplicationContext(), "Endereço encontrado: " + endereco.toString(), Toast.LENGTH_LONG).show();
+                        });
+
+                    } catch (IllegalArgumentException e) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+
+                    } catch (Exception e) {
+                        Log.e("CEP_ERRO", "Erro ao buscar CEP", e);
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), "Erro inesperado ao buscar CEP", Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                });
+
                 if (!control){
                     edit_nome.setVisibility(View.GONE);
                     edit_desc.setVisibility(View.GONE);
@@ -291,7 +320,6 @@ public class FormCadastro extends AppCompatActivity {
         }
     }
 
-
     private void CadastrarUsuario(View v) {
 
         String email = edit_email.getText().toString();
@@ -386,6 +414,15 @@ public class FormCadastro extends AppCompatActivity {
                         Log.d("db_erro", "Erro ao salvar os dados" + e.toString());
                     });
 
+            // Adiciona na subcoleção 'endereco' dentro do usuário 'abc123'
+            db.collection("Cliente")
+                    .document(usuarioID)
+                    .collection("Endereco")
+                    .document("principal") // <- Nome fixo do documento
+                    .set(endereco)         // <- Substitui ou cria o documento
+                    .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "Endereço salvo/atualizado com sucesso."))
+                    .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao salvar endereço: ", e));
+
         } else {
             cliente.setNome(edit_nome.getText().toString());
             cliente.setTipoConta(tipoConta);
@@ -413,9 +450,19 @@ public class FormCadastro extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                         Log.d("db_erro", "Erro ao salvar os dados" + e.toString());
                     });
+
+            // Adiciona na subcoleção 'endereco' dentro do usuário 'abc123'
+            db.collection("Cliente")
+                    .document(usuarioID)
+                    .collection("Endereco")
+                    .document("principal") // <- Nome fixo do documento
+                    .set(endereco)         // <- Substitui ou cria o documento
+                    .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "Endereço salvo/atualizado com sucesso."))
+                    .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao salvar endereço: ", e));
         }
 
         salvarImagemPerfil(usuarioID);
+        avisoVerificacaoEmail(); // <- mover para aqui
 
     }
 
@@ -441,7 +488,6 @@ public class FormCadastro extends AppCompatActivity {
                                 .update("fotoPerfil", imageUrl)
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("FIREBASE", "fotoPerfil atualizado com sucesso");
-                                    avisoVerificacaoEmail(); // <- mover para aqui
                                 })
                                 .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao salvar fotoPerfil", e));
                     });
@@ -449,7 +495,7 @@ public class FormCadastro extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e("FIREBASE", "Falha ao fazer upload da imagem", e));
     }
 
-    private void avisoVerificacaoEmail(){
+    private void avisoVerificacaoEmail() {
         AlertDialog.Builder builder = new AlertDialog.Builder(FormCadastro.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_verificacao_email, null);
@@ -468,6 +514,10 @@ public class FormCadastro extends AppCompatActivity {
         Button btnFechar = view.findViewById(R.id.btnFechar);
 
         AlertDialog dialog = builder.setView(view).create();
+
+        // Impede que o usuário feche tocando fora ou com o botão "Voltar"
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
 
         btnReenviarEmail.setOnClickListener(v -> {
             if (user != null && !user.isEmailVerified()) {

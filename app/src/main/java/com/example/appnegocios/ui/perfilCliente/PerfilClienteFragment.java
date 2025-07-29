@@ -38,15 +38,23 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import Class.Endereco;
+import Class.CepUtils;
+
 public class PerfilClienteFragment extends Fragment {
     private FragmentPerfilBinding binding;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String usuarioID, caminhoIcon;;
+    private String usuarioID, caminhoIcon;
+    ;
     private TextView text_alterFoto;
     private EditText nome, telefone, cep;
     private ImageView iconUser;
     private Button bt_editar, bt_salvar, bt_cancelar;
     private Uri selectedImageUri;
+    private Endereco novoEndereco;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -95,23 +103,61 @@ public class PerfilClienteFragment extends Fragment {
         bt_salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (selectedImageUri != null) {
                     salvarImagemPerfil(usuarioID);
                 }
 
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                executor.execute(() -> {
+                    try {
+                        novoEndereco = CepUtils.buscarCep(cep.getText().toString());
+                        Log.d("ENDERECO", "Endereco: " + novoEndereco);
+                        if (novoEndereco == null) {
+                            Log.e("ENDERECO", "Endereco é null! Não vai salvar.");
+                            return;
+                        }
+                        if (isAdded() && getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(), "Endereço encontrado: " + novoEndereco.toString(), Toast.LENGTH_LONG).show();
+                            });
+                        }
+                        // salva fora da UI
+                        atualizarEnderecoDoCliente(usuarioID, novoEndereco);
+
+                    } catch (IllegalArgumentException e) {
+                        if (isAdded() && getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("CEP_ERRO", "Erro ao buscar CEP", e);
+                        if (isAdded() && getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireContext(), "Erro ao buscar CEP", Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    }
+                });
+
+
                 db.collection("Cliente").document(usuarioID)
                         .update(
                                 "nome", nome.getText().toString(),
-                                "telefone", telefone.getText().toString(), // sem acento
-                                "CEP", cep.getText().toString() // padronize campos
+                                "telefone", telefone.getText().toString(),
+                                "CEP", cep.getText().toString()
                         )
                         .addOnSuccessListener(aVoid -> {
+
                             Snackbar snackbar = Snackbar.make(v, "Perfil atualizado!", Snackbar.LENGTH_SHORT);
                             snackbar.setBackgroundTint(Color.GREEN);
                             snackbar.setTextColor(Color.BLACK);
                             snackbar.show();
 
-                            atualizarTela(); // só chama aqui depois do sucesso
+
+                            atualizarTela();
                         })
                         .addOnFailureListener(e -> {
                             Snackbar snackbar = Snackbar.make(v, "Erro: " + e.getMessage(), Snackbar.LENGTH_SHORT);
@@ -239,6 +285,22 @@ public class PerfilClienteFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FIREBASE", "Erro ao fazer upload da nova imagem", e);
+                });
+    }
+
+    private void atualizarEnderecoDoCliente(String clienteId, Endereco endereco) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Cliente")
+                .document(clienteId)
+                .collection("Endereco")
+                .document("principal") // ID fixo
+                .set(endereco)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("FIREBASE", "Endereço salvo/atualizado com sucesso.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIREBASE", "Erro ao salvar/atualizar endereço: ", e);
                 });
     }
 
