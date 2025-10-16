@@ -236,6 +236,9 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                                     .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao excluir documento " + doc.getId(), e));
                         }
                     }).addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao buscar documentos de views", e));
+
+                    //Salva notificação interação para empreendimento
+                    //salvarInteracao("","");
                 });
 
                 dialog.show();
@@ -702,6 +705,32 @@ public class ViewPerfilEmpreedimentoFragment extends Fragment {
                         .addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao excluir documento " + doc.getId(), e));
             }
         }).addOnFailureListener(e -> Log.e("FIREBASE", "Erro ao buscar documentos de clicksContatos", e));
+    }
+
+    private void salvarInteracao(String descricao, String categoria) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String usuarioId = auth.getCurrentUser().getUid();
+
+        // Criação do objeto da interação
+        Map<String, Object> interacao = new HashMap<>();
+        interacao.put("descricao", descricao);
+        interacao.put("categoria", categoria);
+        interacao.put("tempo", FieldValue.serverTimestamp()); // pega data/hora do servidor
+
+        // Referência para: Cliente/{usuarioId}/Interacoes
+        db.collection("Cliente")
+                .document(usuarioId)
+                .collection("Interacoes")
+                .add(interacao)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(getContext(), "Interação salva com sucesso!", Toast.LENGTH_SHORT).show();
+                    Log.d("FIREBASE", "Interação salva: " + documentReference.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIREBASE", "Erro ao salvar interação", e);
+                    Toast.makeText(getContext(), "Erro ao salvar interação", Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override

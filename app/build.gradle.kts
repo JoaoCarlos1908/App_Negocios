@@ -40,6 +40,8 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
     implementation("com.google.firebase:firebase-storage:20.3.0")

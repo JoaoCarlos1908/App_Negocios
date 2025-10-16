@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -75,17 +76,7 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        for (int x = 0; x < 8; x++) {
-            // Infla o layout de item individual
-            View item = getLayoutInflater().inflate(R.layout.layout_view_interacao, containerInteracoes, false);
-
-            ImageView icCategoria = item.findViewById(R.id.icCategoria);
-            TextView tvDescricao = item.findViewById(R.id.tvDescricao);
-            TextView tvTempo = item.findViewById(R.id.tvTempo);
-
-            // Adiciona o item ao LinearLayout
-            containerInteracoes.addView(item);
-        }
+        carregarInteracoes();
 
         btnAbrirOutroFragmento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +171,74 @@ public class DashboardFragment extends Fragment {
                     Log.e("ERRO", "Erro ao buscar reclamações", e);
                 });
     }
+
+    private void carregarInteracoes() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String usuarioId = auth.getCurrentUser().getUid();
+
+        db.collection("Cliente")
+                .document(usuarioId)
+                .collection("Interacoes")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    containerInteracoes.removeAllViews(); // limpa antes de carregar
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        String descricao = doc.getString("descricao");
+                        String tempo = doc.getString("tempo");
+                        String categoria = doc.getString("categoria");
+
+                        // Infla o layout de item individual
+                        View item = getLayoutInflater().inflate(R.layout.layout_view_interacao, containerInteracoes, false);
+
+                        ImageView icCategoria = item.findViewById(R.id.icCategoria);
+                        TextView tvDescricao = item.findViewById(R.id.tvDescricao);
+                        TextView tvTempo = item.findViewById(R.id.tvTempo);
+                        TextView tvDetalhes = item.findViewById(R.id.tvDetalhes);
+
+                        // Preenche os campos
+                        tvDescricao.setText(descricao != null ? descricao : "Sem descrição");
+                        tvTempo.setText(tempo != null ? tempo : "Sem tempo");
+
+                        // Exemplo: muda o ícone baseado na categoria
+                        if (categoria != null) {
+                            switch (categoria) {
+                                case "pefil":
+                                    icCategoria.setImageResource(R.drawable.ic_perfil);
+                                    break;
+                                case "chat":
+                                    icCategoria.setImageResource(R.drawable.ic_balao_fala);
+                                    break;
+                                case "avaliacao":
+                                    icCategoria.setImageResource(R.drawable.ic_estrela);
+                                    break;
+                                case "reclamacao":
+                                    icCategoria.setImageResource(R.drawable.ic_negativo);
+                                    break;
+                                default:
+                                    icCategoria.setImageResource(R.drawable.ic_sino);
+                                    break;
+                            }
+                        } else {
+                            icCategoria.setImageResource(R.drawable.ic_sino);
+                        }
+
+                        // Adiciona ao container
+                        containerInteracoes.addView(item);
+                    }
+
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        Toast.makeText(getContext(), "Nenhuma interação encontrada.", Toast.LENGTH_SHORT).show();
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FIREBASE", "Erro ao carregar interações", e);
+                    Toast.makeText(getContext(), "Erro ao carregar interações", Toast.LENGTH_SHORT).show();
+                });
+    }
+
 
     @Override
     public void onDestroyView() {
